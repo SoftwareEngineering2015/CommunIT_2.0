@@ -39,6 +39,10 @@ $("#pincolor").change(function() {
     document.getElementById('house_pin').src = fullimg;
 });
 
+$("input[name=has_floorplans]:radio").change(function () {
+  $("#changingHasFloorplanRadioButtonAlert").modal("show");
+});
+
 // Jquery Actions
 $(document).ready(function() {
 
@@ -102,15 +106,31 @@ $(document).ready(function() {
                 inputMarkerLongitude: $("#longitude").val(),
             },
             function(data, status) {
-                if (data.trim() === "success") {
+                data = jQuery.parseJSON(data);
+                if (data.status.trim() === "success") {
                   $('#updateMarkerModal').modal('hide');
-                  overalayColor($("#pincolor").val());
-                  markers[marker_clicked].setIcon(fullimg);
-                  infowindows[marker_clicked].setContent("<b>Refresh the page to do additional marker actions.</b>");
+                  if (!default_pin_color_status) {
+                    overalayColor($("#pincolor").val());
+                    markers[marker_clicked].setIcon(fullimg);
+                  }
+
+                  markers[marker_clicked].setTitle(data.marker_name + "\n" + data.marker_location);
+
+                  if (data.has_floorplan == 1) {
+                      infowindows[marker_clicked].setContent("");
+                      infowindows[marker_clicked].setContent("<b> Name: " + data.marker_name + " <br /> Location: " + data.marker_location + " </b> <br /> <a onclick='edit_marker(`" + data.marker_id + "`, `" + marker_clicked + "`)'> Edit Marker </a> <br /> <a onclick='load_floor_plans(`" + data.marker_id + "`)'> Load Floorplans </a>  <br /> <a onclick='delete_marker(`" + data.marker_id + "`)'> Delete Marker </a>");
+                  } else {
+                      infowindows[marker_clicked].setContent("");
+                      infowindows[marker_clicked].setContent("<b> Name: " + data.marker_name + " <br /> Location: " + data.marker_location + " </b> <br /> <a onclick='edit_marker(`" + data.marker_id + "`, `" + marker_clicked + "`)'> Edit Marker </a> <br /> <a onclick='add_remove_residents(`" + data.marker_id + "`)'> Add / Remove Residents </a> <br /> <a onclick='delete_marker(`" + data.marker_id + "`)'> Delete Marker </a>");
+                  }
                 } else {
-                    alert("There was an error submitting the form.");
+                    $("#updateMarkerErrorMessage").html("There was an error submitting the form.");
                 }
             });
+    });
+
+    $("#updateMarkerModal").on('hidden.bs.modal', function() {
+        $("#updateMarkerErrorMessage").empty(); // Clear the error message
     });
 });
 </script>
@@ -208,9 +228,32 @@ $(document).ready(function() {
             <td id="inputMarkerLongitude"> </td>
          </tr>
       </table>
+      <div style="font-weight: bold; color: red" id="updateMarkerErrorMessage"> </div>
    </div>
    <div class="modal-footer">
       <button type="button" class="btn btn-primary" id="updateCommunityMarkers" value="<?php echo $marker_id; ?>">Update Marker</button>
       <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
    </div>
+</div>
+</div>
+</div>
+
+<!-- Modal -->
+<div id="changingHasFloorplanRadioButtonAlert" class="modal fade" role="dialog">
+<div class="modal-dialog">
+<!-- Modal content --> 
+<div class="modal-content">
+   <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <h3 class="modal-title">Changing Floorplan Status</h3>
+   </div>
+   <div class="modal-body">
+      <b class="text-danger"> Changing this will value will hide all residents tied to this marker. <br /> <br />
+        Unlink residents tied to this marker if you would like to assign them to other markers. </b>
+   <div class="modal-footer">
+      <button type="button" class="btn btn-warning" data-dismiss="modal">I Understand</button>
+   </div>
+  </div>
+</div>
+</div>
 </div>

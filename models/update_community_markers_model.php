@@ -46,9 +46,18 @@ $sql_update_marker_longitude = "UPDATE markers SET  longitude='$longitude' WHERE
 
 if (mysqli_query($conn, $sql_update_marker_name) && mysqli_query($conn, $sql_update_marker_location) && mysqli_query($conn, $sql_update_marker_pin_color) && mysqli_query($conn, $sql_update_marker_has_floorplan) && mysqli_query($conn, $sql_update_marker_latitude) && mysqli_query($conn, $sql_update_marker_longitude)) {
 
-    echo "success";
-    //header( 'Location: myhome.php' );
+    $json_return_array =  array(
+        "status" =>  "success",
+        "marker_id" =>  $marker_id,
+        "marker_name" => $name,
+        "marker_location" => $location,
+        "has_floorplan" => $has_floorplans
+    );
+    echo json_encode($json_return_array); exit();
 } else {
-    echo "fail";
+    $json_return_array =  array(
+    	"status" =>  "error",
+    );
+    echo json_encode($json_return_array); exit();
 }
 ?>

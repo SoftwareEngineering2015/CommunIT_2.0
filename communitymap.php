@@ -15,8 +15,12 @@
 
 <!-- Google API KEY for accessing a broader spectrum of Google APIs-->
 <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCTUwndh9ZED3trNlGZqcCEjkAb5-bpoUw"></script>
+<!-- File that holds the date code to convert datetime to day of the week -->
+<script type="text/javascript" src="js/date.js"></script>
 <!-- File that holds the javascript to color a marker -->
 <script type="text/javascript" src="js/colorpins.js"></script>
+<!-- Dropdown list file -->
+<script src="js/dropdown.js"></script>
 <!-- Add controller files -->
 <script type="text/javascript" src="controllers/communitymap_controller.js"></script>
 <style>
@@ -53,29 +57,57 @@
         background-color: #1995dc;
     }
 
-    #infowindowPanel {
-        width: 300px;
-        height: 91%;
-        padding: 10px;
-        background-color: #FFFFFF;
-        margin-left: -300px;
-        position: fixed;
-        top: 55px;
-        /*background: rgba(0,0,0,.5);*/
-    }
-
-    #infowindowPanel::-webkit-scrollbar-track {
+    #floorplanInformationField::-webkit-scrollbar-track {
         -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
         border-radius: 10px;
         background-color: rgba(0, 0, 0, .5);
     }
 
-    #infowindowPanel::-webkit-scrollbar {
+    #floorplanInformationField::-webkit-scrollbar {
         width: 12px;
         background-color: rgba(0, 0, 0, .5);
     }
 
-    #infowindowPanel::-webkit-scrollbar-thumb {
+    #floorplanInformationField::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+        background-color: #1995dc;
+    }
+
+    #forecastDiv::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        background-color: rgba(0, 0, 0, .5);
+    }
+
+    #forecastDiv::-webkit-scrollbar {
+        width: 12px;
+        background-color: rgba(0, 0, 0, .5);
+    }
+
+    #forecastDiv::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+        background-color: #1995dc;
+    }
+    #floorplanModalDiv {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .ui-widget-content::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        background-color: rgba(0, 0, 0, .5);
+    }
+
+    .ui-widget-content::-webkit-scrollbar {
+        width: 12px;
+        background-color: rgba(0, 0, 0, .5);
+    }
+
+    .ui-widget-content::-webkit-scrollbar-thumb {
         border-radius: 10px;
         -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
         background-color: #1995dc;
@@ -87,15 +119,23 @@
         }
     }
 
-    .scrollbar {
-        margin-left: 30px;
-        float: left;
-        height: 300px;
-        width: 65px;
-        background: #F5F5F5;
-        overflow-y: scroll;
-        margin-bottom: 25px;
+     .modal-dialog{
+        position: relative;
+        display: table;
+        overflow-y: auto;
+        overflow-x: auto;
+        width: 90%;
+        height: 90%;
     }
+
+    .modal-content {
+          height: 99%;
+        }
+
+    #table-borderless tbody tr td, #table-borderless tbody tr th, #table-borderless thead tr th {
+        border: none;
+    }
+
 </style>
 
 <body ng-controller="communitymapController">
@@ -107,72 +147,121 @@
             </div>
 
             <div id='street-view' class="col-sm-12" style="background-color: #EEEEEE;  min-height: 175px; height:20% width: 100%; text-align: center; font-size: 25px; font-weight: bold;">
-                Select a Residence
+                Select A Residence
             </div>
             <div> &nbsp </div>
 
-            <div class="col-sm-12" style="background-color: #EEEEEE; " ng-show="!noProfiles" ng-hide="noProfiles">
+            <div class="col-sm-12" style="background-color: #EEEEEE; " ng-show="!noInformation" ng-hide="noInformation">
                 <b><div class="col-sm-12" Style="text-align: center; font-size: 125%;" id="head_resident_panel"> {{ marker_name }} </div></b>
                 <div class="col-sm-12" Style="text-align: center; font-size: 100%; font-weight: bold;" id="address_panel"> {{ marker_location }} </div>
-                <hr />
-                </br>
-                <div ng-repeat="x in profiles_array">
-                  <h4> {{ x.residents_name }} </h4>
-                  <table class="table table-hover" Style="font-size: 90%; background-color: #FFFFFF;">
-                    <tr id='phone_01' ng-show="x.phone_01">
-                      <td style="color: #006699; font-weight: bold;"> Primary Phone: </td>
-                      <td>{{ x.phone_01 }} </td>
-                    </tr>
-                    <tr id='phone_02' ng-show="x.phone_02">
-                      <td style="color: #006699; font-weight: bold;"> Secondary Phone: </td>
-                      <td style="text-align: left;">{{ x.phone_02 }} </td>
-                    </tr>
-                    <tr id='email_01' ng-show="x.email_01">
-                      <td style="color: #006699; font-weight: bold;"> Primary E-mail: </td>
-                      <td>{{ x.email_01 }} </td>
-                    </tr>
-                    <tr id='email_02' ng-show="x.email_02">
-                      <td style="color: #006699; font-weight: bold;"> Secondary E-mail: </td>
-                      <td>{{ x.email_02 }} </td>
-                    </tr>
-                  </table>
-
+                <div ng-show="!noProfiles">
+                    <hr />
+                    </br>
+                    <div ng-repeat="x in profiles_array">
+                        <h4> {{ x.residents_name }} </h4>
+                        <table class="table table-hover" Style="font-size: 90%; background-color: #FFFFFF;">
+                            <tr id='phone_01' ng-show="x.phone_01">
+                                <td style="color: #006699; font-weight: bold;"> Primary Phone: </td>
+                                <td>{{ x.phone_01 }} </td>
+                            </tr>
+                            <tr id='phone_02' ng-show="x.phone_02">
+                                <td style="color: #006699; font-weight: bold;"> Secondary Phone: </td>
+                                <td style="text-align: left;">{{ x.phone_02 }} </td>
+                            </tr>
+                            <tr id='email_01' ng-show="x.email_01">
+                                <td style="color: #006699; font-weight: bold;"> Primary E-mail: </td>
+                                <td>{{ x.email_01 }} </td>
+                            </tr>
+                            <tr id='email_02' ng-show="x.email_02">
+                                <td style="color: #006699; font-weight: bold;"> Secondary E-mail: </td>
+                                <td>{{ x.email_02 }} </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br />
                 </div>
-                  <br />
+                <div ng-show="hasFloorplans">
+                    <h4> Floorplans </h4>
+                    <table class="table table-hover" Style="font-size: 90%; background-color: #FFFFFF;">
+                        <tr ng-repeat="x in profiles_array" >
+                            <td style="color: #006699; font-weight: bold;"> {{ x.floor}} </td>
+                            <td > <button type='button' class='btn btn-success btn-sm' ng-click="load_view_floorplan(x.floorplan_id)" style='width: 100%;'>View Floorplan</button> </td>
+                        </tr>
+                    </table>
+                    <br />
+                </div>
             </div>
 
-            <div class="col-sm-12" style="background-color: #EEEEEE; font-size: 100%;" ng-show="noProfiles" ng-hide="!noProfiles">
-              <div align="center">
-                <h3> {{ profiles_array.no_profiles }} </h3>
-              </div>
+            <div class="col-sm-12" style="background-color: #EEEEEE; font-size: 100%;" ng-show="noInformation" ng-hide="!noInformation">
+                <div align="center">
+                    <h3> {{ profiles_array.no_profiles }} </h3>
+                </div>
             </div>
             <div>&nbsp</div>
         </div>
         <!--Google Map Div-->
         <div class="col-md-8" id="googleMap" style="height:100%;"></div>
     </div>
+
     <!-- Modal -->
-    <div id="floorplans_model" class="modal fade" role="dialog">
+    <div id="viewFloorplanModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
-            <!-- Modal content-->
-            <div class="modal-content">
+            <!-- Modal content -->
+            <div class="modal-content"  style="overflow:auto;">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <div align="center">
-                        <h1> Floorplans </h1>
-                        <select id="select_floorplans" class="form-control"></select>
+                    <h3 id="floorplanName"> </h3>
+                </div>
+                <div class="modal-body row">
+                    <div class="col-sm-5" class="container-fluid" id="floorplanInformationField" style="height:auto; overflow:auto;">
                     </div>
-                </div>
-                <div class="modal-body" id="floorplans">
-                    <div id='floorplan_div'></div>
-                    <img id='floorplan' style='height: 100%; width: 100%;' />
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="modal-close">Close</button>
+                    <div id='floorplanModalDiv' class="col-sm-7" class="container-fluid">
+                        <img id='floorplanImage' style='width: 100%; height: auto;'>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</body>
 
+    <!-- Modal -->
+    <div id="weatherModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 id="markerNameWeather"></h3>
+                </div>
+                <div class="modal-body" id='weatherInformation'>
+                    <div id="forecastDiv" style="overflow:auto;">
+                        <h4> Current Weather <span id="currentWeatherPic"> </span> </h4>
+                        <table class="table table-responsive" id="table-borderless">
+                            <tr>
+                                <th> Description </th>
+                                <th> Temp </th>
+                                <th> Humidity </th>
+                                <th> Wind </th>
+                            </tr>
+                            <tr>
+                                <td id="currentWeatherDescription" style="text-transform: capitalize;"> </td>
+                                <td id="currentWeatherTemp"> </td>
+                                <td id="currentWeatherHumidity"> </td>
+                                <td id="currentWeatherWind"> </td>
+                            </tr>
+                        </table>
+                        <h4> 5-Day Forecast </h4>
+                        <table class="table table-responsive" id="table-borderless">
+                            <tr id="dayOfWeekForWeather" style="font-weight: bold;"> </tr>
+                            <tr id="weatherForForecast"> </tr>
+                            <tr id="descriptionForForecast" style="text-transform: capitalize;"> </tr>
+                            <tr id="tempForForecast" style="font-weight: bold;"> </tr>
+                        </table>
+                    </div>
+                    <div id="weatherError"> </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
 </html>

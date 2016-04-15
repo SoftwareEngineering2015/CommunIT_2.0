@@ -31,6 +31,8 @@ $has_floorplans = mysql_real_escape_string($has_floorplans);
 $latitude = mysql_real_escape_string($latitude);
 $longitude = mysql_real_escape_string($longitude);
 
+$json_return_array = array();
+
 // Loop that interacts with the database to insert the user
 $error_counter = 0;
 do {
@@ -49,12 +51,22 @@ do {
             $sql_create_marker = "INSERT INTO markers (marker_id, name, latitude, longitude, location, pin_color, has_floorplan) VALUES ('$marker_id', '$name', '$latitude', '$longitude', '$location', '$pin_color', '$has_floorplans')";
             $sql_markers_to_communities = "INSERT INTO markers_to_communities (community_id, marker_id) VALUES ('$community_id', '$marker_id')";
             if(mysqli_query($conn, $sql_create_marker) && mysqli_query($conn, $sql_markers_to_communities)) {
-                echo "success"; exit();
+                $json_return_array =  array(
+                    "status" =>  "success",
+                    "marker_id" =>  $marker_id,
+                    "marker_name" => $name,
+                    "marker_location" => $location,
+                    "has_floorplan" => $has_floorplans
+                );
+                echo json_encode($json_return_array); exit();
             } 
             // Close the connection down here somewhere
         }
     if($error_counter == 100){
-        echo "Problem with connection, please try again.";
+        $json_return_array =  array(
+            "status" =>  "error",
+        );
+        echo json_encode($json_return_array); exit();
     }
 }while($available == false && $error_counter < 100);
 

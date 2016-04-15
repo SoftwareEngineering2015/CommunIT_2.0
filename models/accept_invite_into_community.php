@@ -32,7 +32,7 @@ while ($row = $sql_get_user_information_result->fetch_assoc()) {
             $available             = true;
             $sql_give_user_profile = "INSERT INTO profiles (profile_id, user_id, community_id) VALUES ('$profile_id', '$user_id', '$community_id')";
             
-            $sql_accpet_user_into_community = "INSERT INTO users_to_communities (user_id, community_id, privilege_id) VALUES ('$user_id', '$community_id', '3')";
+            $sql_accpet_user_into_community = "INSERT INTO users_to_communities (user_id, community_id, privilege_id) VALUES ('$user_id', '$community_id', '4')";
             
             $sql_delete_request = "DELETE FROM requests_to_join_communities WHERE user_id = '$user_id' AND community_id = '$community_id'";
             

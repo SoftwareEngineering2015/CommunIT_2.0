@@ -10,8 +10,6 @@ if(isset($_REQUEST["community"])) {
 
 include("db_class.php");
 
-$users_array = array();
-
 $sql_community_requests = "SELECT * FROM requests_to_join_communities INNER JOIN users ON requests_to_join_communities.user_id = users.user_id WHERE requests_to_join_communities.community_id = '$community_id'";
 $sql_community_requests_result = mysqli_query($conn, $sql_community_requests);
 
@@ -60,16 +58,15 @@ if (mysqli_num_rows($sql_community_requests_result) == 0 ) {
 
   $sql_community_requests_result = mysqli_query($conn, $sql_community_requests);
   while($row = $sql_community_requests_result->fetch_assoc()){
-    array_push($users_array, $row['user_id']);
 
     echo "<tr> <td> " . $row['username'] . " </td>";
     echo "<td> " . $row['first_name'] . " </td>";
     echo "<td> " . $row['last_name'] . " </td>";
     if ($row['requested_or_invited'] == 0) {
-      echo "<td> <button type='button' class='btn btn-primary btn-sm acceptResidentButton' style='width: 100%;'> Accept Resident </button></td>";
-      echo "<td> <button type='button' class='btn btn-danger btn-sm deleteRequestInviteButton' style='width: 100%;'> Decline Request </button> </td></tr>";
+      echo "<td> <button type='button' class='btn btn-primary btn-sm acceptResidentButton' style='width: 100%;' value='" . $row['user_id'] . "'> Accept Resident </button></td>";
+      echo "<td> <button type='button' class='btn btn-danger btn-sm deleteRequestInviteButton' style='width: 100%;' value='" . $row['user_id'] . "'> Decline Request </button> </td></tr>";
     } else {
-      echo "<td> </td><td> <button type='button' class='btn btn-danger btn-sm deleteRequestInviteButton' style='width: 100%;'> Delete Invite </button> </td></tr>";
+      echo "<td> </td><td> <button type='button' class='btn btn-danger btn-sm deleteRequestInviteButton' style='width: 100%;' value='" . $row['user_id'] . "'> Delete Invite </button> </td></tr>";
     }
   }
 
@@ -79,15 +76,13 @@ if (mysqli_num_rows($sql_community_requests_result) == 0 ) {
 ?>
 
 <script>
-var users = <?php echo json_encode($users_array); ?>;
 
 var tableRowClicked;
 var userClicked;
 
 $(".acceptResidentButton").click(function(event) {
     tableRowClicked = ($(this).closest("tr").index());
-    userClicked = users[$(".acceptResidentButton").index(this)];
-    document.getElementById("approveResidentButton").value = users[$(".acceptResidentButton").index(this)];
+    userClicked = this.value;
     $("#approveResidentModal").modal("show");
 });
 
@@ -110,8 +105,7 @@ $("#approveResidentButton").click(function(event) {
 
 $(".deleteRequestInviteButton").click(function(event) {
     tableRowClicked = ($(this).closest("tr").index());
-    userClicked = users[$(".deleteRequestInviteButton").index(this)];
-    document.getElementById("deleteRequestInvite").value = users[$(".acceptResidentButton").index(this)];
+    userClicked = this.value;
     $("#deleteRequestInviteModal").modal("show");
 });
 

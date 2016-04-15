@@ -1,6 +1,17 @@
 communitApp.controller('communitysearchController', ['$scope', '$http', function($scope, $http) {
 
+    $scope.can_join = true;
+
     $scope.joined_communities_counter = 0; // Used to keep track of how many communities user is in
+
+    $scope.communities = []; // Holds the return json of the communities the user searched for
+
+    $scope.has_results = false;
+
+    $scope.displayed_communities = []; // Holds the return json of the communities the user searched for
+    $scope.range = 0; // Used to limit the number of results shown 
+    $scope.hide_next = false; // Used to hide the next button
+    $scope.hide_last = true; // Used to hide the last button 
 
     var encodedData = 'user=' +
         encodeURIComponent(localStorage.getItem("communit_user_id"));
@@ -21,9 +32,9 @@ communitApp.controller('communitysearchController', ['$scope', '$http', function
 
                     $scope.joined_communities_counter++;
 
-                    if ($scope.joined_communities_counter >= 4) {
-                        alert("You are already apart of the max amount of communities.");
-                        window.location.href = "myhome.php";
+                    if ($scope.joined_communities_counter >= 5) {
+                        $scope.can_join = false;
+                        $("#maxJoinedAlertModal").modal("show");
                     }
                 });
             }
@@ -32,31 +43,125 @@ communitApp.controller('communitysearchController', ['$scope', '$http', function
 
         })
 
-}]);
-
-$(document).ready(function() {
-    $("#submit_search").click(function(event) {
-
-        $("#search_results_div").empty().html("<h1> Searching... </h1>"); // Clear the div when they change their selection for which community profile they would like to edit
+    $scope.submit_search = function() {
 
         var name = document.getElementById("name").value; // Get the value of the selection they chose
         var city = document.getElementById("city").value; // Get the value of the selection they chose
         var state = document.getElementById("state").value; // Get the value of the selection they chose
         var country = document.getElementById("country").value; // Get the value of the selection they chose
 
-        $.post(
-            "models/communitysearch_model.php", {
-                name: name,
-                city: city,
-                state: state,
-                country: country
-            },
-            function(data) {
-                $("#search_results_div").empty().html(data);
-            }
-        );
 
-    });
+        encodedData = 'name=' +
+            encodeURIComponent(name) +
+            '&city=' +
+            encodeURIComponent(city) +
+            '&state=' +
+            encodeURIComponent(state) +
+            '&country=' +
+            encodeURIComponent(country) +
+            '&can_join=' +
+            encodeURIComponent($scope.can_join);
+
+        $http({
+                method: 'POST',
+                url: './models/communitysearch_model.php',
+                data: encodedData,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            .success(function(data, status, headers, config) {
+                if (data[0].status.trim() == "success") {
+                    $scope.displayed_communities.length = 0;
+                    $scope.has_results = true;
+                    $scope.communities = data;
+                    for (i = 0; i <= $scope.range ; i++) { 
+                        $scope.displayed_communities.push(data[i]);
+                    }
+                    if ($scope.range >= $scope.communities.length - 1) {
+                        $scope.hide_next = true;
+                    }
+                } else {
+                    $scope.has_results = false;
+                    $scope.communities = data;
+                }  
+            })
+            .error(function(data, status, headers, config) {
+                $scope.has_results = false;
+            })
+    }
+
+    $scope.load_map_into_modal = function (community) {
+
+        $("#community_map").empty(); // Clear the div when they change their selection for which community profile they would like to edit
+
+        encodedData = 'community=' +
+            encodeURIComponent(community);
+
+        $http({
+                method: 'POST',
+                url: './models/jquery_community_map_load.php',
+                data: encodedData,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            .success(function(data, status, headers, config) {
+                $("#community_map").html(data);
+                $('#view_community_modal').on('shown.bs.modal', function() {
+                    google.maps.event.trigger(map, 'resize');
+                    map.fitBounds(bounds);
+                });
+            })
+            .error(function(data, status, headers, config) {
+
+            })
+    }
+
+    $scope.show_join_community_modal = function(community) {
+        document.getElementById("joinCommunityButton").value = community;
+        $("#join_community_modal").modal("show");
+    }
+
+    $scope.next = function() {
+        $scope.displayed_communities.length = 0;
+
+        $scope.range = $scope.range + 1;
+
+        for (i = $scope.range; i <= $scope.range; i++) {
+            $scope.displayed_communities.push($scope.communities[i]);
+        }
+
+        if ($scope.range >= $scope.communities.length - 1) {
+            $scope.hide_next = true;
+        }
+
+        if ($scope.range != 0) {
+            $scope.hide_last = false;
+        }
+    }
+
+    $scope.last = function() {
+        $scope.displayed_communities.length = 0;
+
+        $scope.range = $scope.range - 1;
+
+        for (i = $scope.range; i >= $scope.range; i--) {
+            $scope.displayed_communities.push($scope.communities[i]);
+        }
+
+        if ($scope.range == 0) {
+            $scope.hide_last = true;
+        }
+
+        if ($scope.range < $scope.communities.length) {
+            $scope.hide_next = false;
+        }
+    }
+
+}]);
+
+$(document).ready(function() {
 
     $("#joinCommunityButton").click(function(event) {
 
@@ -81,29 +186,8 @@ $(document).ready(function() {
 
     });
 
-    $('#join_community_modal').on('hidden.bs.modal', function () {
+    $('#join_community_modal').on('hidden.bs.modal', function() {
         $("#joinCommunityErrorMessage").empty();
         $("#joinCommunitySuccessMessage").empty();
     })
 });
-
-function load_map_into_modal(community) {
-    $("#community_map").empty(); // Clear the div when they change their selection for which community profile they would like to edit
-    $.post(
-        "models/jquery_community_map_load.php", {
-            community: community
-        },
-        function(data) {
-            $("#community_map").html(data);
-            $('#view_community_modal').on('shown.bs.modal', function() {
-                google.maps.event.trigger(map, 'resize');
-                map.setCenter(myCenter);
-            });
-        }
-    );
-}
-
-function show_join_community_modal(community) {
-    document.getElementById("joinCommunityButton").value = community;
-    $("#join_community_modal").modal("show");
-}

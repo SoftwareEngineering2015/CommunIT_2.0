@@ -18,7 +18,8 @@ communitApp.controller('joincommunityrequestsController', ['$scope', '$http', fu
                 })
                 .success(function(data, status, headers, config) {
                         if (data == "noRequests") {
-
+                            document.getElementById("requests").innerHTML = "<h4 style='color: black;'> You currently have no requests to join a community. </h4>";
+                            document.getElementById("invites").innerHTML = "<h4 style='color: black;'>  You currently have no invites to join a community. </h4>";
                         } else {
                             angular.forEach(data, function(value, key) {
                                 if (value.requested_or_invited.trim() == 0) {
@@ -39,6 +40,13 @@ communitApp.controller('joincommunityrequestsController', ['$scope', '$http', fu
 
                                 }
                             });
+                            
+                            if ($scope.requested_array.length == 0) {
+                                document.getElementById("requests").innerHTML = "<h4 style='color: black;'> You currently have no requests to join a community. </h4>";
+                            } 
+                            if ($scope.invited_array.length == 0) {
+                                document.getElementById("invites").innerHTML = "<h4 style='color: black;'>  You currently have no invites to join a community. </h4>";
+                            }
                         }
                     })
                     .error(function(data, status, headers, config) {
@@ -74,7 +82,7 @@ communitApp.controller('joincommunityrequestsController', ['$scope', '$http', fu
                                 if (data.trim() == "success") {
                                     location.reload();
                                 } else {
-                                    alert("There was an error deleting the request.");
+                                    $("#deleteRequestMessage").html("There was an error deleting the request.");
                                 }
                             })
                             .error(function(data, status, headers, config) {
@@ -108,7 +116,7 @@ communitApp.controller('joincommunityrequestsController', ['$scope', '$http', fu
                                 if (data.trim() == "success") {
                                     location.reload();
                                 } else {
-                                    alert("There was an error deleting the request.");
+                                    $("#acceptInvitedMessage").html("There was an error accepting the invite.");
                                 }
                             })
                             .error(function(data, status, headers, config) {
@@ -145,12 +153,24 @@ communitApp.controller('joincommunityrequestsController', ['$scope', '$http', fu
                                 if (data.trim() == "success") {
                                     location.reload();
                                 } else {
-                                    alert("There was an error deleting the request.");
+                                    $("#deleteInvitedMessage").html("There was an error deleting the invite.");
                                 }
                             })
                             .error(function(data, status, headers, config) {
 
                             })
                     };
+
+                    $("#delete_request_to_community_modal").on('hidden.bs.modal', function() {
+                        $("#deleteRequestMessage").empty(); // Clear the error message
+                    });
+
+                    $("#delete_invite_to_community_modal").on('hidden.bs.modal', function() {
+                        $("#deleteInvitedMessage").empty(); // Clear the error message
+                    });
+
+                    $("#accept_invite_to_community_modal").on('hidden.bs.modal', function() {
+                        $("#acceptInvitedMessage").empty(); // Clear the error message
+                    });
 
                 }]);

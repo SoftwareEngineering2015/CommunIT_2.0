@@ -12,8 +12,8 @@
 
 var placedMarkerInfoWindow; // This will hold the infowindow of added markers to the community
 
-pin_color = document.getElementById('pincolor').value;
-overalayColor(pin_color);
+document.getElementById('pincolor').value = community_marker_color;
+overalayColor(community_marker_color);
 document.getElementById('house_pin').src = fullimg;
 
 //Change pin color on change of color select
@@ -36,7 +36,6 @@ function geocodeAddress(geocoder, resultsMap) {
     }, function(results, status) {
         if (status === google.maps.GeocoderStatus.OK) {
             resultsMap.panTo(results[0].geometry.location);
-            resultsMap.setZoom(bounds);
             //Sets a Marker at the locations in the Geocoder search
             var marker = new google.maps.Marker({
                 map: resultsMap,
@@ -52,8 +51,9 @@ function geocodeAddress(geocoder, resultsMap) {
             google.maps.event.addListener(marker, 'click', function() {
                 map.panTo(marker.getPosition());
             });
+            $("#geocodeError").empty();
         } else {
-            alert('Geocode was not successful for the following reason: ' + status);
+            $("#geocodeError").html('Geocode was not successful for the following reason: ' + status);
         }
         google.maps.event.addListener(marker, 'dragend', function(event) {
             document.getElementById("latitude").value = this.getPosition().lat();
@@ -136,33 +136,51 @@ $(document).ready(function() {
                 inputMarkerLongitude: $("#longitude").val(),
             },
             function(data, status) {
-                if (data.trim() === "success") {
+                data = jQuery.parseJSON(data);
+                if (data.status.trim() === "success") {
                   $('#addMarkersModal').modal('hide');
 
-                  overalayColor($("#pincolor").val());
-                  var addedMarker = new google.maps.Marker({
+                  if (default_pin_color_status) {
+                    overalayColor(default_pin_color);
+                  } else {
+                    overalayColor($("#pincolor").val());
+                  }
+
+                  markers.push(new google.maps.Marker({
                     position: placedMarker[0].position,
+                    title: (data.marker_name + "\n" + data.marker_location),
                     icon: fullimg,
                     map: map
-                  });
-                  placedMarkerInfoWindow = new google.maps.InfoWindow({
-                      content: "<b>Refresh the page to edit / delete marker.</b>"
-                  });
-                  addedMarker.addListener('mouseover', function() {
-                    placedMarkerInfoWindow.open(map, this);
-                  });
+                  }));
 
-                  // assuming you also want to hide the infowindow when user mouses-out
-                  addedMarker.addListener('mouseout', function() {
-                    placedMarkerInfoWindow.close();
-                  });
+                  bounds.extend(placedMarker[0].position);
+                  var i = markers.length - 1;
+
+                  marker_ids.push(data.marker_id);
+
+                  // If the marker has a floorplan add the listener for the floorplan, otherwise add a listener to get the profile of the marker
+                  if (data.has_floorplans == 1) {
+                      infowindows[i] = new google.maps.InfoWindow({
+                          content: "<b> Name: " + data.marker_name + " <br /> Location: " + data.marker_location + " </b> <br /> <a onclick='edit_marker(`" + data.marker_id + "`, `" + i + "`)'> Edit Marker </a> <br /> <a onclick='load_floor_plans(`" + data.marker_id + "`)'> Load Floorplans </a>  <br /> <a onclick='delete_marker(`" + data.marker_id + "`)'> Delete Marker </a>"
+                      });
+                      addFloorplanListener(i);
+                  } else {
+                      infowindows[i] = new google.maps.InfoWindow({
+                          content: "<b> Name: " + data.marker_name + " <br /> Location: " + data.marker_location + " </b> <br /> <a onclick='edit_marker(`" + data.marker_id + "`, `" + i + "`)'> Edit Marker </a> <br /> <a onclick='add_remove_residents(`" + data.marker_id + "`)'> Add / Remove Residents </a> <br /> <a onclick='delete_marker(`" + data.marker_id + "`)'> Delete Marker </a>"
+                      });
+                      addProfileListener(i);
+                  }
                   placedMarker[0].setMap(null);
                   placedMarker.pop();
                 } else {
-                    alert("There was an error updating the settings.");
+                  $("#addMarkersModalErrorMessage").html("There was an error adding the marker.");
                 }
             });
     });
+
+  $("#addMarkersModal").on('hidden.bs.modal', function() {
+      $("#addMarkersModalErrorMessage").empty(); // Clear the error message
+  });
 });
 </script>
 
@@ -187,7 +205,7 @@ $(document).ready(function() {
       <th> </th>
       <td> </td>
       <td> </td>
-      <td> <button type="button" class="btn btn-primary btn-md" id="dropMarker" style="width:100%"> Drop Marker </button> </td>
+      <td> <button type="button" class="btn btn-primary btn-md" id="dropMarker" style="width:100%"> Drop Marker </button> <span class="text-danger" id="geocodeError"> </span> </td>
    </tr>
    <tr>
       <th> Marker Pin Color </th>
@@ -264,6 +282,8 @@ $(document).ready(function() {
             <td id="inputMarkerLongitude"> </td>
          </tr>
       </table>
+      <br />
+      <div id="addMarkersModalErrorMessage" style="color: red; font-weight: bold;"> </div>
    </div>
    <div class="modal-footer">
       <button type="button" class="btn btn-primary" id="addMarkerToCommunity" value="<?php echo $community_id; ?>">Add Marker To Community</button>

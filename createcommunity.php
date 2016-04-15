@@ -111,6 +111,10 @@ $('#review_information_modal').on('show.bs.modal', function () {
               });
 });
 
+$('#maxCreatedAlertModal').on('hidden.bs.modal', function () {
+  window.location.href = "myhome.php";
+});
+
 });
 </script>
 <body ng-controller="createcommunityController">
@@ -481,6 +485,25 @@ $('#review_information_modal').on('show.bs.modal', function () {
       </div>
     </div>
   </form>
+</div>
+</div>
+
+<!-- Modal -->
+<div id="maxCreatedAlertModal" class="modal fade" role="dialog">
+<div class="modal-dialog">
+<!-- Modal content --> 
+<div class="modal-content">
+   <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <h3 class="modal-title">Max Amount Of Created Communities</h3>
+   </div>
+   <div class="modal-body">
+      <b class="text-danger" id="maxCreatedAlertModalMessage"></b>
+   <div class="modal-footer">
+      <button type="button" class="btn btn-warning" data-dismiss="modal" id="maxCreatedAlertModalButton">I Understand</button>
+   </div>
+  </div>
+</div>
 </div>
 </div>
 </body>

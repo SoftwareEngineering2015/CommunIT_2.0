@@ -8,7 +8,7 @@ communitApp.controller('profileCtrl', function($scope, $http) {
     $scope.userfirstname = localStorage.getItem('communit_user_first');
     $scope.userlastname = localStorage.getItem('communit_user_last');
     $scope.marker = "";
-    $scope.selectProfile;
+    $scope.selectProfile = 0;
     $scope.viewSwitch = false;
 
     //Here we grab the json object from profileModel.php.
@@ -26,9 +26,8 @@ communitApp.controller('profileCtrl', function($scope, $http) {
       //alert("sent the post");
       $scope.contents = data;
 
-
       for(var i = 0; i < $scope.contents.length; i++){
-        if($scope.contents[i].has_edited == 0){
+        if($scope.contents[i].has_edited == 0 || $scope.contents[i].has_edited === null){
           //alert("no profile here");
           //$scope.selectProfile = i;
           window.location.href = 'editprofile.php';
@@ -43,5 +42,12 @@ communitApp.controller('profileCtrl', function($scope, $http) {
       }
 
     });
+
+    $scope.changePinColor = function() {
+      if ($scope.contents[$scope.selectProfile].pin_color != "" && $scope.contents[$scope.selectProfile].pin_color != null) {
+        overalayColor($scope.contents[$scope.selectProfile].pin_color);
+        document.getElementById('house_pin').src = fullimg;
+      }
+    }
 
 });

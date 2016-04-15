@@ -28,11 +28,12 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
         })
 
     $scope.profiles_array = []; // Holds the profile data from the marker 
-
     $scope.noProfiles = true; // This will hide the profiles table until there is a profile to display
 
     $scope.marker_name; // This show the name of the clicked marker when there is a profile
     $scope.marker_location; // This show the location of the clicked marker when there is a profile
+
+    $scope.marker_clicked_for_weather_information;
 
     var profile_request; // Varaible that will hold the request to get the profile of a marker; needed for aborted requests
 
@@ -50,6 +51,8 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
     var marker_latlngs = []; //holds parsed latlng marker data
     var marker_locations = []; //holds marker location
     var marker_pin_colors = []; //holds marker pin color
+    var default_pin_color;
+    var default_pin_color_status;
     var marker_has_floorplans = []; //Specifies that the marker has floorplans
 
     var infowindows = [];
@@ -102,6 +105,13 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
                                         marker_latlngs.push(new google.maps.LatLng(value.latitude, value.longitude));
                                         marker_locations.push(value.location);
                                         marker_pin_colors.push(value.pin_color);
+                                        if (value.default_pin_color_status == 1) {
+                                            default_pin_color_status = true;
+                                            default_pin_color = value.pin_color;
+                                        } else {
+                                            default_pin_color_status = false;
+                                            default_pin_color = "";
+                                        }
                                         marker_has_floorplans.push(value.has_floorplan);
                                     });
 
@@ -129,8 +139,14 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
 
         google.maps.event.addDomListener(window, "resize", function() {
             google.maps.event.trigger(map, "resize");
-            map.panTo(myCenter);
+            map.fitBounds(bounds);
         });
+
+        bounds.extend(new google.maps.LatLng(28.70, -127.50));
+        bounds.extend(new google.maps.LatLng(48.85, -55.90));
+
+        map.fitBounds(bounds);
+
     }
 
     function initializeFilledCommunity() {
@@ -143,7 +159,7 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
 
         google.maps.event.addDomListener(window, "resize", function() {
             google.maps.event.trigger(map, "resize");
-            map.panTo(map.getBounds().getCenter());
+            map.fitBounds(bounds);
         });
 
         //this loop will create all of the markers, then invoke the addlistener function
@@ -166,16 +182,38 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
             // If the marker has a floorplan add the listener for the floorplan, otherwise add a listener to get the profile of the marker
             if (marker_has_floorplans[i] == 1) {
                 infowindows[i] = new google.maps.InfoWindow({
-                    content: "<b> Name: " + marker_names[i] + " <br /> Location: " + marker_locations[i] + " </b> <br /> <a onclick='load_floor_plans(" + marker_ids[i] + ")'> Load Floorplans </a>"
+                    content: "<b> Name: " + marker_names[i] + " <br /> Location: " + marker_locations[i] + " </b>"
                 });
                 addFloorplanListener(i);
             } else {
                 infowindows[i] = new google.maps.InfoWindow({
-                    content: "<b> Name: " + marker_names[i] + " <br /> Location: " + marker_locations[i]
+                    content: "<b> Name: " + marker_names[i] + " <br /> Location: " + marker_locations[i] + " </b>"
                 });
                 addProfileListener(i);
             }
         };
+
+        //these next four lines are for the weather div
+        var createWeatherDiv = document.createElement('div');
+        var weather = new weatherDiv(createWeatherDiv, map);
+        createWeatherDiv.index = 1;
+        //puts the div on the map
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(createWeatherDiv);
+
+        //these next four lines are for the centering button
+        var centerControlDiv = document.createElement('div');
+        var centerControl = new centerbutton(centerControlDiv, map);
+        centerControlDiv.index = 1;
+        //puts the centering button on the map
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
+
+        //these next four lines are for the select box
+        var centerSelectlDiv = document.createElement('div');
+        var selectControl = new residenceSelectBox(centerSelectlDiv, map, marker_names, marker_has_floorplans);
+        centerSelectlDiv.index = 1;
+        //puts the centering button on the map
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerSelectlDiv);
+
         map.fitBounds(bounds);
 
     }
@@ -185,20 +223,21 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
     function addFloorplanListener(i) {
         markers[i].addListener('click', function() {
 
+            $scope.marker_clicked_for_weather_information = i;
+
             if (prev_infowindow) {
                 prev_infowindow.close();
+                $("#weatherDiv").empty();
             }
 
             prev_infowindow = infowindows[i];
 
             infowindows[i].open(map, markers[i]);
 
-            alert("Still developing floorplan markers."); return;
-
             if ($.active > 0) {
                 profile_request.abort();
             }
-            
+
             encodedData = 'marker_id=' +
                 encodeURIComponent(marker_ids[i]) +
                 '&marker_name=' +
@@ -206,14 +245,25 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
 
             profile_request = $http({
                     method: 'POST',
-                    url: './models/jquery_slide_panel_floorplan_load.php',
+                    url: './models/load_floorplans_in_marker.php',
                     data: encodedData,
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 })
                 .success(function(data, status, headers, config) {
-                    $("#informationField").html(data);
+
+                    $scope.profiles_array = data;
+
+                    if ($scope.profiles_array.no_profiles) {
+                        $scope.noInformation = true;
+                    } else {
+                        $scope.noInformation = false;
+                        $scope.noProfiles = true;
+                        $scope.hasFloorplans = true;
+                        $scope.marker_name = marker_names[i];
+                        $scope.marker_location = marker_locations[i];
+                    }
                     streetview.getPanoramaByLocation(marker_latlngs[i], 50, function(data, status) {
                         if (status == 'OK') {
                             document.getElementById('street-view').style.display = 'block';
@@ -233,12 +283,34 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
                             document.getElementById('street-view').style.display = 'none';
                         }
                     });
+
+                    var url = "http://api.openweathermap.org/data/2.5/weather?lat=" + marker_latitudes[i] + "&" + "lon=" + marker_longitudes[i] + "&APPID=cd4eda95a76d3de65a551a892bf8ce41&units=imperial";
+
+                    $http({
+                            method: 'GET',
+                            url: url,
+                        })
+                        .success(function(data, status, headers, config) {
+                            $("#weatherDiv").html("<img id='weatherPic' /> <span style='color: #19A3FF; font-size: 18px;'> " + data.main.temp + "&degF </span> <br /> Click For More Information");
+                            document.getElementById("weatherPic").src = "images/weather/" + data.weather[0].icon + ".png";
+                        })
+                        .error(function(data, status, headers, config) {
+                            $("#weatherDiv").html("<h4 style='color: red;'> No Weather </h4>");
+                        })
                 })
                 .error(function(data, status, headers, config) {
 
                 })
 
             map.panTo(marker_latlngs[i]);
+        });
+
+        google.maps.event.addListener(map, 'click', function() {
+            if (prev_infowindow) {
+                prev_infowindow.close();
+                $("#weatherDiv").empty();
+            }
+
         });
     }
 
@@ -247,8 +319,11 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
     function addProfileListener(i) {
         markers[i].addListener('click', function() {
 
+            $scope.marker_clicked_for_weather_information = i;
+
             if (prev_infowindow) {
                 prev_infowindow.close();
+                $("#weatherDiv").empty();
             }
 
             prev_infowindow = infowindows[i];
@@ -258,7 +333,7 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
             if ($.active > 0) {
                 profile_request.abort();
             }
-            
+
             encodedData = 'marker_id=' +
                 encodeURIComponent(marker_ids[i]) +
                 '&marker_name=' +
@@ -276,9 +351,11 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
                     $scope.profiles_array = data;
 
                     if ($scope.profiles_array.no_profiles) {
-                        $scope.noProfiles = true;
+                        $scope.noInformation = true;
                     } else {
+                        $scope.noInformation = false;
                         $scope.noProfiles = false;
+                        $scope.hasFloorplans = false;
                         $scope.marker_name = marker_names[i];
                         $scope.marker_location = marker_locations[i];
                     }
@@ -302,6 +379,20 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
                             document.getElementById('street-view').style.display = 'none';
                         }
                     });
+
+                    var url = "http://api.openweathermap.org/data/2.5/weather?lat=" + marker_latitudes[i] + "&" + "lon=" + marker_longitudes[i] + "&APPID=cd4eda95a76d3de65a551a892bf8ce41&units=imperial";
+
+                    $http({
+                            method: 'GET',
+                            url: url,
+                        })
+                        .success(function(data, status, headers, config) {
+                            $("#weatherDiv").html("<img id='weatherPic' /> <span style='color: #19A3FF; font-size: 18px;'> " + data.main.temp + "&degF </span> <br /> Click For More Information");
+                            document.getElementById("weatherPic").src = "images/weather/" + data.weather[0].icon + ".png";
+                        })
+                        .error(function(data, status, headers, config) {
+                            $("#weatherDiv").html("<h4 style='color: red;'> No Weather </h4>");
+                        })
                 })
                 .error(function(data, status, headers, config) {
 
@@ -313,132 +404,411 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
         google.maps.event.addListener(map, 'click', function() {
             if (prev_infowindow) {
                 prev_infowindow.close();
+                $("#weatherDiv").empty();
             }
 
         });
     }
 
-    function load_floor_plans(marker) {
-        clicked_marker = marker;
-        $('#select_floorplans').empty();
-        $('#floorplan_div').empty();
-        $.post("models/floorplan_model.php", {
-            input_marker: marker
-        }, function(json) {
-            var array_counter = 0;
-            $.each(json, function(index, data) {
-                if (array_counter == 0) {
-                    var display_first_floor_plan = true;
-                    $.each(data, function(index, value) {
-                        $('#select_floorplans').append($("<option/>", {
-                            value: index, //value.floorplan_id,
-                            text: value.floor
-                        }));
-                        if (display_first_floor_plan) {
-                            document.getElementById("floorplan").src = value.image_location;
-                            display_first_floor_plan = false;
-                        }
-                    });
-                    array_counter++;
-                } else {
-                    $.each(data, function(index, value) {
-                        $("#floorplan_div").append('<img src="images/house_pin02.png" id="marker_' + value.marker_id + '" style="display: block; position: absolute; left:' + value.latitude + '%; top:' + value.longitude + '%;" title="' + value.location + '" onclick="loadInfoWindow(`' + value.marker_id + '`,`' + value.name + '`)"/>');
-                        colorPins(value.pin_color, "marker_" + value.marker_id);
-                    });
-                }
-            });
-            $('#floorplans_model').modal('show'); // Clear the div when they change their selection for which community profile they would like to edit
+    function centerbutton(controlDiv, map) {
+        // Set CSS for the control border.
+        var controlUI = document.createElement('div');
+        controlUI.style.backgroundColor = '#3399FF';
+        controlUI.style.border = '2px solid #00000';
+        controlUI.style.borderRadius = '3px';
+        controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+        controlUI.style.cursor = 'pointer';
+        controlUI.style.marginBottom = '22px';
+        controlUI.style.textAlign = 'center';
+        controlUI.title = 'Click To Recenter The Map On Your Community';
+        controlDiv.appendChild(controlUI);
+
+        // Set CSS for the control interior.
+        var controlText = document.createElement('div');
+        controlText.style.color = 'rgb(250,250,250)';
+        controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+        controlText.style.fontSize = '16px';
+        controlText.style.lineHeight = '38px';
+        controlText.style.paddingLeft = '5px';
+        controlText.style.paddingRight = '5px';
+        controlText.innerHTML = 'Center Map On Community';
+        controlUI.appendChild(controlText);
+
+        // Setup the click event listeners: calls the centermap function
+        controlUI.addEventListener('click', function() {
+            map.fitBounds(bounds);
         });
     }
 
-    // Process to color the icons for the floorplan markers; alittle different from the google maps marker pins
-    // Function to fill the color of generated image
-    function Color(path, id) {
-        color = path;
+    function residenceSelectBox(controlDiv, map, name_of_markers, has_floorplans) {
+        // Set CSS for the control border.
+        var controlUI = document.createElement('select');
+        controlUI.style.backgroundColor = '#3399FF';
+        controlUI.style.border = '2px solid #00000';
+        controlUI.style.borderRadius = '3px';
+        controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+        controlUI.style.cursor = 'pointer';
+        controlUI.style.marginTop = '0px';
+        controlUI.style.textAlign = 'center';
+        controlUI.style.marginRight = '-150px';
+        controlUI.style.color = 'rgb(250,250,250)';
+        controlUI.style.fontFamily = 'Roboto,Arial,sans-serif';
+        controlUI.style.fontSize = '16px';
+        controlUI.style.lineHeight = '38px';
+        controlUI.style.paddingLeft = '10px';
+        controlUI.style.paddingRight = '10px';
+        controlUI.title = 'Go To Residence';
+        controlUI.id = 'residentSelectBox';
+        controlDiv.appendChild(controlUI);
 
-        if (!originalPixels) return; // Check if image has loaded
-        var newColor = HexToRGB(color);
+        var option = document.createElement("option");
+        var name = document.createTextNode("Go To Residence");
+        option.setAttribute("value", "first_select_option");
+        option.appendChild(name);
 
-        for (var I = 0, L = originalPixels.data.length; I < L; I += 4) {
-            if (currentPixels.data[I + 3] > 0) {
-                currentPixels.data[I] = originalPixels.data[I] / 255 * newColor.R;
-                currentPixels.data[I + 1] = originalPixels.data[I + 1] / 255 * newColor.G;
-                currentPixels.data[I + 2] = originalPixels.data[I + 2] / 255 * newColor.B;
-            }
+        controlUI.appendChild(option);
+        for (i in name_of_markers) {
+            var option = document.createElement("option");
+            option.setAttribute("value", i + "," + has_floorplans[i]);
+            var name = document.createTextNode(name_of_markers[i]);
+            option.appendChild(name);
+
+            controlUI.appendChild(option);
         }
 
-        ctx.putImageData(currentPixels, 0, 0);
-        document.getElementById(id).src = canvas.toDataURL("image/house_pin.png");
+        $("#googleMap").on("change", "#residentSelectBox", function() {
+            if ($("#residentSelectBox option[value='first_select_option']").length > 0) {
+                $("#residentSelectBox").find("option").eq(0).remove();
+            }
+            var i = this.value.substr(0, this.value.indexOf(","));
+
+            $scope.marker_clicked_for_weather_information = i;
+
+            if (this.value.substr(this.value.indexOf(",") + 1) == 0) {
+
+                if (prev_infowindow) {
+                    prev_infowindow.close();
+                    $("#weatherDiv").empty();
+                }
+
+                prev_infowindow = infowindows[i];
+
+                infowindows[i].open(map, markers[i]);
+
+                if ($.active > 0) {
+                    profile_request.abort();
+                }
+
+                encodedData = 'marker_id=' +
+                    encodeURIComponent(marker_ids[i]) +
+                    '&marker_name=' +
+                    encodeURIComponent(marker_names[i]);
+
+                profile_request = $http({
+                        method: 'POST',
+                        url: './models/load_profiles_in_marker.php',
+                        data: encodedData,
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        }
+                    })
+                    .success(function(data, status, headers, config) {
+                        $scope.profiles_array = data;
+
+                        if ($scope.profiles_array.no_profiles) {
+                            $scope.noInformation = true;
+                        } else {
+                            $scope.noInformation = false;
+                            $scope.noProfiles = false;
+                            $scope.hasFloorplans = false;
+                            $scope.marker_name = marker_names[i];
+                            $scope.marker_location = marker_locations[i];
+                        }
+
+                        streetview.getPanoramaByLocation(marker_latlngs[i], 50, function(data, status) {
+                            if (status == 'OK') {
+                                document.getElementById('street-view').style.display = 'block';
+                                //configure panorama
+                                panorama = new google.maps.StreetViewPanorama(
+                                    document.getElementById('street-view'), {
+                                        position: marker_latlngs[i],
+                                        pov: {
+                                            heading: 0,
+                                            pitch: 0
+                                        },
+                                        zoom: 1,
+                                        linksControl: false,
+                                        addressControl: false
+                                    });
+                            } else {
+                                document.getElementById('street-view').style.display = 'none';
+                            }
+                        });
+
+                        var url = "http://api.openweathermap.org/data/2.5/weather?lat=" + marker_latitudes[i] + "&" + "lon=" + marker_longitudes[i] + "&APPID=cd4eda95a76d3de65a551a892bf8ce41&units=imperial";
+
+                        $http({
+                                method: 'GET',
+                                url: url,
+                            })
+                            .success(function(data, status, headers, config) {
+                                $("#weatherDiv").html("<img id='weatherPic' /> <span style='color: #19A3FF; font-size: 18px;'> " + data.main.temp + "&degF </span> <br /> Click For More Information");
+                                document.getElementById("weatherPic").src = "images/weather/" + data.weather[0].icon + ".png";
+                            })
+                            .error(function(data, status, headers, config) {
+                                $("#weatherDiv").html("<h4 style='color: red;'> No Weather </h4>");
+                            })
+                    })
+                    .error(function(data, status, headers, config) {
+
+                    })
+
+                map.panTo(marker_latlngs[i]);
+            } else {
+
+                if (prev_infowindow) {
+                    prev_infowindow.close();
+                    $("#weatherDiv").empty();
+                }
+
+                prev_infowindow = infowindows[i];
+
+                infowindows[i].open(map, markers[i]);
+
+                if ($.active > 0) {
+                    profile_request.abort();
+                }
+
+                encodedData = 'marker_id=' +
+                    encodeURIComponent(marker_ids[i]) +
+                    '&marker_name=' +
+                    encodeURIComponent(marker_names[i]);
+
+                profile_request = $http({
+                        method: 'POST',
+                        url: './models/load_floorplans_in_marker.php',
+                        data: encodedData,
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        }
+                    })
+                    .success(function(data, status, headers, config) {
+
+                        $scope.profiles_array = data;
+
+                        if ($scope.profiles_array.no_profiles) {
+                            $scope.noInformation = true;
+                        } else {
+                            $scope.noInformation = false;
+                            $scope.noProfiles = true;
+                            $scope.hasFloorplans = true;
+                            $scope.marker_name = marker_names[i];
+                            $scope.marker_location = marker_locations[i];
+                        }
+                        streetview.getPanoramaByLocation(marker_latlngs[i], 50, function(data, status) {
+                            if (status == 'OK') {
+                                document.getElementById('street-view').style.display = 'block';
+                                //configure panorama
+                                panorama = new google.maps.StreetViewPanorama(
+                                    document.getElementById('street-view'), {
+                                        position: marker_latlngs[i],
+                                        pov: {
+                                            heading: 0,
+                                            pitch: 0
+                                        },
+                                        zoom: 1,
+                                        linksControl: false,
+                                        addressControl: false
+                                    });
+                            } else {
+                                document.getElementById('street-view').style.display = 'none';
+                            }
+                        });
+
+                        var url = "http://api.openweathermap.org/data/2.5/weather?lat=" + marker_latitudes[i] + "&" + "lon=" + marker_longitudes[i] + "&APPID=cd4eda95a76d3de65a551a892bf8ce41&units=imperial";
+
+                        $http({
+                                method: 'GET',
+                                url: url,
+                            })
+                            .success(function(data, status, headers, config) {
+                                $("#weatherDiv").html("<img id='weatherPic' /> <span style='color: #19A3FF; font-size: 18px;'> " + data.main.temp + "&degF </span> <br /> Click For More Information");
+                                document.getElementById("weatherPic").src = "images/weather/" + data.weather[0].icon + ".png";
+                            })
+                            .error(function(data, status, headers, config) {
+                                $("#weatherDiv").html("<h4 style='color: red;'> No Weather </h4>");
+                            })
+                    })
+                    .error(function(data, status, headers, config) {
+
+                    })
+
+                map.panTo(marker_latlngs[i]);
+            }
+        });
 
     }
 
-    // Function for draw a image
-    function colorPins(color, id) {
-        //fullimg = document.getElementsByTagName('img')[0];
-        selectImg = img;
-        //alert(img.src);
-        //alert(img.src);
-        canvas.width = selectImg.width;
-        canvas.height = selectImg.height;
+    function weatherDiv(controlDiv, map) {
+        // Set CSS for the control border.
+        var controlUI = document.createElement('div');
+        controlUI.style.backgroundColor = 'rgba(0,0,0,0)';
+        controlUI.style.textStyle = 'bold';
+        controlUI.style.textShadow = "1px -1px 0 #ffffff, 1px -1px 0 #ffffff, -1px 1px 0 #ffffff, 1px 1px 0 #ffffff";
+        controlUI.style.fontWeight = 'bold';
+        controlUI.style.marginLeft = '-150px';
+        controlUI.style.cursor = 'pointer';
+        controlUI.id = 'weatherDiv';
+        controlDiv.appendChild(controlUI);
 
-        ctx.drawImage(selectImg, 0, 0, selectImg.naturalWidth, selectImg.naturalHeight, 0, 0, selectImg.width, selectImg.height);
-        originalPixels = ctx.getImageData(0, 0, selectImg.width, selectImg.height);
-        currentPixels = ctx.getImageData(0, 0, selectImg.width, selectImg.height);
+        // Setup the click event listeners: calls the centermap function
+        controlUI.addEventListener('click', function() {
+            var moreWeatherURL = "http://api.openweathermap.org/data/2.5/weather?lat=" + marker_latitudes[$scope.marker_clicked_for_weather_information] + "&" + "lon=" + marker_longitudes[$scope.marker_clicked_for_weather_information] + "&APPID=cd4eda95a76d3de65a551a892bf8ce41&units=imperial";
 
-        selectImg.onload = null;
-        Color(color, id);
+            $http({
+                    method: 'GET',
+                    url: moreWeatherURL,
+                })
+                .success(function(data, status, headers, config) {
+                    $("#currentWeatherPic").html("<img src='images/weather/" + data.weather['0']['icon'] + ".png' />");
+                    $("#currentWeatherDescription").html(data.weather['0']['description']);
+                    $("#currentWeatherTemp").html(data.main['temp'] + "&degF");
+                    $("#currentWeatherHumidity").html(data.main['humidity']);
+                    $("#currentWeatherWind").html(data.wind['speed']);
+                                
+                    city_id = data.sys.id;
+
+                    var forecastURL = "http://api.openweathermap.org/data/2.5/forecast?lat=" + marker_latitudes[$scope.marker_clicked_for_weather_information] + "&" + "lon=" + marker_longitudes[$scope.marker_clicked_for_weather_information] + "&APPID=cd4eda95a76d3de65a551a892bf8ce41&units=imperial";
+
+                    $http({
+                            method: 'GET',
+                            url: forecastURL,
+                        })
+                        .success(function(data, status, headers, config) {
+                            angular.forEach(data.list, function(value, key) {
+                                var dayOfWeek = Date.parse(value.dt_txt);
+                                if (value.dt_txt.indexOf("12:00:00") > 0) {
+                                    $("#dayOfWeekForWeather").append("<td> " + dayOfWeek.toString('M/d<br />ddd<br />12:00 tt') + " </td>");
+                                    $("#weatherForForecast").append("<td><img src='images/weather/" + value.weather['0']['icon'] + ".png' /></td>");
+                                    $("#tempForForecast").append("<td> " + value.main['temp'] + "&degF</td>");
+                                    $("#descriptionForForecast").append("<td> " + value.weather['0']['description'] + "</td>");
+                                } else if (value.dt_txt.indexOf("00:00:00") > 0) {
+                                    $("#dayOfWeekForWeather").append("<td> " + dayOfWeek.toString('M/d<br />ddd<br />12:00 tt') + " </td>");
+                                    $("#weatherForForecast").append("<td><img src='images/weather/" + value.weather['0']['icon'] + ".png' /></td>");
+                                    $("#tempForForecast").append("<td> " + value.main['temp'] + "&degF</td>");
+                                    $("#descriptionForForecast").append("<td> " + value.weather['0']['description'] + "</td>");
+                                }
+                            });
+
+                        })
+                        .error(function(data, status, headers, config) {
+                            if (status == 429) {
+                                $("#weatherError").html("<h4 style='color: red;'> Could Not Get Weather For Location (Too Many Requests) </h4>");
+                            } else {
+                                $("#weatherError").html("<h4 style='color: red;'> Could Not Get Weather For Location </h4>");
+                            }
+                        })
+
+                    $("#markerNameWeather").html("Weather For " + data.name);
+                })
+                .error(function(data, status, headers, config) {
+                    if (status == 429) {
+                        $("#weatherError").html("<h4 style='color: red;'> Could Not Get Weather For Location (Too Many Requests) </h4>");
+                    } else {
+                        $("#weatherError").html("<h4 style='color: red;'> Could Not Get Weather For Location </h4>");
+                    }
+                })
+            $("#weatherModal").modal("show");
+        });
     }
-    //End of the color process for the floor plan markers
 
-    function loadInfoWindow(id, name) {
-
+    $scope.load_view_floorplan = function(floorplan) {
         if ($.active > 0) {
             profile_request.abort();
         }
-        profile_request = $.post("models/jquery_floor_plan_dialog_load.php", {
-                marker_id: id,
-                marker_name: name
-            },
-            function(data) {
-                $("#infowindow").dialog(data);
-            }
-        );
+
+        encodedData = 'floorplan=' +
+            encodeURIComponent(floorplan) +
+            '&default_pin_color=' +
+            encodeURIComponent(default_pin_color);
+
+        profile_request = $http({
+                method: 'POST',
+                url: './models/load_floorplans_map_model.php',
+                data: encodedData,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            .success(function(json, status, headers, config) {
+                angular.forEach(json, function(data, key) {
+                    if (key == 'floorplan_information') {
+                        document.getElementById("floorplanName").innerHTML = data.floor;
+                        document.getElementById("floorplanImage").src = data.image_location;
+                    } else {
+                        if (key == "no_markers") {
+
+                        } else {
+                            angular.forEach(data, function(value, key) {
+                                overalayColor(value.pin_color);
+                                $("#floorplanModalDiv").append('<img src=' + fullimg + ' class="markers_on_floorplan" id="marker_' + value.marker_id + '" style="display: block; position: absolute; left:' + value.latitude + '%; top:' + value.longitude + '%;" title="' + value.name + '\n' + value.location + '" onclick="loadInfoWindow(`' + value.marker_id + '`, `' + value.name + '`)"/>');
+                            });
+                        }
+                    }
+                });
+                $("#viewFloorplanModal").modal("show");
+            })
+            .error(function(data, status, headers, config) {
+
+            })
     }
 
 }]);
 
-// Jquery Actions
 $(document).ready(function() {
 
-    $("#floorplans_model").on('hidden.bs.modal', function() {
-        $("#floorplan_div").empty(); // Clear the modal
-        $("#select_floorplans").empty(); // Clear the select box
+    $("#weatherModal").on('hidden.bs.modal', function() {
+        $("#weatherError").empty(); // Clear the error message
+        $("#weatherForForecast").empty(); // Clear the error message
+        $("#dayOfWeekForWeather").empty(); // Clear the error message
+        $("#tempForForecast").empty(); // Clear the error message
+        $("#descriptionForForecast").empty(); // Clear the error message
     });
-    $("#select_floorplans").on("change", function() {
-        var selected_floorplan = this.value;
-        $('#floorplan_div').empty();
-        $.post("models/floorplan_model.php", {
-            input_marker: clicked_marker,
-            floorplan: selected_floorplan
-        }, function(json) {
-            var array_counter = 0;
-            $.each(json, function(index, data) {
-                if (array_counter == 0) {
-                    var display_foor_plan = 0;
-                    $.each(data, function(index, value) {
-                        if (display_foor_plan == selected_floorplan) {
-                            document.getElementById("floorplan").src = value.image_location;
-                        }
-                        display_foor_plan++;
-                    });
-                    array_counter++;
-                } else {
-                    $.each(data, function(index, value) {
-                        $("#floorplan_div").append('<img src="images/house_pin02.png" id="marker_' + value.marker_id + '" style="display: block; position: absolute; left:' + value.latitude + '%; top:' + value.longitude + '%;" title="' + value.location + '" onclick="loadInfoWindow(' + value.marker_id + ')"/>');
-                        colorPins(value.pin_color, "marker_" + value.marker_id);
-                    });
-                }
-            });
-        });
+
+    $("#viewFloorplanModal").on("hidden.bs.modal", function() {
+        $("#floorplanInformationField").empty();
+        $(".markers_on_floorplan").remove();
     });
+
 });
+
+function loadInfoWindow(marker, name) {
+
+    $.post("./models/load_profiles_in_marker.php", {
+            marker_id: marker,
+            marker_name: name
+        },
+        function(data) {
+            data = jQuery.parseJSON(data);
+            if (data.no_profiles) {
+                $("#floorplanInformationField").html("<h3>" + data.no_profiles + "</h3>");
+            } else {
+                $.each(data, function(key, value) {
+                    $("#floorplanInformationField").append("<table class='table table-hover' id='floorplanInformationFieldTable" + key + "'> </table>");
+                    $("#floorplanInformationFieldTable" + key + "").append("<tr><td style='color: #006699; font-weight: bold;'> Resident: </td><td> " + value.residents_name + " </td></tr>");
+                    if (value.phone_01) {
+                        $("#floorplanInformationFieldTable" + key + "").append("<tr><td style='color: #006699; font-weight: bold;'> Primary Phone: </td><td> " + value.phone_01 + " </td></tr>");
+                    }
+                    if (value.phone_02) {
+                        $("#floorplanInformationFieldTable" + key + "").append("<tr><td style='color: #006699; font-weight: bold;'> Secondary Phone: </td><td> " + value.phone_02 + " </td></tr>");
+                    }
+                    if (value.email_01) {
+                        $("#floorplanInformationFieldTable" + key + "").append("<tr><td style='color: #006699; font-weight: bold;'> Primary E-mail: </td><td> " + value.email_01 + " </td></tr>");
+                    }
+                    if (value.email_02) {
+                        $("#floorplanInformationFieldTable" + key + "").append("<tr><td style='color: #006699; font-weight: bold;'> Secondary E-mail: </td><td> " + value.email_02 + " </td></tr>");
+                    }
+                });
+            }
+        });
+}

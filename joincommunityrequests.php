@@ -24,9 +24,10 @@
       <div class="container-fluid">
          <div class="row">
             <div class="col-md-6" class="container-fluid">
-               <h1> Requests </h1>
+               <h1> Requests To Join Communities </h1>
                <hr>
-               <div ng-repeat="x in requested_array" id="requests">
+               <div id="requests">
+                  <div ng-repeat="x in requested_array">
                   <table class="table table-borderless">
                      <tr>
                         <td colspan = "3">
@@ -43,12 +44,14 @@
                      </tr>
                   </table>
                   <br />
+                  </div>
                </div>
             </div>
             <div class="col-md-6" class="container-fluid">
-               <h1> Invites </h1>
+               <h1> Invites To Join Communities </h1>
                <hr>
-               <div ng-repeat="x in invited_array" id="invites">
+               <div id="invites">
+                  <div ng-repeat="x in invited_array" >
                   <table class="table table-borderless">
                      <tr>
                         <td colspan = "3">
@@ -67,6 +70,7 @@
                      </tr>
                   </table>
                   <br />
+                  </div>
                </div>
             </div>
          </div>
@@ -82,7 +86,7 @@
                   <h3 class="modal-title">Delete Request</h3>
                </div>
                <div class="modal-body">
-                  <b> Are you sure you want to delete this request? 
+                  <b> Are you sure you want to delete this request? <br /> <br /> <span style="color: red;" id="deleteRequestMessage"> </span> </b> 
                 </div>
                <div class="modal-footer">
                   <button type="button" class="btn btn-primary" style="width: auto" ng-model="deleteRequestToCommunityButton" ng-click="delete_request_to_community();">Delete Request</button>
@@ -102,7 +106,7 @@
                   <h3 class="modal-title">Delete Invite</h3>
                </div>
                <div class="modal-body">
-                  <b> Are you sure you want to delete this invite? 
+                  <b> Are you sure you want to delete this invite? <br /> <br /> <span style="color: red;" id="deleteInvitedMessage"> </span> </b> 
                 </div>
                <div class="modal-footer">
                   <button type="button" class="btn btn-primary" style="width: auto" ng-model="deleteInviteToCommunityButton" ng-click="delete_invite_to_community();">Delete Invite</button>
@@ -122,7 +126,7 @@
                   <h3 class="modal-title">Accept Invite</h3>
                </div>
                <div class="modal-body">
-                  <b> Are you sure you want to accept this invite? 
+                  <b> Are you sure you want to accept this invite? <br /> <br /> <span style="color: red;" id="acceptInvitedMessage"> </span> </b> 
                 </div>
                <div class="modal-footer">
                   <button type="button" class="btn btn-primary" style="width: auto" ng-model="acceptInviteToCommunityButton" ng-click="accept_invite_to_community();">Accept Invite</button>

@@ -30,9 +30,9 @@ $(document).ready(function() {
         });
     });
 
-    $(".show_unlink_resident_modal").click(function() {
+    $('#residentsTiedToMarker').on('click', '.show_unlink_resident_modal', function() {
         document.getElementById("unlinkResident").value = $(this).val();
-        row = ($(this).index());
+        row = ($(this).closest("tr").index() - 1);
         var residentFirstName;
         var residentLastName;
         $( ".resident_first_name" ).each(function( index ) {
@@ -57,17 +57,33 @@ $(document).ready(function() {
 
             },
             function(data, status) {
-                if (data.trim() === "success") {
+                data = jQuery.parseJSON(data);
+                console.log(data);
+                if (data.status.trim() === "success") {
                   $('#confirmUnlinkResidentModal').modal('hide');
                   row = row + 1;
                   $("#residentsTiedToMarker tr:eq(" + row + ")").remove();
+
+                  if (!$('#residentsAvailableSelectBox').length) {
+                      $('#residentsAvailableTableRow').empty();
+                      $('#residentsAvailableTableRow').append("<td> <select class='form-control' id='residentsAvailableSelectBox'> </td><td><button type='button' class='btn btn-primary' id='assignResidentToMarkerButton'>Assign To Marker</button></td>");
+                      $('#residentsAvailableSelectBox').append($('<option/>', { 
+                        value: data.profile,
+                        text : data.name 
+                      }));
+                  } else {
+                      $('#residentsAvailableSelectBox').append($('<option/>', { 
+                        value: data.profile,
+                        text : data.name 
+                      }));
+                  }
                 } else {
-                    alert("There was an error updating the settings.");
+                    $("#unlinkResidentErrorMessage").html("There was an error unlinking the resident.");
                 }
             });
     });
 
-    $("#assignResidentToMarkerButton").click(function() {
+    $('#residentsAvailableTableRow').on('click', '#assignResidentToMarkerButton', function() {
         document.getElementById("assignResidentToMarker").value = $("#residentsAvailableSelectBox option:selected").val();
         $("#assignResidentToMarkerMessage").html("<b>Are you sure you want to assign " + $("#residentsAvailableSelectBox option:selected").text() + " to this marker?</b>");
         $("#assignResidentToMarkerModal").modal("show");
@@ -81,13 +97,26 @@ $(document).ready(function() {
                 marker: clickedMarker
             },
             function(data, status) {
-                if (data.trim() === "success") {
+                data = jQuery.parseJSON(data);
+                if (data.status.trim() === "success") {
                   $("#residentsAvailableSelectBox option[value='" + profile + "']").remove();
                   $('#assignResidentToMarkerModal').modal('hide');
+                  $("#residentsTiedToMarker").append("<tr> <td class='resident_first_name'> " + data.first_name + " </td> <td class='resident_last_name'> " + data.last_name + " </td> <td> <button type='button' class='btn btn-danger btn-sm show_unlink_resident_modal' value='" + data.profile + "' style='width: 100%;'>Unlink Resident</button> </td> </tr>");
+                  if ($('#residentsAvailableSelectBox option').length == 0) {
+                    $('#residentsAvailableTableRow').html("<b> There are no available residents. </b>");
+                  }
                 } else {
-                    alert("There was an error updating the settings.");
+                    $("#assignResidentErrorMessage").html("There was an error assigning the resident to this marker."); // Clear the error message
                 }
             });
+    });
+
+    $("#confirmUnlinkResidentModal").on('hidden.bs.modal', function() {
+        $("#unlinkResidentErrorMessage").empty(); // Clear the error message
+    });
+
+    $("#assignResidentToMarkerModal").on('hidden.bs.modal', function() {
+        $("#assignResidentErrorMessage").empty(); // Clear the error message
     });
 });
 </script>
@@ -117,7 +146,7 @@ $(document).ready(function() {
       <th> Residents Available </th>
       <th> </th>
    </tr>
-   <tr> 
+   <tr id='residentsAvailableTableRow'> 
 
    <?php
 
@@ -168,8 +197,9 @@ $(document).ready(function() {
       <button type="button" class="close" data-dismiss="modal">&times;</button>
       <h3 class="modal-title">Unlink Resident</h3>
    </div>
-   <div class="modal-body" id="unlinkResidentMessage">
-
+   <div class="modal-body">
+      <div style="font-weight: bold;" id="unlinkResidentMessage"> </div> <br />
+      <div style="font-weight: bold; color: red;" id="unlinkResidentErrorMessage"> </div>
    </div>
    <div class="modal-footer">
       <button type="button" class="btn btn-primary" id="unlinkResident">Unlink Resident</button>
@@ -188,8 +218,9 @@ $(document).ready(function() {
       <button type="button" class="close" data-dismiss="modal">&times;</button>
       <h3 class="modal-title">Assign Resident To Marker</h3>
    </div>
-   <div class="modal-body" id="assignResidentToMarkerMessage">
-
+   <div class="modal-body">
+      <div style="font-weight: bold;" id="assignResidentToMarkerMessage"> </div> <br />
+      <div style="font-weight: bold; color: red;" id="assignResidentErrorMessage"> </div>
    </div>
    <div class="modal-footer">
       <button type="button" class="btn btn-primary" id="assignResidentToMarker">Assign Resident To Marker</button>

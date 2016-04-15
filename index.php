@@ -202,10 +202,10 @@ background-size: cover;
                                 <div class="col-xs-7">
                                     <div class="form-group">
                                         <select class="form-control input-sm floatlabel" name="inputGender" id="inputGender" ng-model="inputData.gender">
+                                            <option selected value=""> No Answer</option>
                                             <option value="male"> Male </option>
                                             <option value="female"> Female </option>
                                             <option value="other"> Other </option>
-                                            <option selected value=""> No Answer</option>
                                         </select>
                                     </div>
                                 </div>

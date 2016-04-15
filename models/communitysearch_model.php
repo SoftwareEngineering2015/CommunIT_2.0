@@ -1,5 +1,5 @@
 <?php
-if( !isset($_REQUEST["name"]) && !isset($_REQUEST["city"]) && !isset($_REQUEST["state"]) && !isset($_REQUEST["country"]) ) {
+if( !isset($_REQUEST["name"]) && !isset($_REQUEST["city"]) && !isset($_REQUEST["state"]) && !isset($_REQUEST["country"]) && !isset($_REQUEST["can_join"])) {
 	exit;
 }
 
@@ -98,28 +98,38 @@ else if( $_REQUEST["country"] != "" ) {
 	$community_search_result = mysqli_query($conn, $sql_community_search);
 }
 
-?>
+$json_array = array();
+$counter = 0;
 
-<h1> Search Results </h1> <hr>
-<table class='table table-borderless'>
-
-<?php
 if (!isset($community_search_result)) {
-	print "There were no results for your search.";
+	$json_array[$counter]["status"] = "error";
+	$json_array[$counter]["message"] = "There were no results for your search.";
+	echo json_encode($json_array); exit();
 } elseif (!mysqli_fetch_row($community_search_result)) {
-	print "There were no results for your search.";
+	$json_array[$counter]["status"] = "error";
+	$json_array[$counter]["message"] = "There were no results for your search.";
+	echo json_encode($json_array); exit();
 } 
 else {
 	$community_search_result = mysqli_query($conn, $sql_community_search);
-	while($row = mysqli_fetch_assoc($community_search_result)){
-		print "<tr> <th> Community Name </th> <th> City </th> <th> State / Province </th> <th> Country </th> </tr> ";
-		print "<tr> <td style='color: #317eac'>" . $row['community_name'] . "</td> <td> ". $row['city'] . "</td> <td> ". $row['province'] . "</td> <td> ". $row['country'] . "</td> </tr>";
-		print "<tr> <td colspan='4'> <b> Description: </b> <br /> ". $row['community_description'] . "</td></tr>";
-		print "<tr> <td> <button type='button' class='btn btn-success btn-md' style='width:auto' onclick='load_map_into_modal(`" . $row['community_id'] ."`)' data-toggle='modal' data-target='#view_community_modal'>View Community</button> </td>
-				<td> <button type='button' class='btn btn-info btn-md' style='width:auto' onclick='show_join_community_modal(`" . $row['community_id'] ."`)' data-toggle='modal'>Join Community</button> </td> <td> </td> <td> </td></tr>";
+	if (mysqli_num_rows($community_search_result) == 0) {
+		$json_array[$counter]["status"] = "error";
+		$json_array[$counter]["message"] = "There were no results for your search.";
+		echo json_encode($json_array); exit();
+	} else {
+		while($row = mysqli_fetch_assoc($community_search_result)){
+			$json_array[$counter]["status"] = "success";
+			$json_array[$counter]["community_id"] = $row['community_id'];
+			$json_array[$counter]["community_name"] = $row['community_name'];
+			$json_array[$counter]["community_description"] = $row['community_description'];
+			$json_array[$counter]["city"] = $row['city'];
+			$json_array[$counter]["state"] = $row['province'];
+			$json_array[$counter]["country"] = $row['country'];
+
+			$counter++;
+		}
+		echo json_encode($json_array); exit();
 	}
 }
 
 ?>
-
-</table>

@@ -19,6 +19,22 @@
       height: 100%;
       width: 100%;
       }
+      #informationField::-webkit-scrollbar-track {
+           -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+           border-radius: 10px;
+           background-color: rgba(0, 0, 0, .5);
+       }
+
+       #informationField::-webkit-scrollbar {
+           width: 12px;
+           background-color: rgba(0, 0, 0, .5);
+       }
+
+       #informationField::-webkit-scrollbar-thumb {
+           border-radius: 10px;
+           -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+           background-color: #1995dc;
+       }
    </style>
    
    <!-- Google API KEY for accessing a broader spectrum of Google APIs-->
@@ -42,7 +58,7 @@
                <button type="button" class="btn btn-info btn-sm" style="width:100%;" id="residentRequestsInviteButton">Resident Requests / Invite</button>
             </div>
             &nbsp
-            <div id="informationField">
+            <div id="informationField" style="height:87%; overflow:auto;">
             </div>
          </div>
          <!--Google Map Div-->
@@ -61,7 +77,8 @@
    </div>
    <div class="modal-body">
       <b> Are you sure you want to delete this marker? <br />
-         <span style="color: red"> This action will permanently delete this marker and all information tied to it. This cannot be undone! </span> </b>
+        <span style="color: red"> This action will permanently delete this marker and all information tied to it. This cannot be undone! </span> <br /><br />
+        <span style="color: red" id="deleteMarkerModalMessage"> </span> </b> 
    </div>
    <div class="modal-footer">
       <button type="button" class="btn btn-primary" id="sumbitDeleteButton" name="sumbitDeleteButton">Delete Marker</button>

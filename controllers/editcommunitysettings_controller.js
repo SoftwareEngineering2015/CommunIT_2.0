@@ -31,6 +31,9 @@ var marker_longitudes = []; //holds marker longitude
 var marker_latlngs = []; //holds parsed latlng marker data
 var marker_locations = []; //holds marker location
 var marker_pin_colors = []; //holds marker pin color
+var default_pin_color;
+var default_pin_color_status;
+var community_marker_color;
 var marker_has_floorplans = []; //Specifies that the marker has floorplans
 
 var infowindows = [];
@@ -56,8 +59,9 @@ function loadCommunity(community) {
             window.location.href = 'myhome.php';
         } else {
             var obj = jQuery.parseJSON(data);
-            if (obj == "") {
+            if (obj[0].marker_id == null) {
                 initializeNewCommunity();
+                community_marker_color = obj[0].community_marker_color;
             } else {
                 $.each(obj, function(key, value) {
                     //populates the marker arrays with the data from the database
@@ -68,7 +72,16 @@ function loadCommunity(community) {
                     marker_latlngs.push(new google.maps.LatLng(value.latitude, value.longitude));
                     marker_locations.push(value.location);
                     marker_pin_colors.push(value.pin_color);
+                    if (value.default_pin_color_status == 1) {
+                        default_pin_color_status = true;
+                        default_pin_color = value.pin_color;
+                    } else {
+                        default_pin_color_status = false;
+                        default_pin_color = "";
+                    }
                     marker_has_floorplans.push(value.has_floorplan);
+
+                    community_marker_color = value.community_marker_color;
                 });
 
                 // Load Google Maps
@@ -90,8 +103,13 @@ function initializeNewCommunity() {
 
     google.maps.event.addDomListener(window, "resize", function() {
         google.maps.event.trigger(map, "resize");
-        map.panTo(myCenter);
+        map.fitBounds(bounds);
     });
+
+    bounds.extend(new google.maps.LatLng(28.70, -127.50));
+    bounds.extend(new google.maps.LatLng(48.85, -55.90));
+
+    map.fitBounds(bounds);
 
     geocoder = new google.maps.Geocoder();
 
@@ -143,6 +161,14 @@ function initializeFilledCommunity() {
             addProfileListener(i);
         }
     };
+
+    //these next four lines are for the centering button
+    var centerControlDiv = document.createElement('div');
+    var centerControl = new centerbutton(centerControlDiv, map);
+    centerControlDiv.index = 1;
+    //puts the centering button on the map
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
+
     map.fitBounds(bounds);
 
 }
@@ -202,38 +228,36 @@ function addProfileListener(i) {
     });
 }
 
-function load_floor_plans(marker) {
-    clicked_marker = marker;
-    $('#select_floorplans').empty();
-    $('#floorplan_div').empty();
-    $.post("models/floorplan_model.php", {
-        input_marker: marker
-    }, function(json) {
-        var array_counter = 0;
-        $.each(json, function(index, data) {
-            if (array_counter == 0) {
-                var display_first_floor_plan = true;
-                $.each(data, function(index, value) {
-                    $('#select_floorplans').append($("<option/>", {
-                        value: index, //value.floorplan_id,
-                        text: value.floor
-                    }));
-                    if (display_first_floor_plan) {
-                        document.getElementById("floorplan").src = value.image_location;
-                        display_first_floor_plan = false;
-                    }
-                });
-                array_counter++;
-            } else {
-                $.each(data, function(index, value) {
-                    $("#floorplan_div").append('<img src="images/house_pin02.png" id="marker_' + value.marker_id + '" style="display: block; position: absolute; left:' + value.latitude + '%; top:' + value.longitude + '%;" title="' + value.location + '" onclick="loadInfoWindow(`' + value.marker_id + '`,`' + value.name + '`)"/>');
-                    colorPins(value.pin_color, "marker_" + value.marker_id);
-                });
-            }
+function centerbutton(controlDiv, map) {
+        // Set CSS for the control border.
+        var controlUI = document.createElement('div');
+        controlUI.style.backgroundColor = '#3399FF';
+        controlUI.style.border = '2px solid #00000';
+        controlUI.style.borderRadius = '3px';
+        controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+        controlUI.style.cursor = 'pointer';
+        controlUI.style.marginBottom = '22px';
+        controlUI.style.textAlign = 'center';
+        controlUI.style.marginRight = '15px';
+        controlUI.title = 'Click To Recenter The Map On Your Community';
+        controlDiv.appendChild(controlUI);
+
+        // Set CSS for the control interior.
+        var controlText = document.createElement('div');
+        controlText.style.color = 'rgb(250,250,250)';
+        controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+        controlText.style.fontSize = '16px';
+        controlText.style.lineHeight = '38px';
+        controlText.style.paddingLeft = '5px';
+        controlText.style.paddingRight = '5px';
+        controlText.innerHTML = 'Center Map On Community';
+        controlUI.appendChild(controlText);
+
+        // Setup the click event listeners: calls the centermap function
+        controlUI.addEventListener('click', function() {
+            map.fitBounds(bounds);
         });
-        $('#floorplans_model').modal('show'); // Clear the div when they change their selection for which community profile they would like to edit
-    });
-}
+    }
 
 // Process to color the icons for the floorplan markers; alittle different from the google maps marker pins
 // Function to fill the color of generated image
@@ -274,21 +298,6 @@ function colorPins(color, id) {
 }
 //End of the color process for the floor plan markers
 
-function loadInfoWindow(id, name) {
-    var panel = $('#infowindowPanel');
-    if ($.active > 0) {
-        profile_request.abort();
-    }
-    profile_request = $.post("models/jquery_floor_plan_dialog_load.php", {
-            marker_id: id,
-            marker_name: name
-        },
-        function(data) {
-            $("#infowindow").dialog(data);
-        }
-    );
-}
-
 function edit_marker(id, i) {
 
     for (x in markers) {
@@ -311,6 +320,23 @@ function edit_marker(id, i) {
         document.getElementById("latitude").value = this.getPosition().lat();
         document.getElementById("longitude").value = this.getPosition().lng();
     });
+}
+
+function load_floor_plans(marker) {
+    for (x in markers) {
+        markers[x].setDraggable(false);
+    }
+
+    $("#informationField").empty();
+    $.post(
+        "models/jquery_load_floorplans_form.php", {
+            community: $.urlParam('community'), // Get the community id from the url
+            marker: marker // Id of the marker that is being edited
+        },
+        function(data) {
+            $("#informationField").html(data);
+        }
+    );
 }
 
 function add_remove_residents(id) {
@@ -420,7 +446,7 @@ $(document).ready(function() {
                     $("#deleteMarkerModal").modal("hide");
                     clicked_marker.setMap(null);
                 } else {
-                    alert("There was an error deleting the marker.");
+                    $("#deleteMarkerModalMessage").html("There was an error deleting the marker.");
                 }
             }
         );
@@ -445,31 +471,8 @@ $(document).ready(function() {
         $("#floorplan_div").empty(); // Clear the modal
         $("#select_floorplans").empty(); // Clear the select box
     });
-    $("#select_floorplans").on("change", function() {
-        var selected_floorplan = this.value;
-        $('#floorplan_div').empty();
-        $.post("models/floorplan_model.php", {
-            input_marker: clicked_marker,
-            floorplan: selected_floorplan
-        }, function(json) {
-            var array_counter = 0;
-            $.each(json, function(index, data) {
-                if (array_counter == 0) {
-                    var display_foor_plan = 0;
-                    $.each(data, function(index, value) {
-                        if (display_foor_plan == selected_floorplan) {
-                            document.getElementById("floorplan").src = value.image_location;
-                        }
-                        display_foor_plan++;
-                    });
-                    array_counter++;
-                } else {
-                    $.each(data, function(index, value) {
-                        $("#floorplan_div").append('<img src="images/house_pin02.png" id="marker_' + value.marker_id + '" style="display: block; position: absolute; left:' + value.latitude + '%; top:' + value.longitude + '%;" title="' + value.location + '" onclick="loadInfoWindow(' + value.marker_id + ')"/>');
-                        colorPins(value.pin_color, "marker_" + value.marker_id);
-                    });
-                }
-            });
-        });
+
+    $("#deleteMarkerModal").on('hidden.bs.modal', function() {
+        $("#deleteMarkerModalMessage").empty(); // Clear the error message
     });
 });

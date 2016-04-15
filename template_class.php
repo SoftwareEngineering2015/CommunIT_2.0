@@ -24,7 +24,7 @@ print "<!DOCTYPE html>\n<html ng-app='communitApp'>\n<head> <title> $this->TITLE
 ?>
 <?php
 //include('session.php');
-include('db_class.php');
+//include('db_class.php');
 $error = '';
 ?>
 <!-- Style the house icon to the left //e6f2ff; -->
@@ -65,6 +65,7 @@ $error = '';
 </ul>
 </li>
 <li><a href="myprofile.php">My Profiles</a></li>
+<li><a href="residents.php">Residents</a></li>
 </ul>
 <ul class="nav navbar-nav navbar-right">
 <!--<li><a href="directory.php">Directory</a></li>-->

@@ -23,15 +23,22 @@ foreach ($users as $key => $value) {
 	$sanitized_user = mysql_real_escape_string($sanitized_user); // Do this here because data passed to it is in an array
 	$sanitized_privilege = mysql_real_escape_string($sanitized_privilege); // Do this here because data passed to it is in an array
 
-	if ($sanitized_privilege === "moderator") { 
+	if ($sanitized_privilege === "owner") { 
 		$sql_update_resident_privilege = "UPDATE users_to_communities SET  privilege_id='2' WHERE user_id= '$sanitized_user' AND community_id='$community_id'";
 		if (mysqli_query($conn, $sql_update_resident_privilege)) {
 			continue;
 		} else {
 			echo "failed"; exit();
 		}
+	} else if ($sanitized_privilege === "moderator") { 
+		$sql_update_resident_privilege = "UPDATE users_to_communities SET  privilege_id='3' WHERE user_id= '$sanitized_user' AND community_id='$community_id'";
+		if (mysqli_query($conn, $sql_update_resident_privilege)) {
+			continue;
+		} else {
+			echo "failed"; exit();
+		}
 	} elseif ($sanitized_privilege === "resident") {
-		$sql_update_resident_privilege = "UPDATE users_to_communities SET privilege_id='3' WHERE user_id= '$sanitized_user' AND community_id='$community_id'";
+		$sql_update_resident_privilege = "UPDATE users_to_communities SET privilege_id='4' WHERE user_id= '$sanitized_user' AND community_id='$community_id'";
 		if (mysqli_query($conn, $sql_update_resident_privilege)) {
 			continue;
 		} else {

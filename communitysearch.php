@@ -7,6 +7,7 @@
 
    <!-- Google API KEY for accessing a broader spectrum of Google APIs-->
    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCTUwndh9ZED3trNlGZqcCEjkAb5-bpoUw"></script>
+   <script type="text/javascript" src="js/colorpins.js"></script>
 
    <style>
       hr {
@@ -304,12 +305,48 @@
                   <tr>
                      <th></th>
                      <td>
-                        <button type="button" class="btn btn-primary btn-md" style="width:100%" id="submit_search">Search</button>
+                        <button type="button" class="btn btn-primary btn-md" style="width:100%" id="submit_search" ng-click="submit_search();">Search</button>
                      </td>
                   </tr>
                </table>
             </div>
-            <div class="col-md-7" class="container-fluid" id="search_results_div"></div>
+            <div class="col-md-7" class="container-fluid" id="search_results_div">
+               <div ng-show="!has_results">
+                  <h3> {{ communities[0].message }} </h3>
+               </div>
+               <div ng-show="has_results"> 
+                  <h3> {{ communities.length }} Results </h3>
+                  <div align="center">
+                     <button class='btn btn-info btn-md' style='width:auto' ng-click="last()" ng-show="!hide_last"><span class="glyphicon glyphicon-arrow-left"/></button>
+                     <button class='btn btn-info btn-md' style='width:auto' ng-click="next()" ng-show="!hide_next"><span class="glyphicon glyphicon-arrow-right"/></button>
+                  </div>
+                  <table class="table table-borderless" ng-repeat="x in displayed_communities">
+                     <tr> 
+                        <th> Community Name </th> 
+                        <th> City </th> 
+                        <th> State / Province </th> 
+                        <th> Country </th> 
+                     </tr>
+                     <tr> 
+                        <td style='color: #317eac'> {{ x.community_name }} </td> 
+                        <td> {{ x.city }} </td> 
+                        <td> {{ x.state }} </td> 
+                        <td> {{ x.country }} </td> 
+                     </tr>
+                     <tr> 
+                        <td colspan='4'> <b> Description: </b> <br /> {{ x.community_description }} </td>
+                     </tr>
+                     <tr> 
+                        <td> <button type='button' class='btn btn-success btn-md' style='width:auto' ng-click='load_map_into_modal(x.community_id)' data-toggle='modal' data-target='#view_community_modal'>View Community</button> </td>
+                        <td ng-if="can_join"> <button type='button' class='btn btn-info btn-md' style='width:auto' ng-click='show_join_community_modal(x.community_id)' data-toggle='modal'>Join Community</button> </td> <td> </td> <td> </td>
+                     </tr>
+                  </table>
+                  <div align="center">
+                     <button class='btn btn-info btn-md' style='width:auto' ng-click="last()" ng-show="!hide_last"><span class="glyphicon glyphicon-arrow-left"/></button>
+                     <button class='btn btn-info btn-md' style='width:auto' ng-click="next()" ng-show="!hide_next"><span class="glyphicon glyphicon-arrow-right"/></button>
+                  </div>
+               </div>
+            </div>
          </div>
       </div>
       <div>
@@ -320,7 +357,7 @@
             <div class="modal-content">
                <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <h4 class="modal-title">Community Map</h4>
+                  <h4 class="modal-title" id="community_name"></h4>
                </div>
                <div class="modal-body" id="community_map" style="height: 450px"></div>
                <div class="modal-footer">
@@ -347,6 +384,24 @@
                   <button type="button" class="btn btn-primary" id="joinCommunityButton">Join Community</button>
                   <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                </div>
+            </div>
+         </div>
+      </div>
+      <!-- Modal -->
+      <div id="maxJoinedAlertModal" class="modal fade" role="dialog">
+         <div class="modal-dialog">
+         <!-- Modal content --> 
+            <div class="modal-content">
+               <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h3 class="modal-title">Max Amount Of Joined Communities</h3>
+               </div>
+               <div class="modal-body">
+                  <b class="text-danger"> You have reached the max amount of communities that you can be in. <br /><br /> * You can still search and view communities but will not be able to join them.</b>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-warning" data-dismiss="modal">I Understand</button>
+               </div>
+              </div>
             </div>
          </div>
       </div>

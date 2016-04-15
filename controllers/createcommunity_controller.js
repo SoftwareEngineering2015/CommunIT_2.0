@@ -19,28 +19,28 @@ communitApp.controller('createcommunityController', ['$scope', '$http', function
 
             } else {
                 angular.forEach(data, function(value, key) {
-                    if (value.privilege.trim() == "owner") {
+                    if (value.privilege.trim() == "creator") {
 
                         $scope.owned_communities_counter++;
                         $scope.joined_communities_counter++;
 
                         if ($scope.owned_communities_counter >= 2) {
-                            alert("You already own the max amount of communities.");
-                            window.location.href = "myhome.php";
+                            $("#maxCreatedAlertModalMessage").html("You have reached the max amount of communities that you can create.");
+                            $("#maxCreatedAlertModal").modal("show");
                         }
 
-                        if ($scope.joined_communities_counter >= 4) {
-                            alert("You are already apart of the max amount of communities.");
-                            window.location.href = "myhome.php";
+                        if ($scope.joined_communities_counter >= 5) {
+                            $("#maxCreatedAlertModalMessage").html("You have reached the max amount of communities that you can be in.");
+                            $("#maxCreatedAlertModal").modal("show");
                         }
 
                     } else {
 
                         $scope.joined_communities_counter++;
 
-                        if ($scope.joined_communities_counter >= 4) {
-                            alert("You are already apart of the max amount of communities.");
-                            window.location.href = "myhome.php";
+                        if ($scope.joined_communities_counter >= 5) {
+                            $("#maxCreatedAlertModalMessage").html("You have reached the max amount of communities that you can be in.");
+                            $("#maxCreatedAlertModal").modal("show");
                         }
 
                     }

@@ -5,8 +5,8 @@ if (!isset($_REQUEST['inputUsername']) && !isset($_REQUEST['inputEmail']) && !is
 	exit;
 }
 
-include ('db_class.php'); // Include the database class 
-
+include ('db_class.php'); // Include the database class
+ 
 // Get the variables and set them
 $username = $_REQUEST['inputUsername'];
 $email = $_REQUEST['inputEmail'];
@@ -66,9 +66,9 @@ $error_counter = 0;
 do {
     $available = true;
     $user_id = generate_HexCode();
-    
+
     $sql_user_id_check = "SELECT user_id FROM users WHERE user_id= '$user_id' LIMIT 1";
-    $result_user_id_check = mysqli_query($conn, $sql_user_id_check); 
+    $result_user_id_check = mysqli_query($conn, $sql_user_id_check);
 
     //Check to see if the User ID Already Exists
     if(mysqli_fetch_row($result_user_id_check)){
@@ -79,7 +79,7 @@ do {
             $sql_create_user = "INSERT INTO users (user_id, username, password, email, first_name, last_name, m_initial, gender, birth_date, date_created) VALUES ('$user_id', '$username', '$password', '$email', '$firstName', '$lastName', '$middleInitial', '$gender', '$birthDate',  NOW())";
             if(mysqli_query($conn, $sql_create_user)) {
                 echo "success"; exit();
-            } 
+            }
             // Close the connection down here somewhere
         }
     if($error_counter == 100){
@@ -93,8 +93,8 @@ function generate_HexCode() {
     $hexIDLength = 12;
     //Characters to use in Hex Code
     $hexOptions = 'ABCDEF1234567890';
-    $hexID = ''; 
-    //Assigns the 
+    $hexID = '';
+    //Assigns the
     $optionsLength = (strlen($hexOptions) - 1);
     //Loops through and randomly creates a hex string
     for ($i = 0; $i < $hexIDLength; $i++) {

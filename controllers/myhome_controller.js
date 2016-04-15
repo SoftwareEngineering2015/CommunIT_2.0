@@ -53,7 +53,7 @@ communitApp.controller('myhomeController', ['$scope', '$http', function($scope, 
 
                         } else {
                             angular.forEach(data, function(value, key) {
-                                if (value.privilege.trim() == "owner") {
+                                if (value.privilege.trim() == "creator") {
                                     temp_array['community_id'] = value.community_id;
                                     temp_array['community_name'] = value.community_name;
                                     temp_array['community_description'] = value.community_description;
@@ -64,8 +64,12 @@ communitApp.controller('myhomeController', ['$scope', '$http', function($scope, 
                                     $scope.owned_communities_counter++;
                                     $scope.joined_communities_counter++;
 
-                                    if ($scope.owned_communities_counter >= 2 || $scope.joined_communities_counter >= 4) {
+                                    if ($scope.owned_communities_counter >= 2) {
                                         $scope.hide_owned_communities_button = true; // This will make the create a community button go away
+                                    }
+
+                                    if ($scope.joined_communities_counter >= 5) {
+                                        $scope.hide_join_communities_button = true; // This will make the create a community button go away
                                     }
 
                                 } else {
@@ -78,7 +82,7 @@ communitApp.controller('myhomeController', ['$scope', '$http', function($scope, 
 
                                     $scope.joined_communities_counter++;
 
-                                    if ($scope.joined_communities_counter >= 4) {
+                                    if ($scope.joined_communities_counter >= 5) {
                                         $scope.hide_join_communities_button = true; // This will make the create a community button go away
                                     }
 
@@ -114,12 +118,54 @@ communitApp.controller('myhomeController', ['$scope', '$http', function($scope, 
                                 if (data.trim() == "success") {
                                     location.reload();
                                 } else {
-                                    alert("There was an error deleting the community.");
+                                    $("#deleteCommunityMessage").html("There was an error deleting the community.");
                                 }
                             })
                             .error(function(data, status, headers, config) {
 
                             })
                     };
+
+                    $scope.show_leave_community_modal = function(community) {
+
+                        $scope.leaveCommunityButton = community;
+                        $('#leave_community_modal').modal('show');
+
+                    };
+
+                    $scope.leave_community = function() {
+
+                        var encodedData = 'community=' +
+                            encodeURIComponent($scope.leaveCommunityButton) +
+                            '&user=' +
+                            encodeURIComponent(localStorage.getItem("communit_user_id"));
+
+                        $http({
+                                method: 'POST',
+                                url: './models/leave_community_model.php',
+                                data: encodedData,
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                }
+                            })
+                            .success(function(data, status, headers, config) {
+                                if (data.trim() == "success") {
+                                    location.reload();
+                                } else {
+                                    $("#leaveCommunityMessage").html("There was an error leaving the community.");
+                                }
+                            })
+                            .error(function(data, status, headers, config) {
+
+                            })
+                    };
+
+                    $("#delete_community_modal").on('hidden.bs.modal', function() {
+                        $("#deleteCommunityMessage").empty(); // Clear the error message
+                    });
+
+                    $("#leave_community_modal").on('hidden.bs.modal', function() {
+                        $("#leaveCommunityMessage").empty(); // Clear the error message
+                    });
 
                 }]);

@@ -130,11 +130,15 @@
       function(data, status){
         if (data.trim() === "success") {
           $('#review_information_modal').modal('hide');
+          community_marker_color = $("#pincolor").val();
         } else {
-         alert("There was an error updating the settings.");
+         $("#updateCommunitySettingsErrorMessage").html("There was an error updating the settings.");
         }
       });
    });
+    $("#review_information_modal").on('hidden.bs.modal', function() {
+      $("#updateCommunitySettingsErrorMessage").empty();
+    });
    });
 </script>
 <table class="table table-striped table-hover table-condensed ">
@@ -500,6 +504,7 @@
             <td id="inputCommunityCountry"> </td>
          </tr>
       </table>
+      <div style="font-weight: bold; color: red;" id="updateCommunitySettingsErrorMessage"> </div>
    </div>
    <div class="modal-footer">
       <button type="button" class="btn btn-primary" id="sumbit" value="<?php echo $community_id; ?>">Update Community Settings</button>

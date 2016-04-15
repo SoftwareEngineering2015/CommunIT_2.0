@@ -34,20 +34,24 @@
       color: #006699;
       font-weight: bold;
     }
+    #notAvailable{
+      color: #bebebe;
+    }
   </style>
   </head>
       <body ng-controller="profileCtrl">
         <div class="jumbotron" ng-show="viewSwitch ">
-          <div ng-show="!selectProfile">
+          <div ng-show="!selectProfile" style="padding-left: 5%;">
             <h1>Welcome {{userfirstname}}!</h1>
             <h3>Please select a community</h3>
           </div>
-          <div ng-show="selectProfile">
+          <div ng-show="selectProfile" style="padding-left: 5%;">
             <h1>Welcome {{userfirstname}}!</h1>
-            <p>Here is your profile for {{contents[selectProfile].name}}, at {{contents[selectProfile].community_name}}.</p>
+            <p ng-show="contents[selectProfile].marker_name">Here is your profile for {{contents[selectProfile].marker_name}}, at {{contents[selectProfile].community_name}}.</p>
+            <p ng-show="!contents[selectProfile].marker_name">No place of residence set, at {{contents[selectProfile].community_name}}.</p>
           </div>
         </div>
-        <div class="jumbotron" ng-show="!viewSwitch">
+        <div class="jumbotron" ng-show="!viewSwitch" style="padding-left: 5%;">
             <h1> Whoops, looks like you have no profiles. </h1>
             <h3>Why not search for a community to join or create one for your community?</h3>
         </div>
@@ -58,25 +62,33 @@
             <a href="editprofile.php" class="col-sm-8 col-sm-offset-2 btn btn-lg btn-primary" > Add one here! </a>
           </div>
           <table id="profileTable" class="table table-striped table-hover" ng-show="selectProfile && contents[selectProfile].phone_01">
+
             <tr>
               <td id="profileRow">Primary Phone: </td>
+              <td> </td>
               <td ng-show="(contents[selectProfile].phone_01)">{{contents[selectProfile].phone_01}}</td>
             </tr>
-            <tr ng-show="(contents[selectProfile].phone_02)">
+            <tr>
               <td id="profileRow">Secondary Phone: </td>
-              <td>{{contents[selectProfile].phone_02}}</td>
+              <td> </td>
+              <td ng-show="(contents[selectProfile].phone_02)">{{contents[selectProfile].phone_02}}</td>
+              <td id="notAvailable" ng-show="!(contents[selectProfile].phone_02)"> N/A</td>
             </tr>
             <tr>
               <td id="profileRow">Primary Email: </td>
+              <td> </td>
               <td ng-show="(contents[selectProfile].email_01)">{{contents[selectProfile].email_01}}</td>
             </tr>
-            <tr ng-show="(contents[selectProfile].email_02)">
+            <tr>
               <td id="profileRow">Secondary Email: </td>
-              <td>{{contents[selectProfile].email_02}}</td>
+              <td> </td>
+              <td ng-show="(contents[selectProfile].email_02)">{{contents[selectProfile].email_02}}</td>
+              <td id="notAvailable" ng-show="!(contents[selectProfile].email_02)"> N/A</td>
             </tr>
             <tr ng-show="(contents[selectProfile].pin_color)">
               <td id="profileRow">Pin Color: </td>
-              <td style="background: {{contents[selectProfile].pin_color}};">{{contents[selectProfile].pin_color}}</td>
+              <td> <img src="images/house_pin.png" id="house_pin" alt="" style="width:auto; height;auto"> </td>
+              <td style="background: {{contents[selectProfile].pin_color}};"></td>
               <!--
               <td> <input type="color" name="pincolor" id="pincolor" ng-value="contents[selectProfile].pin_color" style="width: 100%"></td>
               <td> <img src="images/house_pin.png" id="house_pin" alt="" style="width:auto; height;auto"> </td>
@@ -94,7 +106,7 @@
         <span ng-show="selectProfile">Selected Community.</span>
         <br /><br />
       </div>
-        <select id="selectMarker" ng-model="selectProfile" class="form-control">
+        <select id="selectMarker" ng-model="selectProfile" class="form-control" ng-change="changePinColor();">
           <option ng-repeat="markers in contents" value={{$index}}>{{markers.community_name}}</option>
         </select>
         <div style="text-align: right;">
