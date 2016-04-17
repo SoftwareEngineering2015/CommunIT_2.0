@@ -89,7 +89,7 @@ do {
                 $sql_create_community_config  = "INSERT INTO config (community_id, community_name, community_description, default_pin_color, default_pin_color_status, allow_user_pin_colors) VALUES ('$community_id', '$name', '$description', '$default_pin_color', '$default_pin_color_status', '$allow_user_pin_colors')";
                 $sql_create_user_to_community = "INSERT INTO users_to_communities (user_id, community_id, privilege_id) VALUES ('$user_id', '$community_id', '1')";
                 
-                $sql_give_owner_profile = "INSERT INTO profiles (profile_id, user_id, community_id) VALUES ('$profile_id', '$user_id', '$community_id')";
+                $sql_give_owner_profile = "INSERT INTO profiles (profile_id, user_id, community_id, has_edited) VALUES ('$profile_id', '$user_id', '$community_id', '1')";
             
                 if (mysqli_query($conn, $sql_create_community) && mysqli_query($conn, $sql_create_community_config) && mysqli_query($conn, $sql_create_user_to_community) && mysqli_query($conn, $sql_give_owner_profile)) {
                     echo "success";

@@ -10,12 +10,14 @@ include("db_class.php");
 
 $profiles_array = array();
 
-$sql_community_profiles = "SELECT profiles.profile_id AS profile_id, markers.name AS marker_name, users.first_name AS first_name, users.last_name AS last_name, profiles.phone_01 AS phone_01, profiles.phone_02 AS phone_02, profiles.email_01 AS email_01, profiles.email_02 AS email_02 FROM profiles INNER JOIN profiles_to_markers ON profiles.profile_id = profiles_to_markers.profile_id INNER JOIN users ON profiles.user_id = users.user_id INNER JOIN markers ON profiles_to_markers.marker_id = markers.marker_id WHERE markers.marker_id = '$marker_id' AND profiles.has_edited != 0 ORDER BY users.user_id";
+$sql_community_profiles = "SELECT profiles.profile_id AS profile_id, markers.name AS marker_name, users.first_name AS first_name, users.last_name AS last_name, profiles.phone_01 AS phone_01, profiles.phone_02 AS phone_02, profiles.email_01 AS email_01, profiles.email_02 AS email_02, markers.name as marker_name, markers.location as marker_location  FROM profiles INNER JOIN profiles_to_markers ON profiles.profile_id = profiles_to_markers.profile_id INNER JOIN users ON profiles.user_id = users.user_id INNER JOIN markers ON profiles_to_markers.marker_id = markers.marker_id WHERE markers.marker_id = '$marker_id' AND profiles.has_edited != 0 ORDER BY users.user_id";
 $community_profiles_result = mysqli_query($conn,$sql_community_profiles);
 
 if (mysqli_num_rows($community_profiles_result) > 0 ) {	
     $counter = 0;
     while($row = $community_profiles_result->fetch_assoc()){
+        $profiles_array[$counter]['marker_name'] =  $row['marker_name'];
+        $profiles_array[$counter]['marker_location'] =  $row['marker_location'];
         $profiles_array[$counter]['marker_name'] =  $row['marker_name'];
         $profiles_array[$counter]['residents_name'] =  $row['first_name'] . " " . $row['last_name'];
         $profiles_array[$counter]['phone_01'] =  $row['phone_01'];

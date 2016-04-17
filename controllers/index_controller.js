@@ -130,6 +130,16 @@ indexApp.controller('createaccountController', ['$scope', '$http', function($sco
 			}
 		}
 
+     $scope.clearForm = function() {
+      $scope.inputData.username = '';
+      $scope.inputData.email = '';
+      $scope.inputData.firstName = '';
+      $scope.inputData.middleInitial = '';
+      $scope.inputData.lastName = '';
+      $scope.inputData.password = '';
+      $scope.inputData.passwordConfirm = '';
+     }
+
     $scope.postCreateAccount = function() {
     $scope.errorMsgBirthDate = "";
     $scope.errorMsgPassword = "";
@@ -173,7 +183,8 @@ indexApp.controller('createaccountController', ['$scope', '$http', function($sco
     $scope.errorMsgEmail = "That Email Already Exists";
     }
     if ( data.trim() === 'success') {
-    window.location.href = 'index.php';
+    //window.location.href = 'index.php';
+    $scope.clearForm();
     $scope.formSwitch = false;
     $scope.successMsg = 'Account Created Successfully, Please Log In.';
     }

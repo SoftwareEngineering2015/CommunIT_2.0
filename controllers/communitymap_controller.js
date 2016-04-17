@@ -27,7 +27,7 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
 
         })
 
-    $scope.profiles_array = []; // Holds the profile data from the marker 
+    $scope.profiles_array = []; // Holds the profile data from the marker
     $scope.noProfiles = true; // This will hide the profiles table until there is a profile to display
 
     $scope.marker_name; // This show the name of the clicked marker when there is a profile
@@ -56,7 +56,7 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
     var marker_has_floorplans = []; //Specifies that the marker has floorplans
 
     var infowindows = [];
-    var prev_infowindow = false; // Varaible to check to 
+    var prev_infowindow = false; // Varaible to check to
 
     //creates a bounds object that is extended in the main loop
     var bounds = new google.maps.LatLngBounds();
@@ -673,9 +673,9 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
                     $("#currentWeatherPic").html("<img src='images/weather/" + data.weather['0']['icon'] + ".png' />");
                     $("#currentWeatherDescription").html(data.weather['0']['description']);
                     $("#currentWeatherTemp").html(data.main['temp'] + "&degF");
-                    $("#currentWeatherHumidity").html(data.main['humidity']);
-                    $("#currentWeatherWind").html(data.wind['speed']);
-                                
+                    $("#currentWeatherHumidity").html(data.main['humidity']+"%");
+                    $("#currentWeatherWind").html(data.wind['speed']+" mph");
+
                     city_id = data.sys.id;
 
                     var forecastURL = "http://api.openweathermap.org/data/2.5/forecast?lat=" + marker_latitudes[$scope.marker_clicked_for_weather_information] + "&" + "lon=" + marker_longitudes[$scope.marker_clicked_for_weather_information] + "&APPID=cd4eda95a76d3de65a551a892bf8ce41&units=imperial";
@@ -743,7 +743,7 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
             .success(function(json, status, headers, config) {
                 angular.forEach(json, function(data, key) {
                     if (key == 'floorplan_information') {
-                        document.getElementById("floorplanName").innerHTML = data.floor;
+                        document.getElementById("floorplanName").innerHTML = data.marker_name + ": " + data.floor;
                         document.getElementById("floorplanImage").src = data.image_location;
                     } else {
                         if (key == "no_markers") {
@@ -783,6 +783,7 @@ $(document).ready(function() {
 });
 
 function loadInfoWindow(marker, name) {
+  //$("#floorplanInformationField").empty();
 
     $.post("./models/load_profiles_in_marker.php", {
             marker_id: marker,
@@ -790,11 +791,29 @@ function loadInfoWindow(marker, name) {
         },
         function(data) {
             data = jQuery.parseJSON(data);
+            $("#floorplanInformationField").empty();
             if (data.no_profiles) {
                 $("#floorplanInformationField").html("<h3>" + data.no_profiles + "</h3>");
             } else {
+                $("#floorplanInformationField").append("<h4 id='profileRow' style='font-weight: bold;'>" + data[0].marker_name + "<h4><h5 id='profileRow' style='font-weight: bold;'>" + data[0].marker_location + "</h5><hr />");
                 $.each(data, function(key, value) {
-                    $("#floorplanInformationField").append("<table class='table table-hover' id='floorplanInformationFieldTable" + key + "'> </table>");
+                    $("#floorplanInformationField").append("<h4 id='profileRow' style='font-weight: bold;'>"+value.residents_name+"</h4><table class='table table-hover table-striped' id='floorplanInformationFieldTable" + key + "'> </table>");
+                    if (value.phone_01) {
+                        $("#floorplanInformationFieldTable" + key + "").append("<tr><td id='profileRow'> Primary Phone: </td><td> " + value.phone_01 + " </td></tr>");
+                    }
+                    if (value.phone_02) {
+                        $("#floorplanInformationFieldTable" + key + "").append("<tr><td id='profileRow'> Secondary Phone: </td><td> " + value.phone_02 + " </td></tr>");
+                    }
+                    if (value.email_01) {
+                        $("#floorplanInformationFieldTable" + key + "").append("<tr><td id='profileRow'> Primary E-mail: </td><td> " + value.email_01 + " </td></tr>");
+                    }
+                    if (value.email_02) {
+                        $("#floorplanInformationFieldTable" + key + "").append("<tr><td id='profileRow'> Secondary E-mail: </td><td> " + value.email_02 + " </td></tr>");
+                    }
+                });
+                /*
+                $.each(data, function(key, value) {
+                    $("#floorplanInformationField").append("<h4 id='profileRow'>"+value.residents_name+"</h4><table class='table table-hover' id='floorplanInformationFieldTable" + key + "'> </table>");
                     $("#floorplanInformationFieldTable" + key + "").append("<tr><td style='color: #006699; font-weight: bold;'> Resident: </td><td> " + value.residents_name + " </td></tr>");
                     if (value.phone_01) {
                         $("#floorplanInformationFieldTable" + key + "").append("<tr><td style='color: #006699; font-weight: bold;'> Primary Phone: </td><td> " + value.phone_01 + " </td></tr>");
@@ -809,6 +828,7 @@ function loadInfoWindow(marker, name) {
                         $("#floorplanInformationFieldTable" + key + "").append("<tr><td style='color: #006699; font-weight: bold;'> Secondary E-mail: </td><td> " + value.email_02 + " </td></tr>");
                     }
                 });
+                */
             }
         });
 }

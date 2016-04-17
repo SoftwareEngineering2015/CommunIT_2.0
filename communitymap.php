@@ -39,6 +39,10 @@
         margin-right: 0;
         font-weight: bold;
     }
+    #profileRow{
+      color: #006699;
+      fojjnt-weight: bold;
+    }
 
     #informationField::-webkit-scrollbar-track {
         -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
@@ -140,7 +144,7 @@
 
 <body ng-controller="communitymapController">
     <div style="width:100%; height:91%;">
-        <div class="col-md-4" style="background-color: #19A3FF; height:100%; overflow:auto;" id="informationField" >
+        <div class="col-sm-4" style="background-color: #19A3FF; height:100%; overflow:auto;" id="informationField" >
             <div id='community_name' style="text-align: center; color: #FFFFFF; text-style: bold;
           text-shadow: -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000, 1px 1px 0 #000000;
           font-size: 300%; font-weight: bold;">
@@ -200,22 +204,25 @@
             <div>&nbsp</div>
         </div>
         <!--Google Map Div-->
-        <div class="col-md-8" id="googleMap" style="height:100%;"></div>
+        <div class="col-sm-8" id="googleMap" style="height:100%;"></div>
     </div>
 
     <!-- Modal -->
-    <div id="viewFloorplanModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
+    <div id="viewFloorplanModal" class="modal fade" role="dialog"  style="overflow-y:auto; ">
+        <div class="modal-dialog"  style="overflow-y:auto; ">
             <!-- Modal content -->
-            <div class="modal-content"  style="overflow:auto;">
+            <div class="modal-content"  style="overflow-y:auto; overflow-x: hidden;">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h3 id="floorplanName"> </h3>
                 </div>
-                <div class="modal-body row">
-                    <div class="col-sm-5" class="container-fluid" id="floorplanInformationField" style="height:auto; overflow:auto;">
+                <div class="modal-body row" style="height: 85%; overflow-y:auto; overflow-x: hidden;">
+                    <div style="height: 100%; overflow-y:auto; overflow-x: auto; background-color: #19A3FF;" class="col-sm-4 col-lg-3 container-fluid">
+                        <div id="floorplanInformationField" style="height: 90%; overflow-y:auto; overflow-x: auto; background-color: #FFFFFF; padding: 5px; margin-top: 10px; margin-bottom: 10px;">
+                            <h3 align="center"> Select a residence </h3>
+                        </div>
                     </div>
-                    <div id='floorplanModalDiv' class="col-sm-7" class="container-fluid">
+                    <div id='floorplanModalDiv' class="col-sm-8 col-lg-9 container-fluid">
                         <img id='floorplanImage' style='width: 100%; height: auto;'>
                     </div>
                 </div>
@@ -233,7 +240,7 @@
                     <h3 id="markerNameWeather"></h3>
                 </div>
                 <div class="modal-body" id='weatherInformation'>
-                    <div id="forecastDiv" style="overflow:auto;">
+                    <div id="forecastDiv">
                         <h4> Current Weather <span id="currentWeatherPic"> </span> </h4>
                         <table class="table table-responsive" id="table-borderless">
                             <tr>

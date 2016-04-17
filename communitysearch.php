@@ -2,7 +2,7 @@
    require_once( "template_class.php");       // css and headers
    $H = new template( "Search For A Community" );
    $H->show_template( );
-         
+
 ?>
 
    <!-- Google API KEY for accessing a broader spectrum of Google APIs-->
@@ -44,8 +44,8 @@
                      </td>
                   </tr>
                   <tr>
-                     <th> Community State / 
-                        <br /> Province 
+                     <th> Community State /
+                        <br /> Province
                      </th>
                      <td>
                         <input type="text" class="form-control input-md" id="state">
@@ -314,29 +314,29 @@
                <div ng-show="!has_results">
                   <h3> {{ communities[0].message }} </h3>
                </div>
-               <div ng-show="has_results"> 
+               <div ng-show="has_results">
                   <h3> {{ communities.length }} Results </h3>
                   <div align="center">
                      <button class='btn btn-info btn-md' style='width:auto' ng-click="last()" ng-show="!hide_last"><span class="glyphicon glyphicon-arrow-left"/></button>
                      <button class='btn btn-info btn-md' style='width:auto' ng-click="next()" ng-show="!hide_next"><span class="glyphicon glyphicon-arrow-right"/></button>
                   </div>
                   <table class="table table-borderless" ng-repeat="x in displayed_communities">
-                     <tr> 
-                        <th> Community Name </th> 
-                        <th> City </th> 
-                        <th> State / Province </th> 
-                        <th> Country </th> 
+                     <tr>
+                        <th> Community Name </th>
+                        <th> City </th>
+                        <th> State / Province </th>
+                        <th> Country </th>
                      </tr>
-                     <tr> 
-                        <td style='color: #317eac'> {{ x.community_name }} </td> 
-                        <td> {{ x.city }} </td> 
-                        <td> {{ x.state }} </td> 
-                        <td> {{ x.country }} </td> 
+                     <tr>
+                        <td style='color: #317eac'> {{ x.community_name }} </td>
+                        <td> {{ x.city }} </td>
+                        <td> {{ x.state }} </td>
+                        <td> {{ x.country }} </td>
                      </tr>
-                     <tr> 
+                     <tr>
                         <td colspan='4'> <b> Description: </b> <br /> {{ x.community_description }} </td>
                      </tr>
-                     <tr> 
+                     <tr>
                         <td> <button type='button' class='btn btn-success btn-md' style='width:auto' ng-click='load_map_into_modal(x.community_id)' data-toggle='modal' data-target='#view_community_modal'>View Community</button> </td>
                         <td ng-if="can_join"> <button type='button' class='btn btn-info btn-md' style='width:auto' ng-click='show_join_community_modal(x.community_id)' data-toggle='modal'>Join Community</button> </td> <td> </td> <td> </td>
                      </tr>
@@ -390,7 +390,7 @@
       <!-- Modal -->
       <div id="maxJoinedAlertModal" class="modal fade" role="dialog">
          <div class="modal-dialog">
-         <!-- Modal content --> 
+         <!-- Modal content -->
             <div class="modal-content">
                <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal">&times;</button>

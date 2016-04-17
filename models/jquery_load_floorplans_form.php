@@ -28,7 +28,7 @@ if (mysqli_num_rows($sql_floorplans_in_marker_result) == 0 ) {
           </tr>
           <tr>
             <td></td>
-            <td> <button type='submit' id='uploadFloorPlan' name='submit' class='btn btn-primary btn-sm' value='" . $marker_id . "' style='width: 100%;'>Upload Floorplan</button> </td> 
+            <td> <button type='submit' id='uploadFloorPlan' name='submit' class='btn btn-primary btn-sm' value='" . $marker_id . "' style='width: 100%;'>Upload Floorplan</button> </td>
           </tr>
           <tr>
             <th></th>
@@ -45,7 +45,7 @@ if (mysqli_num_rows($sql_floorplans_in_marker_result) == 0 ) {
         </table>
         <b id='no_floorplans_message'> There are currently no floorplans for this marker. </b>";
 
-} else { 
+} else {
 
   echo "<h3> Upload Floorplans </h3>
         <hr style='border: none; width: 1px;'>
@@ -61,7 +61,7 @@ if (mysqli_num_rows($sql_floorplans_in_marker_result) == 0 ) {
           </tr>
           <tr>
             <td></td>
-            <td> <button type='submit' id='uploadFloorPlan' name='submit' class='btn btn-primary btn-sm' value='" . $marker_id . "' style='width: 100%;'>Upload Floorplan</button> </td> 
+            <td> <button type='submit' id='uploadFloorPlan' name='submit' class='btn btn-primary btn-sm' value='" . $marker_id . "' style='width: 100%;'>Upload Floorplan</button> </td>
           </tr>
           <tr>
             <th></th>
@@ -145,7 +145,8 @@ if (mysqli_num_rows($sql_floorplans_in_marker_result) == 0 ) {
                             } else {
                                 $.each(data, function(index, value) {
                                     colorPins(value.pin_color);
-                                    $("#floorplanModalDiv").append('<img src=' + fullimg + ' class="markers_on_floorplan" id="marker_' + value.marker_id + '" style="display: block; position: absolute; left:' + value.latitude + '%; top:' + value.longitude + '%;" title="' + value.name + '\n' + value.location + '" onclick="$(`#dialog_' + value.marker_id + '` ).dialog()"/> <div id="dialog_' + value.marker_id + '" title="Marker Actions" style="display:none;"><a onclick="edit_floorplan_marker(`' + value.marker_id + '`)"> Edit Marker </a><br /> <a onclick="add_remove_residents_to_floorplan_marker(`' + value.marker_id + '`)"> Add / Remove Residents </a><br /> <a onclick="delete_floorplan_marker(`' + value.marker_id + '`)"> Delete Marker </a></div>');
+                                    $("#floorplanModalDiv").append('<img src=' + fullimg + ' class="markers_on_floorplan" id="marker_' + value.marker_id + '" style="display: block; position: absolute; left:' + value.latitude + '%; top:' + value.longitude + '%;" title="' + value.name + '\n' + value.location + '" onclick="$(`#dialog_' + value.marker_id + '` ).dialog()"/> <div id="dialog_' + value.marker_id
+                                    + '" title="Marker Actions" style="display:none;"><a onclick="edit_floorplan_marker(`' + value.marker_id + '`)"> Edit Marker </a><br /> <a onclick="add_remove_residents_to_floorplan_marker(`' + value.marker_id + '`)"> Add / Remove Residents </a><br /> <a onclick="delete_floorplan_marker(`' + value.marker_id + '`)"> Delete Marker </a></div>');
                                 });
                             }
                         }
@@ -285,6 +286,7 @@ if (mysqli_num_rows($sql_floorplans_in_marker_result) == 0 ) {
 
 
         function edit_floorplan_marker(marker) {
+          selectedMarkerID = marker;
             $("#marker_" + marker + "").attr("onmousedown", "_move_item(this)");
             $("#marker_" + marker + "").removeAttr("onclick");
 
@@ -436,13 +438,17 @@ if (mysqli_num_rows($sql_floorplans_in_marker_result) == 0 ) {
             if ($("#floorplan_marker_being_added")) {
                 $("#floorplan_marker_being_added").remove();
             }
+            $("#marker_" + selectedMarkerID + "").removeAttr("onmousedown");
+            //$("#marker_" + selectedMarkerID + "").removeAttr("_move_item(this)");
+            $("#marker_" + selectedMarkerID + "").attr("onclick", "$(`#dialog_" + selectedMarkerID + "`).dialog()");
+            //$("#marker_" + selectedMarkerID + "").attr("title", data.marker_name + "\n" + data.marker_location);
         });
 
         $("#deleteFloorPlanModal").on('hidden.bs.modal', function() {
             $("#deleteFloorPlanErrorMessage").empty(); // Clear the error message
         });
 
-        
+
     </script>
 
     <style>
@@ -451,7 +457,7 @@ if (mysqli_num_rows($sql_floorplans_in_marker_result) == 0 ) {
                 width: @modal-sm;
             }
         }
-        
+
         .ui-dialog {
             z-index: 1000000 !important;
         }
@@ -459,10 +465,10 @@ if (mysqli_num_rows($sql_floorplans_in_marker_result) == 0 ) {
         .modal-dialog{
             position: relative;
             display: table;
-            overflow-y: auto;    
+            overflow-y: auto;
             overflow-x: auto;
             width: 90%;
-            height: 90%; 
+            height: 90%;
         }
 
         .modal-content {
@@ -491,12 +497,12 @@ if (mysqli_num_rows($sql_floorplans_in_marker_result) == 0 ) {
     <div id="editFloorplanModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content -->
-            <div class="modal-content">
+            <div class="modal-content" style="overflow-y:auto; overflow-x:hidden;">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body row">
-                    <div class="col-sm-6" class="container-fluid">
+                    <div class="col-sm-4 col-md-4 col-lg-3" class="container-fluid">
                         <input type='text' class='form-control input-sm' id='floorplanName' placeholder='Floorplan Name'> <br />
                         <button type='button' class='btn btn-primary btn-sm' id='updateFloorplanName'> Update Floor Name </button>
                         <button type='button' class='btn btn-success btn-sm' id='changeFloorplanImage'> Change Floorplan Image </button>
@@ -505,10 +511,10 @@ if (mysqli_num_rows($sql_floorplans_in_marker_result) == 0 ) {
                         <br />
                         <span id='updateFloorplanNameMessage'> </span>
                         <br /><br />
-                        <div id='floorplanFormsField' style="height:73%; overflow:auto;"> </div>
+                        <div id='floorplanFormsField' style="height: auto; overflow:auto;"> </div>
                     </div>
-                    <div id='floorplanModalDiv' class="col-sm-6" class="container-fluid">
-                        <img id='floorplanImage' style='width: 100%; height: 50%;'>
+                    <div id='floorplanModalDiv' class="col-sm-8 col-md-8 col-lg-9" class="container-fluid">
+                        <img id='floorplanImage' style='width: 100%; height: auto;'>
                     </div>
                 </div>
             </div>

@@ -5,7 +5,7 @@
     require_once( "template_class.php");
     $H = new template( "CommunIT Profile" );
     $H->show_template( );
- 
+
     ?>
 	<script src="controllers/editprofile_controller.js"></script>
   <style>
@@ -108,11 +108,11 @@
                   <td id="profileRow"> Confirm Password: </td>
                   <td><input type="password" class="form-control" placeholder="Confirm Password" ng-model="passConfirm" ng-change="checkPassword()" ></td>
               </tr>
-                  <td id="profileRow"> Change Primary Email: </td>
+                  <td id="profileRow"> Change Account Email: </td>
                   <td><input type="email"  class="form-control" placeholder="Primary E-mail" ng-value="account.email" ng-model="primaryEmail" ng-change="checkPrimaryEmail()" minlength="5"></td>
               </tr>
               <tr>
-                  <td id="profileRow"> Confirm Primary Email: </td>
+                  <td id="profileRow"> Confirm Account Email: </td>
                   <td><input type="email" class="form-control" placeholder="Confirm Email" ng-model="emailConfirm" ng-change="checkPrimaryEmail()"></td>
               </tr>
           </table>
