@@ -31,7 +31,7 @@
                 <td id="profileRow">Selected Community: &nbsp</td>
                 <td style="float: left;">
                   <select id="selectMarker" ng-model="selectProfile" class="form-control" ng-change="changeInfo(profiles[selectProfile].profile_id);">
-                      <option ng-repeat="markers in profiles track by $index" value={{$index}}>{{markers.community_name}}</option>
+                      <option ng-repeat="markers in profiles track by $index" value="{{$index}}">{{markers.community_name}}</option>
                   </select>
                 </td>
               </tr>
@@ -46,7 +46,7 @@
                     <td id="profileRow">Selected Community: &nbsp</td>
                     <td style="float: left;">
                       <select id="selectMarker" ng-model="selectProfile" class="form-control" ng-change="changeInfo(profiles[selectProfile].profile_id);">
-                          <option ng-repeat="markers in profiles track by $index" value={{$index}}>{{markers.community_name}}</option>
+                          <option ng-repeat="markers in profiles track by $index" value="{{$index}}">{{markers.community_name}}</option>
                       </select>
                     </td>
                   </tr>

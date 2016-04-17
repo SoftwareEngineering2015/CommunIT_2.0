@@ -3,6 +3,8 @@ communitApp.controller('editProfileController', function($scope, $http) {
   //Here is the information that is assumed.
   //To test if a user doesn't have a profile just change the $scope.user to something silly.
   $scope.user = localStorage.getItem('communit_user_id');
+  $scope.userfirstname = localStorage.getItem('communit_user_first');
+  $scope.userlastname = localStorage.getItem('communit_user_last');
   $scope.selectProfile;
   $scope.passConfirm = "";
   $scope.emailConfirm = "";

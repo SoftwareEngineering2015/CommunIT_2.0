@@ -69,6 +69,7 @@ $error = '';
 </ul>
 <ul class="nav navbar-nav navbar-right">
 <!--<li><a href="directory.php">Directory</a></li>-->
+<li><a href="account.php">Account</a></li>
 <li><a ng-click="logout();">Logout</a></li>
 </ul>
 </div><!-- /.navbar-collapse -->

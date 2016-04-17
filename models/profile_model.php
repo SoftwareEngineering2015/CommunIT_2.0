@@ -15,7 +15,7 @@ $resultCheck = $conn->query($checkQuery) or exit("Error code ({$conn->errno}): {
 
 if (mysqli_fetch_row($resultCheck)) {
 
-        $query = "SELECT markers.marker_id, profiles.profile_id, `profiles`.`has_edited`, `markers`.`name` as 'marker_name', `config`.`allow_user_pin_colors`, phone_01, phone_02, email_01, email_02, pin_color, location, community_name
+        $query = "SELECT markers.marker_id, profiles.profile_id, first_name, last_name, `profiles`.`has_edited`, `markers`.`name` as 'marker_name', `config`.`allow_user_pin_colors`, phone_01, phone_02, email_01, email_02, pin_color, location, community_name
               FROM profiles
               INNER JOIN users ON profiles.user_id = users.user_id
               INNER JOIN communities ON profiles.community_id = communities.community_id
@@ -23,7 +23,7 @@ if (mysqli_fetch_row($resultCheck)) {
               LEFT JOIN profiles_to_markers ON profiles.profile_id = profiles_to_markers.profile_id
               LEFT JOIN markers ON profiles_to_markers.marker_id = markers.marker_id
               WHERE profiles.user_id = '$user'
-              GROUP BY markers.marker_id
+              GROUP BY profiles.profile_id
               ORDER BY profiles.has_edited ASC";
 
         $results = mysqli_query($conn, $query);
@@ -40,6 +40,8 @@ if (mysqli_fetch_row($resultCheck)) {
                                "marker_id" => $row['marker_id'],
                                "marker_name" => $row['marker_name'],
                                "profile_id" => $row['profile_id'],
+                               "first_name" => $row['first_name'],
+                               "last_name" => $row['last_name'],
                                "phone_01" => $row['phone_01'],
                                "phone_02" => $row['phone_02'],
                                "email_01" => $row['email_01'],
