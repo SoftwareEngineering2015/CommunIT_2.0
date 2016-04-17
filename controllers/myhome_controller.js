@@ -10,7 +10,7 @@ communitApp.controller('myhomeController', ['$scope', '$http', function($scope, 
             $scope.hide_join_communities_button = false; // Used to keep track of how many communities user is in
 
             $scope.user = localStorage.getItem('communit_user_id');
-
+/*
             $http({
               method : 'POST',
               url    : './models/profile_model.php',
@@ -27,13 +27,13 @@ communitApp.controller('myhomeController', ['$scope', '$http', function($scope, 
                 if($scope.contents[i].has_edited == 0){
                   //alert("no profile here");
                   //$scope.selectProfile = i;
-                  window.location.href = 'editprofile.php';
+                  window.location.href = 'profile.php';
                   exit(status);
                 }
               }
 
             });
-
+*/
 
             var temp_array = []; // Used in the foreach loop to create a multidimensional array
 
