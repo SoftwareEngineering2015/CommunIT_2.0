@@ -33,6 +33,14 @@ $error = '';
     margin-left: auto;
     margin-right: auto;
   }
+  #welcomejumbotron{
+  	background-color: #4db8ff;
+  }
+  #welcomejumbotrontext{
+  	color: #FFFFFF;
+  	commentedouttext-shadow: -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000, 1px 1px 0 #000000;
+  }
+
 </style>
 <!--Conatins the Site's Header Nav Bar-->
 <html ng-controller='authenticationController' ng-init='authenticater()' ng-show="authenticated">

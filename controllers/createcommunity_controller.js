@@ -24,12 +24,12 @@ communitApp.controller('createcommunityController', ['$scope', '$http', function
                         $scope.owned_communities_counter++;
                         $scope.joined_communities_counter++;
 
-                        if ($scope.owned_communities_counter >= 2) {
+                        if ($scope.owned_communities_counter >= 10) {
                             $("#maxCreatedAlertModalMessage").html("You have reached the max amount of communities that you can create.");
                             $("#maxCreatedAlertModal").modal("show");
                         }
 
-                        if ($scope.joined_communities_counter >= 5) {
+                        if ($scope.joined_communities_counter >= 10) {
                             $("#maxCreatedAlertModalMessage").html("You have reached the max amount of communities that you can be in.");
                             $("#maxCreatedAlertModal").modal("show");
                         }
@@ -38,7 +38,7 @@ communitApp.controller('createcommunityController', ['$scope', '$http', function
 
                         $scope.joined_communities_counter++;
 
-                        if ($scope.joined_communities_counter >= 5) {
+                        if ($scope.joined_communities_counter >= 10) {
                             $("#maxCreatedAlertModalMessage").html("You have reached the max amount of communities that you can be in.");
                             $("#maxCreatedAlertModal").modal("show");
                         }

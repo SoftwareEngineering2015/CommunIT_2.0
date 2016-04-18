@@ -1,6 +1,6 @@
 <?php
    require_once( "template_class.php");       // css and headers
-   $H = new template( "Join community requests" );
+   $H = new template( "Community Requests" );
    $H->show_template( );
        
 ?>
@@ -21,6 +21,12 @@
    </style>
    <script src='controllers/joincommunityrequests_controller.js'></script>
    <body ng-controller='joincommunityrequestsController'>
+   <div id="welcomejumbotron" class="jumbotron">
+    <div style="padding-left: 5%;">
+      <h2 id="welcomejumbotrontext">Welcome {{userfirstname}} {{userlastname}}!</h2>
+      <h4 id="welcomejumbotrontext">Here are your <b>Community Invitations</b> and <b>Join Requests.</b></h4>
+    </div>
+   </div>
       <div class="container-fluid">
          <div class="row">
             <div class="col-md-6" class="container-fluid">

@@ -2,23 +2,26 @@
 
 
  //The Application's Database Credentials.
-	 $server = "127.0.0.1";
-     $user = "root";
-     $pass = "";
-     $mydb = "communit2";
-     $conn = mysqli_connect($server, $user, $pass, $mydb )
+	 $serverdb = "127.0.0.1";
+     $userdb = "root";
+     $passdb = "";
+     $mydbdb = "communit2";
+     $conn = mysqli_connect($serverdb, $userdb, $passdb, $mydbdb )
 		or die ("Cannot connect to $server using $user." .  mysql_error());
 
+
+
+    
 class manage_db {
   function __construct( $DBG = false ) {
     $this->DBG = $DBG;
   }
   function connect_db(){
         //include("db_config.php");
-   $server = '127.0.0.1';
-     $user = 'root';
-     $pass = '';
-     $mydb = 'communit2';
+   $server = $serverdb;
+     $user = $userdb;
+     $pass = $passdb;
+     $mydb = $mydbdb;
      $this->DBH = mysqli_connect($server, $user, $pass, $mydb ) 
          or die ("Cannot connect to $server using $user" .  mysql_error());
 

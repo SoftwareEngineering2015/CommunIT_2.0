@@ -130,8 +130,6 @@ communitApp.controller('editProfileController', function($scope, $http) {
          $scope.email_02 = $scope.contents[index].email_02;
          $scope.pin_color = $scope.contents[index].pin_color;
          $scope.getAccount();
-        // $scope.primaryEmail = $scope.contents[index].email;
-        // $scope.password = $scope.contents[index].password;
         }
         }
 
@@ -160,7 +158,7 @@ communitApp.controller('editProfileController', function($scope, $http) {
         } else {
         //  if ($scope.selectProfile != null){
            $scope.primaryEmail = $scope.account.email;
-           $scope.password = $scope.account.password;
+           //$scope.password = $scope.account.password;
         //  }
           }
 
@@ -217,6 +215,7 @@ communitApp.controller('editProfileController', function($scope, $http) {
 
           if (!$scope.accountContents.error) {
               $scope.passConfirm = '';
+              $scope.password = '';
               $scope.emailConfirm = '';
               $scope.vaildPassword = false;
               $scope.vaildPrimaryEmail = false;

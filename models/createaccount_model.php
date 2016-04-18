@@ -44,6 +44,8 @@ $gender = mysql_real_escape_string($gender);
 $birthDate = mysql_real_escape_string($birthDate);
 $password = mysql_real_escape_string($password);
 
+$password = (password_hash($password, PASSWORD_DEFAULT));
+
 // Check to see if the username already exists
 $sql_username_check = "SELECT username FROM users WHERE username= '$username' LIMIT 1";
 $result_username_check = mysqli_query($conn, $sql_username_check);

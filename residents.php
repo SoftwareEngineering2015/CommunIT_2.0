@@ -19,7 +19,17 @@
   </style>
   </head>
       <body ng-controller="residentsController" ng-init="checkHasEdited(); getInfo();" ng-click="successMsg = null; errorMsg = null; deleteMsg = false;">
-          <!-- Here is the form for edit profiles -->
+          <div id="welcomejumbotron" class="jumbotron" ng-show="viewSwitch ">
+          <div ng-show="!selectProfile" style="padding-left: 5%;">
+            <h2 id="welcomejumbotrontext">Welcome {{userfirstname}} {{userlastname}}!</h2>
+            <h4 id="welcomejumbotrontext">Please select a community</h4>
+          </div>
+          <div id="welcomejumbotron" ng-show="selectProfile" style="padding-left: 5%;">
+            <h2 id="welcomejumbotrontext">Welcome {{userfirstname}} {{userlastname}}!</h2>
+            <h4 id="welcomejumbotrontext" ng-show="profiles[selectProfile].marker_name">Here are your residents for <b>{{profiles[selectProfile].marker_name}}</b>, at <b>{{profiles[selectProfile].community_name}}</b>.</h4>
+            <h4 id="welcomejumbotrontext" ng-show="!profiles[selectProfile].marker_name">No place of residence set at <b>{{profiles[selectProfile].community_name}}</b>.</h4>
+          </div>
+        </div>
           <div id="communitySelecter" class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3" ng-show="!selectProfile && viewSwitch">
             <h2>Community</h2>
             <div class="col-xs-12" style="text-align: center; font-weight: bold;" ng-show="!selectProfile">
@@ -38,7 +48,7 @@
             </table>
           </div>
 
-          <div class="col-sm-6" class="container-fluid" ng-show="viewSwitch">
+          <div class="col-sm-5" class="container-fluid" ng-show="viewSwitch">
               <div id="communitySelecter" ng-show="selectProfile">
                 <h2>Community</h2>
                 <table class="col-xs-12 table table-hover">
@@ -211,7 +221,7 @@
          </div>
 
          <!-- Here we have the form for editting password and primary email -->
-         <div class="col-sm-6" class="container-fluid" ng-show="viewSwitch" ng-init="getInfo();">
+         <div class="col-sm-7" class="container-fluid" ng-show="viewSwitch" ng-init="getInfo();">
           <h2 ng-show="selectProfile">Residents</h2>
           <table class="table table-striped table-hover" ng-show="selectProfile">
             <tr id="profileRow">
@@ -223,13 +233,13 @@
               </td>
             </tr>
             <tr ng-repeat="resident in residents track by $index" ng-show="!residents.error">
-                <td class="col-xs-4"  ng-click="showDetailed(resident.resident_id);"> {{resident.firstname}} {{resident.lastname}} </td>
+                <td class="col-xs-3"  ng-click="showDetailed(resident.resident_id);"> {{resident.firstname}} {{resident.lastname}} </td>
                 <td ng-show="resident.phone_01"  ng-click="showDetailed(resident.resident_id);"> {{resident.phone_01}} </td>
                 <td id="notAvailable" ng-show="!resident.phone_01"  ng-click="showDetailed(resident.resident_id);"> N/A </td>
                 <td ng-show="resident.email_01"  ng-click="showDetailed(resident.resident_id);"> {{resident.email_01}} </td>
                 <td id="notAvailable" ng-show="!resident.email_01"  ng-click="showDetailed(resident.resident_id);"> N/A </td>
-                <td class="col-xs-2 btn btn-primary" ng-click="showEdit(resident.resident_id);"> Edit </td>
-                <td class="col-xs-2 btn btn-danger" ng-click="showDelete(resident.resident_id);"> Remove </td>
+                <td class="col-xs-1 btn btn-primary" ng-click="showEdit(resident.resident_id);"> Edit </td>
+                <td class="col-xs-1 btn btn-danger" ng-click="showDelete(resident.resident_id);"> Remove </td>
             </tr>
           </table>
           <div ng-show="selectProfile">

@@ -22,15 +22,15 @@
   </style>
   </head>
       <body ng-controller="profileController" ng-init="getInfo()" ng-click="successProfileMsg = null">
-        <div class="jumbotron" ng-show="viewSwitch ">
+        <div id="welcomejumbotron" class="jumbotron" ng-show="viewSwitch ">
           <div ng-show="!selectProfile" style="padding-left: 5%;">
-            <h1>Welcome {{userfirstname}} {{userlastname}}!</h1>
-            <h3>Please select a community</h3>
+            <h2 id="welcomejumbotrontext">Welcome {{userfirstname}} {{userlastname}}!</h2>
+            <h4 id="welcomejumbotrontext">Please select a community</h4>
           </div>
-          <div ng-show="selectProfile" style="padding-left: 5%;">
-            <h1>Welcome {{userfirstname}} {{userlastname}}!</h1>
-            <h3 ng-show="contents[selectProfile].marker_name">Here is your profile for <b>{{contents[selectProfile].marker_name}}</b>, at <b>{{contents[selectProfile].community_name}}</b>.</h3>
-            <h3 ng-show="!contents[selectProfile].marker_name">No place of residence set at <b>{{contents[selectProfile].community_name}}</b>.</h3>
+          <div id="welcomejumbotron" ng-show="selectProfile" style="padding-left: 5%;">
+            <h2 id="welcomejumbotrontext">Welcome {{userfirstname}} {{userlastname}}!</h2>
+            <h4 id="welcomejumbotrontext" ng-show="contents[selectProfile].marker_name">Here is your profile for <b>{{contents[selectProfile].marker_name}}</b>, at <b>{{contents[selectProfile].community_name}}</b>.</h4>
+            <h4 id="welcomejumbotrontext" ng-show="!contents[selectProfile].marker_name">No place of residence set at <b>{{contents[selectProfile].community_name}}</b>.</h4>
           </div>
         </div>
 

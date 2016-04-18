@@ -1,4 +1,7 @@
 communitApp.controller('joincommunityrequestsController', ['$scope', '$http', function($scope, $http) {
+            
+            $scope.userfirstname = localStorage.getItem('communit_user_first');
+            $scope.userlastname = localStorage.getItem('communit_user_last');
 
             $scope.requested_array = [];
             $scope.invited_array = [];

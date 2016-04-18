@@ -2,6 +2,8 @@
 communitApp.controller('residentsController', function($scope, $http) {
 
   $scope.user = localStorage.getItem('communit_user_id');
+  $scope.userfirstname = localStorage.getItem('communit_user_first');
+  $scope.userlastname = localStorage.getItem('communit_user_last');
   $scope.selectProfile;
   $scope.selectProfile_id;
   $scope.residentsSwitch = false;
@@ -21,27 +23,7 @@ communitApp.controller('residentsController', function($scope, $http) {
   $scope.email_02 = "";
 
   $scope.user = localStorage.getItem('communit_user_id');
-  //Has_edited profile code
-/*
-  $http({
-    method : 'POST',
-    url    : './models/profile_model.php',
-    data   : {
-      user: $scope.user
-    },
-    headers: { 'Content-Type': 'application/json' }
-  })
-  .success(function (data) {
-    //alert("sent the post");
-    $scope.profiles = data;
-    for(var i = 0; i < $scope.profiles.length; i++){
-      if($scope.profiles[i].has_edited == 0){
-        window.location.href = 'editprofile.php';
-        exit(status);
-      }
-    }
-  });
-*/
+
   $scope.changeInfo = function(selectedProfID) {
     $scope.selectProfile_id = selectedProfID;
     $scope.showDetailedResident = false;

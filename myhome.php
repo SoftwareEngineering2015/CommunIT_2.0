@@ -24,6 +24,12 @@
    </style>
    <script src='controllers/myhome_controller.js'></script>
    <body ng-controller='myhomeController'>
+      <div  id="welcomejumbotron" class="jumbotron">
+       <div style="padding-left: 5%;">
+         <h2 id="welcomejumbotrontext">Welcome {{userfirstname}} {{userlastname}}!</h2>
+         <h4 id="welcomejumbotrontext">Here you can manage your communities.</h4>
+       </div>
+      </div>
       <div class="container-fluid">
          <div class="row">
             <div class="col-md-6" class="container-fluid">

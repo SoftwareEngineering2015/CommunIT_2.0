@@ -1,5 +1,9 @@
 communitApp.controller('myhomeController', ['$scope', '$http', function($scope, $http) {
 
+            
+            $scope.userfirstname = localStorage.getItem('communit_user_first');
+            $scope.userlastname = localStorage.getItem('communit_user_last');
+
             $scope.owned_communities_array = [];
             $scope.joined_communities_array = [];
 

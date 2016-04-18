@@ -109,7 +109,7 @@ if (mysqli_fetch_row($resultCheck)) {
               LEFT JOIN markers ON profiles_to_markers.marker_id = markers.marker_id
               WHERE profiles.user_id = '$user_id'
               GROUP BY profiles.profile_id
-              ORDER BY profiles.has_edited ASC";
+              ORDER BY community_name ASC";
 
         $results = mysqli_query($conn, $query);
 

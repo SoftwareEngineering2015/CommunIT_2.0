@@ -16,10 +16,10 @@
   </style>
   </head>
       <body ng-controller="editProfileController" ng-init="getInfo();" >
-       <div class="jumbotron">
+       <div id="welcomejumbotron" class="jumbotron">
           <div style="padding-left: 5%;">
-            <h1>Welcome {{userfirstname}} {{userlastname}}!</h1>
-            <h3>Here is your account information.</h3>
+            <h2 id="welcomejumbotrontext">Welcome {{userfirstname}} {{userlastname}}!</h2>
+            <h4 id="welcomejumbotrontext">Here is your account information.</h4>
           </div>
         </div>
          <div class="col-xs-12 col-sm-6 col-sm-offset-3" class="container-fluid" ng-init="getAccount();">
@@ -34,7 +34,7 @@
           <table class="table table-striped table-hover ">
               <tr>
                   <td id="profileRow"> Change Password: </td>
-                  <td><input type="password" class="form-control" placeholder="Password" ng-value="account.password" ng-model="password" ng-change="checkPassword()" minlength="8"></td>
+                  <td><input type="password" class="form-control" placeholder="New Password" ng-value="account.password" ng-model="password" ng-change="checkPassword()" minlength="8"></td>
               </tr>
               <tr>
                   <td id="profileRow"> Confirm Password: </td>

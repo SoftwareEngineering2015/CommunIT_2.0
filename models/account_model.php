@@ -9,14 +9,14 @@ $postdata = file_get_contents("php://input");
    $request = json_decode($postdata);
    @$user = $request->user;
 
-$checkQuery = "SELECT password, email FROM users WHERE user_id = '$user' LIMIT 1";
+$checkQuery = "SELECT email FROM users WHERE user_id = '$user' LIMIT 1";
 $resultCheck = $conn->query($checkQuery) or exit("Error code ({$conn->errno}): {$conn->error}");
 
 
 if (mysqli_fetch_row($resultCheck)) {
 
         //Here we build the query. We use $user from above to grab all profile infomation for each marker they have.
-        $query = "SELECT password, email FROM users WHERE user_id = '$user' LIMIT 1";
+        $query = "SELECT email FROM users WHERE user_id = '$user' LIMIT 1";
         //Do the query.
         $results = mysqli_query($conn, $query);
 
@@ -29,7 +29,6 @@ if (mysqli_fetch_row($resultCheck)) {
         //to the controller.
         while($row = mysqli_fetch_assoc($results)) {
                 $json_account_array =  array(
-                               "password" => $row['password'],
                                "email" => $row['email']
                              );
          }

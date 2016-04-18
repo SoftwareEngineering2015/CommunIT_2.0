@@ -26,6 +26,7 @@ if( isset($_REQUEST['password']) ) {
 	$password = $_REQUEST['password'];
 	$password = stripslashes($password);
 	$password = mysql_real_escape_string($password);
+	$password = (password_hash($password, PASSWORD_DEFAULT));
 }else {
 	$password = null;
 }

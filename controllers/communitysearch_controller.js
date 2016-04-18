@@ -32,7 +32,7 @@ communitApp.controller('communitysearchController', ['$scope', '$http', function
 
                     $scope.joined_communities_counter++;
 
-                    if ($scope.joined_communities_counter >= 5) {
+                    if ($scope.joined_communities_counter >= 10) {
                         $scope.can_join = false;
                         $("#maxJoinedAlertModal").modal("show");
                     }
@@ -172,13 +172,20 @@ $(document).ready(function() {
             },
             function(data) {
                 if (data.trim() == "alreadyJoined") {
+                    $("#joinCommunityErrorMessage").empty();
+                    $("#joinCommunitySuccessMessage").empty();
                     $("#joinCommunityErrorMessage").html("You are already apart of this community.");
                 } else if (data.trim() == "alreadyRequested") {
-                    $("#joinCommunityErrorMessage").html("There is already a request for you joining this community.");
+                    $("#joinCommunityErrorMessage").empty();
+                    $("#joinCommunitySuccessMessage").empty();
+                    $("#joinCommunityErrorMessage").html("There is already a request for you to join this community.");
                 } else if (data.trim() == "success") {
                     $("#joinCommunityErrorMessage").empty();
-                    $("#joinCommunitySuccessMessage").html("You're request to join the community has been sent to the owner.");
+                    $("#joinCommunitySuccessMessage").empty();
+                    $("#joinCommunitySuccessMessage").html("You're request to join the community has been sent.");
                 } else {
+                    $("#joinCommunityErrorMessage").empty();
+                    $("#joinCommunitySuccessMessage").empty();
                     $("#joinCommunityErrorMessage").html("There was an error submitting the request.");
                 }
             }
