@@ -15,6 +15,7 @@
 
    while ($row = $sql_marker_information_result->fetch_assoc()) {
       $name = $row['name'];
+      $miscinfo = $row['miscinfo'];
       $location = $row['location'];
       $pin_color = $row['pin_color'];
       $has_floorplans = $row['has_floorplan'];
@@ -68,6 +69,7 @@ $(document).ready(function() {
             $("#errorMsgMarkerLongitude").empty();
 
             $("#inputMarkerName").html($("#name").val());
+            $("#inputMarkerInformation").html($("#information").val());
             $("#inputMarkerLocation").html($("#location").val());
 
             pin_color = document.getElementById('pincolor').value;
@@ -99,6 +101,7 @@ $(document).ready(function() {
         $.post("./models/update_community_markers_model.php", {
                 marker: $("#updateCommunityMarkers").val(),
                 inputMarkerName: $("#name").val(),
+                inputMarkerInformation: $("#information").val(),
                 inputMarkerLocation: $("#location").val(),
                 inputPinColor: $("#pincolor").val(),
                 inputMarkerHasFloorplans: $("input:radio[name=has_floorplans]:checked").val(), 
@@ -134,23 +137,28 @@ $(document).ready(function() {
     });
 });
 </script>
-
+<h5>Click and drag to move the marker on the map.</h5>
 <table class="table table-striped table-hover table-condensed ">
    <tr>
       <th> Marker Name </th>
       <td>
          <a class="glyphicon glyphicon-question-sign" style="text-decoration: none" title="Give the marker a name."> </a>
       </td>
-      <td> </td>
-      <td> <input type="text" class="form-control input-md" id="name" placeholder="Marker Name" value="<?php echo $name; ?>"> <span class="text-danger" id="errorMsgMarkerName"></span> </td>
+      <td colspan="2"> <input type="text" class="form-control input-md" id="name" placeholder="Marker Name" value="<?php echo $name; ?>"> <span class="text-danger" id="errorMsgMarkerName"></span> </td>
+   </tr>
+   <tr>
+      <th> Marker Information </th>
+      <td> 
+        <a class="glyphicon glyphicon-question-sign" style="text-decoration: none" title="Information about this marker."> </a>
+      </td>
+      <td colspan="2"> <textarea class="form-control" id="information" placeholder="Marker Information" wrap="soft" rows="5"><?php echo $miscinfo; ?></textarea></td>
    </tr>
    <tr>
       <th> Marker Location </th>
       <td>
          <a class="glyphicon glyphicon-question-sign" style="text-decoration: none" title="Specify the location of the marker (The location is the address that Google Maps will geocode)."> </a>
       </td>
-      <td> </td>
-      <td> <input type="text" class="form-control input-md" id="location" placeholder="Marker Location" value="<?php echo $location; ?>"> <span class="text-danger" id="errorMsgMarkerLocation"></span> </td>
+      <td colspan="2"> <input type="text" class="form-control input-md" id="location" placeholder="Marker Location" value="<?php echo $location; ?>"> <span class="text-danger" id="errorMsgMarkerLocation"></span> </td>
    </tr>
    <tr>
       <th> Marker Pin Color </th>
@@ -165,24 +173,21 @@ $(document).ready(function() {
       <td>
          <a class="glyphicon glyphicon-question-sign" style="text-decoration: none" title="Check yes if the marker will have floorplans"> </a>
       </td>
-      <td> </td>
-      <td> <label class="radio-inline"><input type="radio" name="has_floorplans" value="1" <?php if ($has_floorplans == 1) { echo "checked";} ?>>Yes</label> <label class="radio-inline"><input type="radio" name="has_floorplans" value="0" <?php if ($has_floorplans == 0) { echo "checked";} ?>>No</label></td>
+      <td colspan="2"> <label class="radio-inline"><input type="radio" name="has_floorplans" value="1" <?php if ($has_floorplans == 1) { echo "checked";} ?>>Yes</label> <label class="radio-inline"><input type="radio" name="has_floorplans" value="0" <?php if ($has_floorplans == 0) { echo "checked";} ?>>No</label></td>
    </tr>
    <tr>
       <th> Latitude </th>
       <td>
          <a class="glyphicon glyphicon-question-sign" style="text-decoration: none" title="The latitude of the marker (Retrieved after dropping marker on map)."> </a>
       </td>
-      <td> </td>
-      <td> <input id="latitude" name="latitude" type="text" class="form-control input-md" value="<?php echo $latitude; ?>"readonly> <span class="text-danger" id="errorMsgMarkerLatitude"></span></td>
+      <td colspan="2"> <input id="latitude" name="latitude" type="text" class="form-control input-md" value="<?php echo $latitude; ?>"readonly> <span class="text-danger" id="errorMsgMarkerLatitude"></span></td>
    </tr>
    <tr>
       <th> Longitude </th>
       <td>
          <a class="glyphicon glyphicon-question-sign" style="text-decoration: none" title="The longitude of the marker (Retrieved after dropping marker on map)."> </a>
       </td>
-      <td> </td>
-      <td> <input id="longitude" name="longitude" type="text" class="form-control input-md" value="<?php echo $longitude; ?>" readonly> <span class="text-danger" id="errorMsgMarkerLongitude"></span> </td>
+      <td colspan="2"> <input id="longitude" name="longitude" type="text" class="form-control input-md" value="<?php echo $longitude; ?>" readonly> <span class="text-danger" id="errorMsgMarkerLongitude"></span> </td>
    </tr>
    <tr>
       <th> </th>
@@ -206,6 +211,10 @@ $(document).ready(function() {
          <tr>
             <th> Marker Name </th>
             <td id="inputMarkerName"> </td>
+         </tr>
+         <tr>
+            <th> Marker Information </th>
+            <td> <textarea id="inputMarkerInformation" style="width: 100%;"></textarea> </td>
          </tr>
          <tr>
             <th> Marker Location </th>

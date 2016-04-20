@@ -8,7 +8,7 @@ if( isset($_REQUEST["marker_id"]) && isset($_REQUEST["marker_name"]) ) {
 
 include("db_class.php");
 
-$sql_floorplans_in_marker = "SELECT * FROM floorplans_to_markers INNER JOIN floor_plans ON floorplans_to_markers.floorplan_id = floor_plans.floorplan_id WHERE floorplans_to_markers.marker_id = '$marker_id'";
+$sql_floorplans_in_marker = "SELECT * FROM floorplans_to_markers INNER JOIN floor_plans ON floorplans_to_markers.floorplan_id = floor_plans.floorplan_id WHERE floorplans_to_markers.marker_id = '$marker_id' ORDER BY floor";
 $sql_floorplans_in_marker_result = mysqli_query($conn, $sql_floorplans_in_marker);
 
 if (mysqli_num_rows($sql_floorplans_in_marker_result) > 0 ) {  

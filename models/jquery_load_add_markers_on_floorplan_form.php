@@ -46,6 +46,7 @@
                     $.post("./models/add_floorplan_markers_model.php", {
                             floorplan: floorplan_being_edited,
                             inputMarkerName: $("#floorplanMarkerName").val(),
+                            inputMarkerInformation: $("#floorplanMarkerInformation").val(),
                             inputMarkerLocation: $("#floorplanMarkerLocation").val(),
                             inputPinColor: $("#floorplanMarkerPincolor").val(),
                             inputMarkerLatitude: percentLeft,
@@ -61,10 +62,11 @@
                                     overalayColor($("#floorplanMarkerPincolor").val());
                                 }
 
-                                $("#floorplanModalDiv").append('<img src=' + fullimg + ' class="markers_on_floorplan" id="marker_' + data.marker_id + '" style="display: block; position: absolute; left:' + data.latitude + '%; top:' + data.longitude + '%;" title="' + data.marker_name + '\n' + data.marker_location + '" onclick="$(`#dialog_' + data.marker_id + '` ).dialog()"/> <div id="dialog_' + data.marker_id + '" title="Marker Actions" style="display:none;"><a onclick="edit_floorplan_marker(`' + data.marker_id + '`)"> Edit Marker </a><br /> <a onclick="add_remove_residents_to_floorplan_marker(`' + data.marker_id + '`)"> Add / Remove Residents </a><br /> <a onclick="delete_floorplan_marker(`' + data.marker_id + '`)"> Delete Marker </a></div>');
+                                $("#floorplanModalDiv").append('<img src=' + fullimg + ' class="markers_on_floorplan" id="marker_' + data.marker_id + '" style="display: block; position: absolute; left:' + data.latitude + '%; top:' + data.longitude + '%;" title="' + data.marker_name + '\n' + data.marker_location + '" onclick="marker_actions(`' + data.marker_id + '`)"/>');
                                 
                                 $("#floorplanMarkerName").val('');
                                 $("#floorplanMarkerLocation").val('');
+                                $("#floorplanMarkerInformation").val('');
                                 $("#addMarkerToFloorplanErrorMessage").empty();
                             } else {
                                 $("#addMarkerToFloorplanErrorMessage").html("There was an error updating the settings.");
@@ -75,7 +77,7 @@
             });
         });
     </script>
-
+<h5>Click and drag to move the marker on the map.</h5>
     <table class="table table-striped table-hover table-condensed ">
         <tr>
             <th> Marker Name </th>
@@ -84,6 +86,14 @@
             </td>
             <td> </td>
             <td> <input type="text" class="form-control input-md" id="floorplanMarkerName" placeholder="Marker Name"> <span class="text-danger" id="errorMsgFloorplanMarkerName"></span> </td>
+        </tr>
+        <tr>
+            <th> Marker Information </th>
+            <td> 
+                <a class="glyphicon glyphicon-question-sign" style="text-decoration: none" title="Information about this marker."> </a>
+            </td>
+            <td> </td>
+            <td> <textarea class="form-control" id="floorplanMarkerInformation" placeholder="Marker Information" wrap="soft" rows="5"></textarea></td>
         </tr>
         <tr>
             <th> Marker Location / Room </th>

@@ -23,29 +23,6 @@ communitApp.controller('editProfileController', function($scope, $http) {
 
   $scope.user = localStorage.getItem('communit_user_id');
 
-  $http({
-    method : 'POST',
-    url    : './models/profile_model.php',
-    data   : {
-      user: $scope.user
-    },
-    headers: { 'Content-Type': 'application/json' }
-  })
-  .success(function (data) {
-    //alert("sent the post");
-    $scope.contents = data;
-
-    for(var i = 0; i < $scope.contents.length; i++){
-      if($scope.contents[i].has_edited == 0){
-        //alert("PLACEHOLDER ALERT BOX\n" + "Congratulations, you are now part of " + $scope.contents[i].community_name + " at " + $scope.contents[i].location + ".\nPlease take some time to fill out your profile for " + $scope.contents[i].community_name +".");
-        alert("PLACEHOLDER ALERT BOX\n" + "Congratulations, you have joined community " + $scope.contents[i].community_name + ".\nPlease take some time to fill out your profile for " + $scope.contents[i].community_name +".");
-        $scope.selectProfile = ""+i+"";
-        //window.location.href = 'editprofile.php';
-      }
-    }
-
-  });
-
   //This is what the cancel and select boxes use to change the default values
   $scope.changeInfo = function() {
 

@@ -32,6 +32,10 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
 
     $scope.marker_name; // This show the name of the clicked marker when there is a profile
     $scope.marker_location; // This show the location of the clicked marker when there is a profile
+    $scope.marker_misc; // This show the location of the clicked marker when there is a profile
+
+    $scope.misc_panel = false;
+    $scope.showMarkerInfoButton = false;
 
     $scope.marker_clicked_for_weather_information;
 
@@ -46,6 +50,7 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
     var markers = []; // This is the array for the markers
     var marker_ids = []; //Marker information
     var marker_names = []; //Marker name
+    var marker_miscinfos = []; //Marker misc
     var marker_latitudes = []; //holds marker latitude
     var marker_longitudes = []; //holds marker longitude
     var marker_latlngs = []; //holds parsed latlng marker data
@@ -100,6 +105,7 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
                                     angular.forEach(data, function(value, key) {
                                         marker_ids.push(value.marker_id);
                                         marker_names.push(value.name);
+                                        marker_miscinfos.push(value.miscinfo)
                                         marker_latitudes.push(value.latitude);
                                         marker_longitudes.push(value.longitude);
                                         marker_latlngs.push(new google.maps.LatLng(value.latitude, value.longitude));
@@ -223,6 +229,8 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
     function addFloorplanListener(i) {
         markers[i].addListener('click', function() {
 
+            $scope.showMarkerInfoButton = true;
+
             $scope.marker_clicked_for_weather_information = i;
 
             if (prev_infowindow) {
@@ -237,6 +245,10 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
             if ($.active > 0) {
                 profile_request.abort();
             }
+
+            $scope.marker_name = marker_names[i];
+            $scope.marker_misc = marker_miscinfos[i];
+            $scope.marker_location = marker_locations[i];
 
             encodedData = 'marker_id=' +
                 encodeURIComponent(marker_ids[i]) +
@@ -261,8 +273,6 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
                         $scope.noInformation = false;
                         $scope.noProfiles = true;
                         $scope.hasFloorplans = true;
-                        $scope.marker_name = marker_names[i];
-                        $scope.marker_location = marker_locations[i];
                     }
                     streetview.getPanoramaByLocation(marker_latlngs[i], 50, function(data, status) {
                         if (status == 'OK') {
@@ -319,6 +329,8 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
     function addProfileListener(i) {
         markers[i].addListener('click', function() {
 
+            $scope.showMarkerInfoButton = true;
+
             $scope.marker_clicked_for_weather_information = i;
 
             if (prev_infowindow) {
@@ -333,6 +345,10 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
             if ($.active > 0) {
                 profile_request.abort();
             }
+
+            $scope.marker_name = marker_names[i];
+            $scope.marker_misc = marker_miscinfos[i];
+            $scope.marker_location = marker_locations[i];
 
             encodedData = 'marker_id=' +
                 encodeURIComponent(marker_ids[i]) +
@@ -356,8 +372,6 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
                         $scope.noInformation = false;
                         $scope.noProfiles = false;
                         $scope.hasFloorplans = false;
-                        $scope.marker_name = marker_names[i];
-                        $scope.marker_location = marker_locations[i];
                     }
 
                     streetview.getPanoramaByLocation(marker_latlngs[i], 50, function(data, status) {
@@ -457,12 +471,12 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
         controlUI.style.lineHeight = '38px';
         controlUI.style.paddingLeft = '10px';
         controlUI.style.paddingRight = '10px';
-        controlUI.title = 'Go To Residence';
+        controlUI.title = 'Go To Marker';
         controlUI.id = 'residentSelectBox';
         controlDiv.appendChild(controlUI);
 
         var option = document.createElement("option");
-        var name = document.createTextNode("Go To Residence");
+        var name = document.createTextNode("Go To Marker");
         option.setAttribute("value", "first_select_option");
         option.appendChild(name);
 
@@ -499,6 +513,10 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
                     profile_request.abort();
                 }
 
+                $scope.marker_name = marker_names[i];
+                $scope.marker_misc = marker_miscinfos[i];
+                $scope.marker_location = marker_locations[i];
+
                 encodedData = 'marker_id=' +
                     encodeURIComponent(marker_ids[i]) +
                     '&marker_name=' +
@@ -521,8 +539,6 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
                             $scope.noInformation = false;
                             $scope.noProfiles = false;
                             $scope.hasFloorplans = false;
-                            $scope.marker_name = marker_names[i];
-                            $scope.marker_location = marker_locations[i];
                         }
 
                         streetview.getPanoramaByLocation(marker_latlngs[i], 50, function(data, status) {
@@ -579,6 +595,10 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
                     profile_request.abort();
                 }
 
+                $scope.marker_name = marker_names[i];
+                $scope.marker_misc = marker_miscinfos[i];
+                $scope.marker_location = marker_locations[i];
+
                 encodedData = 'marker_id=' +
                     encodeURIComponent(marker_ids[i]) +
                     '&marker_name=' +
@@ -602,8 +622,6 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
                             $scope.noInformation = false;
                             $scope.noProfiles = true;
                             $scope.hasFloorplans = true;
-                            $scope.marker_name = marker_names[i];
-                            $scope.marker_location = marker_locations[i];
                         }
                         streetview.getPanoramaByLocation(marker_latlngs[i], 50, function(data, status) {
                             if (status == 'OK') {
@@ -763,6 +781,16 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
             })
     }
 
+    $scope.showMiscInfo = function() {
+        $scope.showMarkerInfoButton = false;
+        $scope.misc_panel = true;
+    }
+
+    $scope.hideMiscInfo = function() {
+        $scope.misc_panel = false;
+        $scope.showMarkerInfoButton = true;
+    }
+
 }]);
 
 $(document).ready(function() {
@@ -776,14 +804,26 @@ $(document).ready(function() {
     });
 
     $("#viewFloorplanModal").on("hidden.bs.modal", function() {
-        $("#floorplanInformationField").empty();
+        //$("#floorplanInformationField").empty();
+        $("#floorplanInformationField").html("<h3 style='text-align: center;'>Select a Residence</h3>");
         $(".markers_on_floorplan").remove();
+    });
+
+    $("#floorplanInformationField").on("click", "#showFloorplanMarkerInfo", function() {
+        $("#floorplanMarkerInfo").show();
+        $("#hideFloorplanMarkerInfo").show();
+        $("#showFloorplanMarkerInfo").hide();
+    });
+    $("#floorplanInformationField").on("click", "#hideFloorplanMarkerInfo", function() {
+        $("#floorplanMarkerInfo").hide();
+        $("#hideFloorplanMarkerInfo").hide();
+        $("#showFloorplanMarkerInfo").show();
     });
 
 });
 
 function loadInfoWindow(marker, name) {
-  //$("#floorplanInformationField").empty();
+  //$("#floorplanInformationField").html("");
 
     $.post("./models/load_profiles_in_marker.php", {
             marker_id: marker,
@@ -791,11 +831,21 @@ function loadInfoWindow(marker, name) {
         },
         function(data) {
             data = jQuery.parseJSON(data);
+            console.log(data);
             $("#floorplanInformationField").empty();
             if (data.no_profiles) {
-                $("#floorplanInformationField").html("<h3>" + data.no_profiles + "</h3>");
+                if (data.marker_miscinfo) {
+                    $("#floorplanInformationField").append("<h4 id='profileRow' style='font-weight: bold;'>" + data.marker_name + "<h4><h5 id='profileRow' style='font-weight: bold;'>" + data.marker_location + "</h5> <button class='btn btn-info btn-xs' id='showFloorplanMarkerInfo'> Show Info </button> <button class='btn btn-info btn-xs' id='hideFloorplanMarkerInfo' style='display: none;'> Hide Info </button> <textarea style='width: 100%; display:none;' rows='4' id='floorplanMarkerInfo'> " + data.marker_miscinfo + " </textarea> <hr />");
+                } else {
+                    $("#floorplanInformationField").append("<h4 id='profileRow' style='font-weight: bold;'>" + data.marker_name + "<h4><h5 id='profileRow' style='font-weight: bold;'>" + data.marker_location + "</h5> <hr />");
+                }
+                $("#floorplanInformationField").append("<h3>" + data.no_profiles + "</h3>");
             } else {
-                $("#floorplanInformationField").append("<h4 id='profileRow' style='font-weight: bold;'>" + data[0].marker_name + "<h4><h5 id='profileRow' style='font-weight: bold;'>" + data[0].marker_location + "</h5><hr />");
+                if (data[0].marker_miscinfo) {
+                    $("#floorplanInformationField").append("<h4 id='profileRow' style='font-weight: bold;'>" + data[0].marker_name + "<h4><h5 id='profileRow' style='font-weight: bold;'>" + data[0].marker_location + "</h5> <button class='btn btn-info btn-xs' id='showFloorplanMarkerInfo'> Show Info </button> <button class='btn btn-info btn-xs' id='hideFloorplanMarkerInfo' style='display: none;'> Hide Info </button> <textarea style='width: 100%; display:none;' rows='4' id='floorplanMarkerInfo'> " + data[0].marker_miscinfo + " </textarea> <hr />");
+                } else {
+                    $("#floorplanInformationField").append("<h4 id='profileRow' style='font-weight: bold;'>" + data[0].marker_name + "<h4><h5 id='profileRow' style='font-weight: bold;'>" + data[0].marker_location + "</h5> <hr />");
+                }
                 $.each(data, function(key, value) {
                     $("#floorplanInformationField").append("<h4 id='profileRow' style='font-weight: bold;'>"+value.residents_name+"</h4><table class='table table-hover table-striped' id='floorplanInformationFieldTable" + key + "'> </table>");
                     if (value.phone_01) {
@@ -809,6 +859,9 @@ function loadInfoWindow(marker, name) {
                     }
                     if (value.email_02) {
                         $("#floorplanInformationFieldTable" + key + "").append("<tr><td id='profileRow'> Secondary E-mail: </td><td> " + value.email_02 + " </td></tr>");
+                    }
+                    if (value.miscinfo) {
+                        $("#floorplanInformationFieldTable" + key + "").append("<tr><td id='profileRow'> Misc Info: </td><td><textarea style='width: 100%;' rows='4'> " + value.email_02 + " </textarea> </td></tr>");
                     }
                 });
                 /*

@@ -158,6 +158,15 @@
             <div class="col-sm-12" style="background-color: #EEEEEE; " ng-show="!noInformation" ng-hide="noInformation">
                 <b><div class="col-sm-12" Style="text-align: center; font-size: 125%;" id="head_resident_panel"> {{ marker_name }} </div></b>
                 <div class="col-sm-12" Style="text-align: center; font-size: 100%; font-weight: bold;" id="address_panel"> {{ marker_location }} </div>
+                <div class="col-sm-12" Style="text-align: center; font-size: 100%; font-weight: bold;" id="address_panel"> </div>
+                <div class="col-sm-12" Style="text-align: center; font-size: 100%;" id="address_panel" ng-show="marker_misc">
+                    <br />
+                    <button class="btn btn-info btn-xs" ng-click="showMiscInfo();" ng-show="showMarkerInfoButton"> Show Info </button>
+                    <button class="btn btn-info btn-xs" ng-click="hideMiscInfo();" ng-show="misc_panel"> Hide Info </button>
+                    <br />
+                    <div ng-show="misc_panel"> <textarea style="width: 100%;" rows="4">{{ marker_misc }}</textarea> </div>
+                    <br />
+                </div>
                 <div ng-show="!noProfiles">
                     <hr />
                     </br>
@@ -180,6 +189,10 @@
                                 <td style="color: #006699; font-weight: bold;"> Secondary E-mail: </td>
                                 <td>{{ x.email_02 }} </td>
                             </tr>
+                            <tr id='miscinfo' ng-show="x.miscinfo">
+                                <td style="color: #006699; font-weight: bold;"> Misc Info:  </td>
+                                <td> <textarea style="width: 100%;" rows="4">{{ x.miscinfo }} </textarea></td>
+                            </tr>
                         </table>
                     </div>
                     <br />
@@ -197,6 +210,17 @@
             </div>
 
             <div class="col-sm-12" style="background-color: #EEEEEE; font-size: 100%;" ng-show="noInformation" ng-hide="!noInformation">
+                <b><div class="col-sm-12" Style="text-align: center; font-size: 125%;" id="head_resident_panel"> {{ marker_name }} </div></b>
+                <div class="col-sm-12" Style="text-align: center; font-size: 100%; font-weight: bold;" id="address_panel"> {{ marker_location }} </div>
+                <div class="col-sm-12" Style="text-align: center; font-size: 100%; font-weight: bold;" id="address_panel"> </div>
+                <div class="col-sm-12" Style="text-align: center; font-size: 100%;" ng-show"marker_misc">
+                    <br />
+                    <button class="btn btn-info btn-xs" ng-click="showMiscInfo();" ng-show="showMarkerInfoButton"> Show Info </button>
+                    <button class="btn btn-info btn-xs" ng-click="hideMiscInfo();" ng-show="misc_panel"> Hide Info </button>
+                    <br />
+                    <div ng-show="misc_panel"> <textarea style="width: 100%;" rows="4">{{ marker_misc }}</textarea> </div>
+                    <br />
+                </div>
                 <div align="center">
                     <h3> {{ profiles_array.no_profiles }} </h3>
                 </div>

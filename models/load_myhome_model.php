@@ -13,7 +13,7 @@ include("db_class.php");
 // This multidimensional array holds the information of the communities the user is in
 $users_to_communities_array = array();
 
-$sql_get_user_communities = "SELECT * FROM communities INNER JOIN config ON communities.community_id = config.community_id INNER JOIN users_to_communities ON communities.community_id = users_to_communities.community_id INNER JOIN privileges ON users_to_communities.privilege_id = privileges.privilege_id WHERE users_to_communities.user_id = '$user_id'";
+$sql_get_user_communities = "SELECT * FROM communities INNER JOIN config ON communities.community_id = config.community_id INNER JOIN users_to_communities ON communities.community_id = users_to_communities.community_id INNER JOIN privileges ON users_to_communities.privilege_id = privileges.privilege_id WHERE users_to_communities.user_id = '$user_id' ORDER BY community_name";
 $sql_get_user_communities_result = mysqli_query($conn, $sql_get_user_communities);
 
 

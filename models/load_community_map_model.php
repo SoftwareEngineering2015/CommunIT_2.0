@@ -41,6 +41,7 @@ if (mysqli_num_rows($sql_does_community_exists_result) == 0) {
         while ($row = $community_information_result->fetch_assoc()) {
             $marker_information[$counter]['marker_id']      = $row['marker_id'];
             $marker_information[$counter]['name']           = $row['name'];
+            $marker_information[$counter]['miscinfo']       = $row['miscinfo'];
             $marker_information[$counter]['latitude']       = $row['latitude'];
             $marker_information[$counter]['longitude']      = $row['longitude'];
             $marker_information[$counter]['location']       = $row['location'];

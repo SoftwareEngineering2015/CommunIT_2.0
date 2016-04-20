@@ -1,7 +1,12 @@
 //var authenticationApp = angular.module('authenticationApp', []);
 
 communitApp.controller('authenticationController', ['$scope', '$http', function($scope, $http) {
-
+/*
+  if(localStorage.getItem('communit_user_first') && localStorage.getItem('communit_user_last')){
+      $scope.userfirstname = localStorage.getItem('communit_user_first');
+      $scope.userlastname = localStorage.getItem('communit_user_last'); 
+  }
+*/
 $scope.authenticater = function(){
   $scope.authenticated = false;
   $scope.authenticateCheck();
@@ -22,8 +27,11 @@ $scope.authenticater = function(){
 $scope.logout = function(){
   localStorage.removeItem("communit_user_id");
   localStorage.removeItem("communit_user_token");
+  localStorage.removeItem("communit_user_first");
+  localStorage.removeItem("communit_user_last");
   sessionStorage.removeItem("communit_user_id");
   sessionStorage.removeItem("communit_user_token");
+
   window.location.href = 'index.php';
   $scope.successMsg = "Successfully Logged Out";
 }

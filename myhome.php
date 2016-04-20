@@ -26,7 +26,8 @@
    <body ng-controller='myhomeController'>
       <div  id="welcomejumbotron" class="jumbotron">
        <div style="padding-left: 5%;">
-         <h2 id="welcomejumbotrontext">Welcome {{userfirstname}} {{userlastname}}!</h2>
+         <h2 id="welcomejumbotrontext" ng-show="userfirstname">Welcome {{userfirstname}} {{userlastname}}!</h2>
+         <h2 id="welcomejumbotrontext" ng-show="!userfirstname">Welcome to CommunIT!</h2>
          <h4 id="welcomejumbotrontext">Here you can manage your communities.</h4>
        </div>
       </div>

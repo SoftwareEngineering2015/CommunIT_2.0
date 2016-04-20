@@ -10,6 +10,7 @@ include ('db_class.php'); // Include the database class
 // Get the variables and set them
 $community_id = $_REQUEST['community'];
 $name = $_REQUEST['inputMarkerName'];
+$miscinfo = $_REQUEST['inputMarkerInformation'];
 $location = $_REQUEST['inputMarkerLocation'];
 $pin_color = $_REQUEST['inputPinColor'];
 $has_floorplans = $_REQUEST['inputMarkerHasFloorplans'];
@@ -18,6 +19,7 @@ $longitude = $_REQUEST['inputMarkerLongitude'];
 
 // MySQL sanitize
 $name = stripslashes($name);
+$miscinfo = stripslashes($miscinfo);
 $location = stripslashes($location);
 $pin_color = stripslashes($pin_color);
 $has_floorplans = stripslashes($has_floorplans);
@@ -25,6 +27,7 @@ $latitude = stripslashes($latitude);
 $longitude = stripslashes($longitude);
 
 $name = mysql_real_escape_string($name);
+$miscinfo = mysql_real_escape_string($miscinfo);
 $location = mysql_real_escape_string($location);
 $pin_color = mysql_real_escape_string($pin_color);
 $has_floorplans = mysql_real_escape_string($has_floorplans);
@@ -48,7 +51,7 @@ do {
             $error_counter++;
         }else{
             $available = true;
-            $sql_create_marker = "INSERT INTO markers (marker_id, name, latitude, longitude, location, pin_color, has_floorplan) VALUES ('$marker_id', '$name', '$latitude', '$longitude', '$location', '$pin_color', '$has_floorplans')";
+            $sql_create_marker = "INSERT INTO markers (marker_id, name, miscinfo, latitude, longitude, location, pin_color, has_floorplan) VALUES ('$marker_id', '$name', '$miscinfo', '$latitude', '$longitude', '$location', '$pin_color', '$has_floorplans')";
             $sql_markers_to_communities = "INSERT INTO markers_to_communities (community_id, marker_id) VALUES ('$community_id', '$marker_id')";
             if(mysqli_query($conn, $sql_create_marker) && mysqli_query($conn, $sql_markers_to_communities)) {
                 $json_return_array =  array(

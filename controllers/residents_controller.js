@@ -92,33 +92,6 @@ communitApp.controller('residentsController', function($scope, $http) {
   };
 
 
-
-  //Here we grab the json object from profileModel.php.
-  $scope.checkHasEdited = function () {
-    var requestHasEdited = $http({
-      method : 'POST',
-      url    : './models/residents_model.php',
-      data: {
-          user : $scope.user,
-          command  : "checkHasEdited"
-      },
-      headers: { 'Content-Type' : 'application/json'}
-    });
-    requestHasEdited.then(function (data, status, headers, config) {
-      $scope.hasEdited = data.data;
-        if ($scope.hasEdited.error) {
-            $scope.viewSwitch = false;
-        } else {
-        for(var i = 0; i < $scope.hasEdited.length; i++){
-          if($scope.hasEdited[i].has_edited == 0){
-            window.location.href = 'editprofile.php';
-            exit(status);
-          }
-        }
-      }
-    });
-  };
-
   $scope.getInfo = function () {
     var requestProfiles = $http({
       method : 'POST',

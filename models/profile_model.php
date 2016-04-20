@@ -15,7 +15,7 @@ $resultCheck = $conn->query($checkQuery) or exit("Error code ({$conn->errno}): {
 
 if (mysqli_fetch_row($resultCheck)) {
 
-        $query = "SELECT markers.marker_id, profiles.profile_id, first_name, last_name, `profiles`.`has_edited`, `markers`.`name` as 'marker_name', `config`.`allow_user_pin_colors`, phone_01, phone_02, email_01, email_02, pin_color, location, community_name
+        $query = "SELECT markers.marker_id, profiles.profile_id, first_name, last_name, `profiles`.`has_edited`, `markers`.`name` as 'marker_name', `config`.`allow_user_pin_colors`, phone_01, phone_02, email_01, email_02, `profiles`.`miscinfo`, pin_color, location, community_name
               FROM profiles
               INNER JOIN users ON profiles.user_id = users.user_id
               INNER JOIN communities ON profiles.community_id = communities.community_id
@@ -46,6 +46,7 @@ if (mysqli_fetch_row($resultCheck)) {
                                "phone_02" => $row['phone_02'],
                                "email_01" => $row['email_01'],
                                "email_02" => $row['email_02'],
+                               "miscinfo" => $row['miscinfo'],
                                "pin_color" => $row['pin_color'],
                                "location" => $row['location'],
                                "community_name" => $row['community_name'],

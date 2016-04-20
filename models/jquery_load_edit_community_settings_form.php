@@ -131,6 +131,20 @@
         if (data.trim() === "success") {
           $('#review_information_modal').modal('hide');
           community_marker_color = $("#pincolor").val();
+
+          if (default_pin_color_status == 1) {
+            default_pin_color = community_marker_color;
+            for (i in marker_ids) {
+              overalayColor(community_marker_color);
+              markers[i].setIcon(fullimg);
+            }
+          } else {
+            default_pin_color = "";
+            for (i in marker_ids) {
+              overalayColor(defined_marker_pin_colors[i]);
+              markers[i].setIcon(fullimg);
+            }
+          }
         } else {
          $("#updateCommunitySettingsErrorMessage").html("There was an error updating the settings.");
         }

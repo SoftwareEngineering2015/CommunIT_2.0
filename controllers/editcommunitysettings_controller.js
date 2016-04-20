@@ -31,13 +31,14 @@ var marker_longitudes = []; //holds marker longitude
 var marker_latlngs = []; //holds parsed latlng marker data
 var marker_locations = []; //holds marker location
 var marker_pin_colors = []; //holds marker pin color
+var defined_marker_pin_colors = [];
 var default_pin_color;
 var default_pin_color_status;
 var community_marker_color;
 var marker_has_floorplans = []; //Specifies that the marker has floorplans
 
 var infowindows = [];
-var prev_infowindow = false; // Varaible to check to
+var prev_infowindow = false; // Varaible to check to 
 
 //creates a bounds object that is extended in the main loop
 var bounds = new google.maps.LatLngBounds();
@@ -72,6 +73,7 @@ function loadCommunity(community) {
                     marker_latlngs.push(new google.maps.LatLng(value.latitude, value.longitude));
                     marker_locations.push(value.location);
                     marker_pin_colors.push(value.pin_color);
+                    defined_marker_pin_colors.push(value.defined_pin_color);
                     if (value.default_pin_color_status == 1) {
                         default_pin_color_status = true;
                         default_pin_color = value.pin_color;
@@ -370,19 +372,19 @@ function delete_marker(id) {
 
 // Jquery Actions
 $(document).ready(function() {
-
     $.urlParam = function(name) {
         var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
         return results[1] || 0;
     }
+
     $.post(
-        "models/jquery_load_edit_community_settings_form.php", {
-            community: $.urlParam('community') // Get the community id from the url
-        },
-        function(data) {
-            $("#informationField").html(data);
-        }
-    );
+            "models/jquery_load_edit_community_settings_form.php", {
+                community: $.urlParam('community') // Get the community id from the url
+            },
+            function(data) {
+                $("#informationField").html(data);
+            }
+        );
 
 
     $("#editCommunitySettingsButton").click(function(event) {
@@ -464,7 +466,7 @@ $(document).ready(function() {
     $('#deleteMarkerModal').on('show.bs.modal', function() {
         $(this).find('.modal-body').css({
             width: 'auto', //probably not needed
-            height: 'auto', //probably not needed
+            height: 'auto', //probably not needed 
             'max-height': '100%'
         });
     });

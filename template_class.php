@@ -4,8 +4,7 @@ function __construct( $title ) {
 $this->TITLE = $title;
 }
 function show_template( ) {
-print "<!DOCTYPE html>\n<html ng-app='communitApp'>\n<head> <title> $this->TITLE </title>
-<link rel='icon' type='image/icon' href='images/favicon.ico'>
+print "<!DOCTYPE html>\n<html ng-app='communitApp'>\n<head> <title> $this->TITLE </title>\n
 <meta name='google' value='notranslate'> </head>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 <link rel='stylesheet' type='text/css' href='css/bootstrap.css'>
@@ -44,6 +43,7 @@ $error = '';
 </style>
 <!--Conatins the Site's Header Nav Bar-->
 <html ng-controller='authenticationController' ng-init='authenticater()' ng-show="authenticated">
+<link rel='icon' type='image/icon' href='images/favicon.ico'>
 <nav class="navbar navbar-default navbar-fixed-top" ng-show="authenticated">
 <div class="container-fluid" ng-show="authenticated">
 <div class="navbar-header" ng-show="authenticated">

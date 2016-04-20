@@ -12,6 +12,7 @@ $postdata = file_get_contents("php://input");
    @$phone_02 = $request->phone_02;
    @$email_01 = $request->email_01;
    @$email_02 = $request->email_02;
+   @$miscinfo = $request->miscinfo;
    @$pin_color = $request->pin_color;
    @$user_id = $request->user_id;
 
@@ -21,6 +22,7 @@ $postdata = file_get_contents("php://input");
  $phone_02 = stripslashes($phone_02);
  $email_01 = stripslashes($email_01);
  $email_02 = stripslashes($email_02);
+ $miscinfo = stripslashes($miscinfo);
  $pin_color = stripslashes($pin_color);
  $user_id = stripslashes($user_id);
 
@@ -30,6 +32,7 @@ $postdata = file_get_contents("php://input");
  $phone_02 = mysql_real_escape_string($phone_02);
  $email_01 = mysql_real_escape_string($email_01);
  $email_02 = mysql_real_escape_string($email_02);
+ $miscinfo = mysql_real_escape_string($miscinfo);
  $pin_color = mysql_real_escape_string($pin_color);
  $user_id = mysql_real_escape_string($user_id);
 
@@ -44,7 +47,7 @@ $postdata = file_get_contents("php://input");
    $pin_color == NULL;
  }
 
- $query = "UPDATE `profiles` SET `phone_01`= '$phone_01',`phone_02`= '$phone_02',`email_01`= '$email_01',`email_02`= '$email_02' WHERE profile_id = '$profile_id' AND `user_id` = '$user_id'";
+ $query = "UPDATE `profiles` SET `phone_01`= '$phone_01',`phone_02`= '$phone_02',`email_01`= '$email_01',`email_02`= '$email_02', `miscinfo`= '$miscinfo' WHERE profile_id = '$profile_id' AND `user_id` = '$user_id'";
  $result = $conn->query($query) or exit("Error code ({$conn->errno}): {$conn->error}");
 
  hasEdited($conn, $profile_id);

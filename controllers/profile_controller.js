@@ -5,12 +5,14 @@ communitApp.controller('profileController', function($scope, $http) {
     $scope.userlastname = localStorage.getItem('communit_user_last');
     $scope.viewSwitch = true;
     $scope.showEditProfile = false;
+    $scope.newProfile = false;
 
     //Form Values
     $scope.phone_01 = "";
     $scope.phone_02 = "";
     $scope.email_01 = "";
     $scope.email_02 = "";
+    $scope.miscinfo = "";
     $scope.pin_color = "";
 
   $http({
@@ -28,8 +30,11 @@ communitApp.controller('profileController', function($scope, $http) {
     for(var i = 0; i < $scope.contents.length; i++){
       if($scope.contents[i].has_edited == 0){
         //alert("PLACEHOLDER ALERT BOX\n" + "Congratulations, you are now part of " + $scope.contents[i].community_name + " at " + $scope.contents[i].location + ".\nPlease take some time to fill out your profile for " + $scope.contents[i].community_name +".");
-        alert("PLACEHOLDER ALERT BOX\n" + "Congratulations, you have joined community " + $scope.contents[i].community_name + ".\nPlease take some time to fill out your profile for " + $scope.contents[i].community_name +".");
+        $scope.newProfileMsg= "Congratulations, you have joined the community \"" + $scope.contents[i].community_name + "\".";
+        $scope.newProfile = true;
         $scope.selectProfile = ""+i+"";
+        $scope.viewSwitch = false;
+        break;
         //window.location.href = 'editprofile.php';
       }
     }
@@ -56,6 +61,7 @@ communitApp.controller('profileController', function($scope, $http) {
     $scope.phone_02 = $scope.contents[index].phone_02;
     $scope.email_01 = $scope.contents[index].email_01;
     $scope.email_02 = $scope.contents[index].email_02;
+    $scope.miscinfo = $scope.contents[index].miscinfo;
     $scope.pin_color = $scope.contents[index].pin_color;
     $scope.changePinColor();
   };
@@ -67,6 +73,7 @@ communitApp.controller('profileController', function($scope, $http) {
     $scope.phone_02 = $scope.contents[index].phone_02;
     $scope.email_01 = $scope.contents[index].email_01;
     $scope.email_02 = $scope.contents[index].email_02;
+    $scope.miscinfo = $scope.contents[index].miscinfo;
     $scope.pin_color = $scope.contents[index].pin_color;
     $scope.showEditProfile = false;
     $scope.changePinColor();
@@ -95,6 +102,7 @@ communitApp.controller('profileController', function($scope, $http) {
          $scope.phone_02 = $scope.contents[index].phone_02;
          $scope.email_01 = $scope.contents[index].email_01;
          $scope.email_02 = $scope.contents[index].email_02;
+         $scope.miscinfo = $scope.contents[index].miscinfo;
          $scope.pin_color = $scope.contents[index].pin_color;
          $scope.changePinColor();
         }
@@ -115,6 +123,7 @@ communitApp.controller('profileController', function($scope, $http) {
              phone_02 : $scope.phone_02,
              email_01 : $scope.email_01,
              email_02 : $scope.email_02,
+             miscinfo : $scope.miscinfo,
              pin_color : $scope.pin_color,
              user_id   : $scope.user
          },

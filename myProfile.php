@@ -22,6 +22,22 @@
   </style>
   </head>
       <body ng-controller="profileController" ng-init="getInfo()" ng-click="successProfileMsg = null">
+
+        <div id="welcomejumbotron" class="jumbotron" ng-show="newProfile">
+          <div ng-show="newProfile" style="text-align: center;">
+            <!--<h2 id="welcomejumbotrontext">Welcome {{userfirstname}} {{userlastname}}!</h2>-->
+            <h2 id="welcomejumbotrontext" style="text-align: center;">
+            Congratulations, you have joined the community <br />"{{contents[selectProfile].community_name}}".</h2>
+            <h4 id="welcomejumbotrontext" style="text-align: center;">
+            Please take some time to fill out your profile for "{{contents[selectProfile].community_name }}"
+            </h4>
+            <br /><br />
+            <div class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-4 btn btn btn-info" 
+            ng-click="viewSwitch = true; newProfile = false; showEditProfile = true;"> Okay!
+            </div><br /><br />
+          </div>
+        </div>
+
         <div id="welcomejumbotron" class="jumbotron" ng-show="viewSwitch ">
           <div ng-show="!selectProfile" style="padding-left: 5%;">
             <h2 id="welcomejumbotrontext">Welcome {{userfirstname}} {{userlastname}}!</h2>
@@ -33,6 +49,15 @@
             <h4 id="welcomejumbotrontext" ng-show="!contents[selectProfile].marker_name">No place of residence set at <b>{{contents[selectProfile].community_name}}</b>.</h4>
           </div>
         </div>
+
+         <div class="jumbotron" ng-show="!viewSwitch && !newProfile" style="padding-left: 5%;">
+           <h1> Whoops, looks like you have no profiles. </h1>
+           <h3> Why not search for a community to join or create one for your community? </h3>
+         </div>
+         <div class="container-fluid" ng-show="!viewSwitch && !newProfile">
+             <a href="communitysearch.php" class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-1 btn btn-lg btn-primary"> Join a Community </a>
+             <a href="createcommunity.php" class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-2 btn btn-lg btn-primary"> Create a Community </a>
+         </div>
 
     <div class="container" ng-show="viewSwitch">
       <div id="communitySelecter" class="col-xs-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2" ng-show="!selectProfile && viewSwitch">
@@ -106,6 +131,15 @@
                   <td  ng-show="(contents[selectProfile].email_02)">{{contents[selectProfile].email_02}}</td>
                   <td  id="notAvailable" ng-show="!(contents[selectProfile].email_02)"> N/A</td>
                 </tr>
+                <tr>
+                  <td id="profileRow">Misc. Information: </td>
+                  <td ng-show="(contents[selectProfile].miscinfo)">
+                    <textarea rows="4" cols="30" readonly>{{contents[selectProfile].miscinfo}}</textarea>
+                  </td>
+                  <td id="notAvailable" ng-show="!(contents[selectProfile].miscinfo)"> 
+                    <textarea rows="2" cols="25" readonly>N/A</textarea> 
+                  </td>
+                </tr>
                 <tr ng-show="(contents[selectProfile].pin_color)">
                   <td id="profileRow">Pin Color: </td>
                   <td> <img src="images/house_pin.png" id="house_pin" alt="" style="width:auto; height:auto;"> </td>
@@ -145,9 +179,16 @@
                 <td id="profileRow">Secondary Email: </td>
                 <td colspan="2"><input type="email" class="form-control" id="inputEmail02" placeholder="Secondary E-mail Address" ng-model="email_02"></td>
               </tr>
+              <tr>
+                <td id="profileRow">Misc. Information: </td>
+                <td colspan="2">
+                  <textarea rows="4" cols="50" maxlength="10000" class="form-control" id="inputMiscInfo" placeholder="Miscellaneous Information" ng-model="miscinfo"></textarea>
+                </td>
+              </tr>
               <tr ng-show="contents[selectProfile].pin_color && (contents[selectProfile].allow_user_pin_colors == 1)">
-                <td id="profileRow">Pin Color: <img src="images/house_pin.png" id="house_pinEdit" alt="" style="width:auto; height: auto"> </td>
-                <td><input type="color" class="form-control" id="inputPinColor" ng-model="pin_color" ng-change="changePinColorEdit();"></td>
+                <td id="profileRow">Pin Color: </td>
+                <td><img src="images/house_pin.png" id="house_pinEdit" alt="" style="width:auto; height: auto"></td>
+                <td colspan="2"><input type="color" class="form-control" id="inputPinColor" ng-model="pin_color" ng-change="changePinColorEdit();"></td>
               </tr>
             </table>
             <div class="col-xs-12" ng-show="selectProfile">
@@ -160,14 +201,7 @@
 
     </div>
 
-         <div class="jumbotron" ng-show="!viewSwitch" style="padding-left: 5%;">
-           <h1> Whoops, looks like you have no profiles. </h1>
-           <h3> Why not search for a community to join or create one for your community? </h3>
-         </div>
-         <div class="container-fluid" ng-show="!viewSwitch">
-             <a href="communitysearch.php" class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-1 btn btn-lg btn-primary"> Join a Community </a>
-             <a href="createcommunity.php" class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-2 btn btn-lg btn-primary"> Create a Community </a>
-         </div>
+
 
       </body>
 </html>

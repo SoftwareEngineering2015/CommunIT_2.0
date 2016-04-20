@@ -14,6 +14,7 @@
 
    while ($row = $sql_marker_information_result->fetch_assoc()) {
       $name = $row['name'];
+      $miscinfo = $row['miscinfo'];
       $location = $row['location'];
       $pin_color = $row['pin_color'];
    }
@@ -23,6 +24,7 @@
 <script>
 
         var marker_clicked = '<?php echo $marker_id; ?>'; // This will keep track of which marker was clicked
+        floorplanMarkerBeingEdited = marker_clicked;
 
         pin_color = document.getElementById('floorplanMarkerPincolor').value;
         overalayColor(pin_color);
@@ -61,6 +63,7 @@
                     $.post("./models/update_floorplan_marker_model.php", {
                             marker: marker_clicked,
                             inputMarkerName: $("#floorplanMarkerName").val(),
+                            inputMarkerInformation: $("#floorplanMarkerInformation").val(),
                             inputMarkerLocation: $("#floorplanMarkerLocation").val(),
                             inputPinColor: $("#floorplanMarkerPincolor").val(),
                             inputMarkerLatitude: percentLeft,
@@ -76,11 +79,10 @@
                                     overalayColor($("#floorplanMarkerPincolor").val());
                                 }
 
-                                $("#marker_" + marker_clicked + "").attr("onclick", "$(`#dialog_" + data.marker_id + "`).dialog()");
-                                $("#marker_" + marker_clicked + "").attr("title", data.marker_name + "\n" + data.marker_location);
-                                $("#marker_" + marker_clicked + "").removeAttr("onmousedown");
+                                $("#marker_" + marker_clicked + "").remove();
 
-                                document.getElementById("marker_" + marker_clicked).src = fullimg;
+                                $("#floorplanModalDiv").append('<img src=' + fullimg + ' class="markers_on_floorplan" id="marker_' + data.marker_id + '" style="display: block; position: absolute; left:' + data.marker_latitude + '%; top:' + data.marker_longitude + '%;" title="' + data.marker_name + '\n' + data.marker_location + '" onclick="marker_actions(`' + data.marker_id + '`)"/>');
+                                
                                 $("#updateFloorplanMarkerMessage").html("<span style='font-weight: bold; color: green'> Marker was successfully updated. </span>");
 
                             } else {
@@ -93,6 +95,7 @@
         });
     </script>
 
+<h5> Click and drag to move the marker on the map </h5>
 <table class="table table-striped table-hover table-condensed ">
         <tr>
             <th> Marker Name </th>
@@ -101,6 +104,14 @@
             </td>
             <td> </td>
             <td> <input type="text" class="form-control input-md" id="floorplanMarkerName" placeholder="Marker Name" value="<?php echo $name; ?>"> <span class="text-danger" id="errorMsgFloorplanMarkerName"></span> </td>
+        </tr>
+        <tr>
+            <th> Marker Information </th>
+            <td> 
+                <a class="glyphicon glyphicon-question-sign" style="text-decoration: none" title="Information about this marker."> </a>
+            </td>
+            <td> </td>
+            <td> <textarea class="form-control" id="floorplanMarkerInformation" placeholder="Marker Information" wrap="soft" rows="5"><?php echo $miscinfo; ?></textarea></td>
         </tr>
         <tr>
             <th> Marker Location </th>

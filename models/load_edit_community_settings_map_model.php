@@ -33,6 +33,7 @@ while($row = $community_information_result->fetch_assoc()){
   $marker_information[$counter]['longitude'] = $row['longitude'];
   $marker_information[$counter]['location'] = $row['location'];
   $marker_information[$counter]['community_marker_color'] = $row['default_pin_color'];
+  $marker_information[$counter]['defined_pin_color'] = $row['pin_color'];
 
   if ($row['default_pin_color_status'] == 1) {
     $marker_information[$counter]['default_pin_color_status'] = 1; 

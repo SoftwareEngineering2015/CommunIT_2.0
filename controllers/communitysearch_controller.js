@@ -12,6 +12,8 @@ communitApp.controller('communitysearchController', ['$scope', '$http', function
     $scope.range = 0; // Used to limit the number of results shown 
     $scope.hide_next = false; // Used to hide the next button
     $scope.hide_last = true; // Used to hide the last button 
+    $scope.show_side_version = false;
+    $scope.row_clikced = 0;
 
     var encodedData = 'user=' +
         encodeURIComponent(localStorage.getItem("communit_user_id"));
@@ -32,7 +34,7 @@ communitApp.controller('communitysearchController', ['$scope', '$http', function
 
                     $scope.joined_communities_counter++;
 
-                    if ($scope.joined_communities_counter >= 10) {
+                    if ($scope.joined_communities_counter >= 5) {
                         $scope.can_join = false;
                         $("#maxJoinedAlertModal").modal("show");
                     }
@@ -75,7 +77,7 @@ communitApp.controller('communitysearchController', ['$scope', '$http', function
                     $scope.displayed_communities.length = 0;
                     $scope.has_results = true;
                     $scope.communities = data;
-                    for (i = 0; i <= $scope.range ; i++) { 
+                    for (i = $scope.range; i <= $scope.range && $scope.range < $scope.communities.length; i++) { 
                         $scope.displayed_communities.push(data[i]);
                     }
                     if ($scope.range >= $scope.communities.length - 1) {
@@ -159,6 +161,15 @@ communitApp.controller('communitysearchController', ['$scope', '$http', function
         }
     }
 
+    $scope.showSideVersion = function() {
+        $scope.show_side_version = true;
+        $scope.row_clicked = $scope.range;
+    }
+
+    $scope.search = function() {
+        $scope.show_side_version = false;
+    }
+
 }]);
 
 $(document).ready(function() {
@@ -172,19 +183,16 @@ $(document).ready(function() {
             },
             function(data) {
                 if (data.trim() == "alreadyJoined") {
-                    $("#joinCommunityErrorMessage").empty();
                     $("#joinCommunitySuccessMessage").empty();
                     $("#joinCommunityErrorMessage").html("You are already apart of this community.");
                 } else if (data.trim() == "alreadyRequested") {
-                    $("#joinCommunityErrorMessage").empty();
                     $("#joinCommunitySuccessMessage").empty();
-                    $("#joinCommunityErrorMessage").html("There is already a request for you to join this community.");
+                    $("#joinCommunityErrorMessage").html("There is already a request for you joining this community.");
                 } else if (data.trim() == "success") {
-                    $("#joinCommunityErrorMessage").empty();
                     $("#joinCommunitySuccessMessage").empty();
-                    $("#joinCommunitySuccessMessage").html("You're request to join the community has been sent.");
-                } else {
                     $("#joinCommunityErrorMessage").empty();
+                    $("#joinCommunitySuccessMessage").html("You're request to join the community has been sent to the owner.");
+                } else {
                     $("#joinCommunitySuccessMessage").empty();
                     $("#joinCommunityErrorMessage").html("There was an error submitting the request.");
                 }

@@ -10,6 +10,7 @@ include ('db_class.php'); // Include the database class
 // Get the variables and set them
 $floorplan_id = $_REQUEST['floorplan'];
 $name = $_REQUEST['inputMarkerName'];
+$miscinfo = $_REQUEST['inputMarkerInformation'];
 $location = $_REQUEST['inputMarkerLocation'];
 $pin_color = $_REQUEST['inputPinColor'];
 $latitude = $_REQUEST['inputMarkerLatitude'];
@@ -17,12 +18,14 @@ $longitude = $_REQUEST['inputMarkerLongitude'];
 
 // MySQL sanitize
 $name = stripslashes($name);
+$miscinfo = stripslashes($miscinfo);
 $location = stripslashes($location);
 $pin_color = stripslashes($pin_color);
 $latitude = stripslashes($latitude);
 $longitude = stripslashes($longitude);
 
 $name = mysql_real_escape_string($name);
+$miscinfo = mysql_real_escape_string($miscinfo);
 $location = mysql_real_escape_string($location);
 $pin_color = mysql_real_escape_string($pin_color);
 $latitude = mysql_real_escape_string($latitude);
@@ -43,7 +46,7 @@ do {
             $error_counter++;
         }else{
             $available = true;
-            $sql_create_marker = "INSERT INTO markers (marker_id, name, latitude, longitude, location, pin_color, has_floorplan) VALUES ('$marker_id', '$name', '$latitude', '$longitude', '$location', '$pin_color', '0')";
+            $sql_create_marker = "INSERT INTO markers (marker_id, name, miscinfo, latitude, longitude, location, pin_color, has_floorplan) VALUES ('$marker_id', '$name', '$miscinfo', '$latitude', '$longitude', '$location', '$pin_color', '0')";
             $sql_markers_to_floorplan = "INSERT INTO markers_to_floorplans (floorplan_id, marker_id) VALUES ('$floorplan_id', '$marker_id')";
             if(mysqli_query($conn, $sql_create_marker) && mysqli_query($conn, $sql_markers_to_floorplan)) {
                 $json_return_array =  array(
