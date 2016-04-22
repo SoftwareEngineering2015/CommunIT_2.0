@@ -18,7 +18,7 @@ if( $_REQUEST["name"] != "" && $_REQUEST["city"] != "" && $_REQUEST["state"] != 
 	$country = $_REQUEST["country"];
 	$country = stripslashes($country);
 	$country = mysql_real_escape_string($country);
-	$sql_community_search = "SELECT * FROM config INNER JOIN communities ON config.community_id = communities.community_id WHERE config.community_name LIKE '%$name%' AND communities.city LIKE '%$city%' AND communities.province LIKE '%$state%' AND communities.country LIKE '%$country%'";
+	$sql_community_search = "SELECT * FROM config INNER JOIN communities ON config.community_id = communities.community_id WHERE config.community_name LIKE '%$name%' AND communities.city LIKE '%$city%' AND communities.province LIKE '%$state%' AND communities.country LIKE '%$country%' ORDER BY community_name";
 	$community_search_result = mysqli_query($conn, $sql_community_search);
 }
 else if( $_REQUEST["city"] != "" && $_REQUEST["state"] != "" && $_REQUEST['country'] != "" ) {
@@ -31,7 +31,7 @@ else if( $_REQUEST["city"] != "" && $_REQUEST["state"] != "" && $_REQUEST['count
 	$country = $_REQUEST["country"];
 	$country = stripslashes($country);
 	$country = mysql_real_escape_string($country);
-	$sql_community_search = "SELECT * FROM config INNER JOIN communities ON config.community_id = communities.community_id WHERE communities.city LIKE '%$city%' AND communities.province LIKE '%$state%' AND communities.country LIKE '%$country%'";
+	$sql_community_search = "SELECT * FROM config INNER JOIN communities ON config.community_id = communities.community_id WHERE communities.city LIKE '%$city%' AND communities.province LIKE '%$state%' AND communities.country LIKE '%$country%' ORDER BY community_name";
 	$community_search_result = mysqli_query($conn, $sql_community_search);
 }
 else if( $_REQUEST["name"] != "" && $_REQUEST["state"] != "" && $_REQUEST['country'] != "" ) {
@@ -44,7 +44,7 @@ else if( $_REQUEST["name"] != "" && $_REQUEST["state"] != "" && $_REQUEST['count
 	$country = $_REQUEST["country"];
 	$country = stripslashes($country);
 	$country = mysql_real_escape_string($country);
-	$sql_community_search = "SELECT * FROM config INNER JOIN communities ON config.community_id = communities.community_id WHERE config.community_name LIKE '%$name%' AND communities.province LIKE '%$state%' AND communities.country LIKE '%$country%'";
+	$sql_community_search = "SELECT * FROM config INNER JOIN communities ON config.community_id = communities.community_id WHERE config.community_name LIKE '%$name%' AND communities.province LIKE '%$state%' AND communities.country LIKE '%$country%' ORDER BY community_name";
 	$community_search_result = mysqli_query($conn, $sql_community_search);
 }
 else if( $_REQUEST["name"] != "" && $_REQUEST["city"] != "" && $_REQUEST['country'] != "" ) {
@@ -57,7 +57,7 @@ else if( $_REQUEST["name"] != "" && $_REQUEST["city"] != "" && $_REQUEST['countr
 	$country = $_REQUEST["country"];
 	$country = stripslashes($country);
 	$country = mysql_real_escape_string($country);
-	$sql_community_search = "SELECT * FROM config INNER JOIN communities ON config.community_id = communities.community_id WHERE config.community_name LIKE '%$name%' AND communities.city LIKE '%$city%' AND communities.country LIKE '%$country%'";
+	$sql_community_search = "SELECT * FROM config INNER JOIN communities ON config.community_id = communities.community_id WHERE config.community_name LIKE '%$name%' AND communities.city LIKE '%$city%' AND communities.country LIKE '%$country%' ORDER BY community_name";
 	$community_search_result = mysqli_query($conn, $sql_community_search);
 }
 else if( $_REQUEST["name"] != "" && $_REQUEST["country"] != "" ) {
@@ -67,7 +67,7 @@ else if( $_REQUEST["name"] != "" && $_REQUEST["country"] != "" ) {
 	$country = $_REQUEST["country"];
 	$country = stripslashes($country);
 	$country = mysql_real_escape_string($country);
-	$sql_community_search = "SELECT * FROM config INNER JOIN communities ON config.community_id = communities.community_id WHERE config.community_name LIKE '%$name%' AND communities.country LIKE '%$country%'";
+	$sql_community_search = "SELECT * FROM config INNER JOIN communities ON config.community_id = communities.community_id WHERE config.community_name LIKE '%$name%' AND communities.country LIKE '%$country%' ORDER BY community_name";
 	$community_search_result = mysqli_query($conn, $sql_community_search);
 }
 else if( $_REQUEST["city"] != "" && $_REQUEST["country"] != "" ) {
@@ -77,7 +77,7 @@ else if( $_REQUEST["city"] != "" && $_REQUEST["country"] != "" ) {
 	$country = $_REQUEST["country"];
 	$country = stripslashes($country);
 	$country = mysql_real_escape_string($country);
-	$sql_community_search = "SELECT * FROM config INNER JOIN communities ON config.community_id = communities.community_id WHERE communities.city LIKE '%$city%' AND communities.country LIKE '%$country%'";
+	$sql_community_search = "SELECT * FROM config INNER JOIN communities ON config.community_id = communities.community_id WHERE communities.city LIKE '%$city%' AND communities.country LIKE '%$country%' ORDER BY community_name";
 	$community_search_result = mysqli_query($conn, $sql_community_search);
 }
 else if( $_REQUEST["state"] != "" && $_REQUEST['country'] != "") {
@@ -87,14 +87,14 @@ else if( $_REQUEST["state"] != "" && $_REQUEST['country'] != "") {
 	$country = $_REQUEST["country"];
 	$country = stripslashes($country);
 	$country = mysql_real_escape_string($country);
-	$sql_community_search = "SELECT * FROM config INNER JOIN communities ON config.community_id = communities.community_id WHERE communities.province LIKE '%$state%' AND communities.country LIKE '%$country%'";
+	$sql_community_search = "SELECT * FROM config INNER JOIN communities ON config.community_id = communities.community_id WHERE communities.province LIKE '%$state%' AND communities.country LIKE '%$country%' ORDER BY community_name";
 	$community_search_result = mysqli_query($conn, $sql_community_search);
 }
 else if( $_REQUEST["country"] != "" ) {
 	$country = $_REQUEST["country"];
 	$country = stripslashes($country);
 	$country = mysql_real_escape_string($country);
-	$sql_community_search = "SELECT * FROM config INNER JOIN communities ON config.community_id = communities.community_id WHERE communities.country LIKE '%$country%'";
+	$sql_community_search = "SELECT * FROM config INNER JOIN communities ON config.community_id = communities.community_id WHERE communities.country LIKE '%$country%' ORDER BY community_name";
 	$community_search_result = mysqli_query($conn, $sql_community_search);
 }
 

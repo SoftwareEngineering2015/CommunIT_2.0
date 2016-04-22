@@ -1,6 +1,6 @@
 <?php
    require_once( "template_class.php");       // css and headers
-   $H = new template( "My Home" );
+   $H = new template( "My Communities" );
    $H->show_template( );
 
 ?>

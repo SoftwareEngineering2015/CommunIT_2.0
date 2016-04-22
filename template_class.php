@@ -69,20 +69,19 @@ $error = '';
 <li><a class="" href="myhome.php">My Communities</a></li>
 <li><a href="createcommunity.php">Create Community</a></li>
 <li><a href="communitysearch.php">Community Search</a></li>
-<li><a href="joincommunityrequests.php">Community Requests</a></li>
+<li><a href="joincommunityrequests.php">Community Requests <span class="badge" ng-show="invitedCounter != 0" ng-bind="invitedCounter"></span></a></li>
 </ul>
 </li>
-<li><a href="myprofile.php">My Profiles</a></li>
 <li><a href="residents.php">Residents</a></li>
 </ul>
 <ul class="nav navbar-nav navbar-right">
 <!--<li><a href="directory.php">Directory</a></li>-->
+<li><a href="myprofile.php">My Profiles <span class="badge" ng-show="(newProfileCounter != 0)" ng-bind="newProfileCounter"></span></a></li></a></li>
 <li><a href="account.php">Account</a></li>
 <li><a ng-click="logout();">Logout</a></li>
 </ul>
 </div><!-- /.navbar-collapse -->
 </nav>
-<div id="nav-bar-spacing" style="height: 55px">&nbsp</div>
 
 
 <!--

@@ -13,10 +13,10 @@
       hr {
       border-color: white;
       }
-      .table {
+      .tabledetail {
       border-bottom:0px !important;
       }
-      .table th, .table td {
+      .tabledetail th, .tabledetail td {
       border: 0px !important;
       }
       .fixed-table-container {
@@ -30,10 +30,11 @@
             <div class="col-md-5" class="container-fluid">
                <div ng-show="show_side_version">
                   <div align="center">
-                     <button class='btn btn-info btn-md' style='width:auto' ng-click="search()"><span class="glyphicon glyphicon-arrow-left"/> Back To Search </button>
+                  <br />
+                     <button class='btn btn-primary btn-md' style='width:auto' ng-click="search()"><span class="glyphicon glyphicon-arrow-left"/> Back To Search </button>
                   </div>
                   <h3> {{ communities[row_clicked].community_name }} </h3>
-                  <table class="table table-borderless table-responsive">
+                  <table class="table  table-borderless table-responsive table-striped">
                      <tr> 
                         <th style="color: #006699"> City: </th> 
                         <td> {{ communities[row_clicked].city }} </td> 
@@ -53,13 +54,13 @@
                   </table>
                   <div align="center">
                      <button type='button' class='btn btn-success btn-sm' style='width:auto' ng-click='load_map_into_modal(communities[row_clicked].community_id)' data-toggle='modal' data-target='#view_community_modal'>View Community</button> </td>
-                     <button ng-if="can_join" type='button' class='btn btn-info btn-sm' style='width:auto' ng-click='show_join_community_modal(communities[row_clicked].community_id)' data-toggle='modal'>Join Community</button> </td> <td> </td> <td> </td>
+                     <button ng-if="can_join" type='button' class='btn btn-primary btn-sm' style='width:auto' ng-click='show_join_community_modal(communities[row_clicked].community_id)' data-toggle='modal'>Join Community</button> </td> <td> </td> <td> </td>
                   </div>   
                </div>
                <div ng-show="!show_side_version">
                   <h1> Search For A Community </h1>
                   <hr>
-                  <table class="table table-striped table-hover ">
+                  <table class="table tabledetail table-striped table-hover ">
                      <tr>
                         <th> Community Name </th>
                         <td>
@@ -347,30 +348,30 @@
                <div ng-show="has_results"> 
                   <h3> {{ communities.length }} Results </h3>
                   <div align="center">
-                     <button class='btn btn-info btn-md' style='width:auto' ng-click="last()" ng-show="!hide_last"><span class="glyphicon glyphicon-arrow-left"/></button>
-                     <button class='btn btn-info btn-md' style='width:auto' ng-click="next()" ng-show="!hide_next"><span class="glyphicon glyphicon-arrow-right"/></button>
+                     <button class='btn btn-primary btn-md' style='width:auto' ng-click="last()" ng-show="!hide_last"><span class="glyphicon glyphicon-arrow-left"/></button>
+                     <button class='btn btn-primary btn-md' style='width:auto' ng-click="next()" ng-show="!hide_next"><span class="glyphicon glyphicon-arrow-right"/></button>
                   </div>
-                  <table class="table table-borderless table-responsive" ng-repeat="x in displayed_communities">
-                     <tr> 
-                        <th> Community Name </th> 
-                        <th> City </th> 
-                        <!--<th> State / Province </th>--> 
-                        <th> Country </th> 
-                        <th> </th>
-                        <th> </th>
-                     </tr>
-                     <tr> 
-                        <td style='color: #317eac' ng-click="showSideVersion();"> {{ x.community_name }} </td> 
-                        <td ng-click="showSideVersion();"> {{ x.city }} </td> 
-                        <!--<td> {{ x.state }} </td> --> 
-                        <td ng-click="showSideVersion();"> {{ x.country }} </td> 
-                        <td> <button type='button' class='btn btn-success btn-sm' style='width:auto' ng-click='load_map_into_modal(x.community_id)' data-toggle='modal' data-target='#view_community_modal'>View Community</button> </td>
-                        <td ng-if="can_join"> <button type='button' class='btn btn-info btn-sm' style='width:auto' ng-click='show_join_community_modal(x.community_id)' data-toggle='modal'>Join Community</button> </td> <td> </td> <td> </td>
-                     </tr>
+                  <table class="table table-borderless table-responsive table-striped table-hover">
+                        <tr> 
+                           <th> Community Name </th> 
+                           <th> City </th> 
+                           <!--<th> State / Province </th>--> 
+                           <th> Country </th> 
+                           <th> </th>
+                           <th> </th>
+                        </tr>
+                        <tr ng-repeat="x in displayed_communities track by $index"> 
+                           <td style='color: #317eac' ng-click="showSideVersion($index);"> {{ x.community_name }} </td> 
+                           <td ng-click="showSideVersion($index);"> {{ x.city }} </td> 
+                           <!--<td> {{ x.state }} </td> --> 
+                           <td ng-click="showSideVersion($index);"> {{ x.country }} </td> 
+                           <td> <button type='button' class='btn btn-success btn-sm' style='width:auto' ng-click='load_map_into_modal(x.community_id)' data-toggle='modal' data-target='#view_community_modal'>View Community</button> </td>
+                           <td ng-if="can_join"> <button type='button' class='btn btn-primary btn-sm' style='width:auto' ng-click='show_join_community_modal(x.community_id)' data-toggle='modal'>Join Community</button> </td>
+                        </tr>
                   </table>
                   <div align="center">
-                     <button class='btn btn-info btn-md' style='width:auto' ng-click="last()" ng-show="!hide_last"><span class="glyphicon glyphicon-arrow-left"/></button>
-                     <button class='btn btn-info btn-md' style='width:auto' ng-click="next()" ng-show="!hide_next"><span class="glyphicon glyphicon-arrow-right"/></button>
+                     <button class='btn btn-primary btn-md' style='width:auto' ng-click="last()" ng-show="!hide_last"><span class="glyphicon glyphicon-arrow-left"/></button>
+                     <button class='btn btn-primary btn-md' style='width:auto' ng-click="next()" ng-show="!hide_next"><span class="glyphicon glyphicon-arrow-right"/></button>
                   </div>
                </div>
             </div>

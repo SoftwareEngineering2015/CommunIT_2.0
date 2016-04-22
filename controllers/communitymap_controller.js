@@ -464,7 +464,7 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
         controlUI.style.cursor = 'pointer';
         controlUI.style.marginTop = '0px';
         controlUI.style.textAlign = 'center';
-        controlUI.style.marginRight = '-150px';
+        controlUI.style.marginLeft = '25px';
         controlUI.style.color = 'rgb(250,250,250)';
         controlUI.style.fontFamily = 'Roboto,Arial,sans-serif';
         controlUI.style.fontSize = '16px';
@@ -839,7 +839,7 @@ function loadInfoWindow(marker, name) {
                 } else {
                     $("#floorplanInformationField").append("<h4 id='profileRow' style='font-weight: bold;'>" + data.marker_name + "<h4><h5 id='profileRow' style='font-weight: bold;'>" + data.marker_location + "</h5> <hr />");
                 }
-                $("#floorplanInformationField").append("<h3>" + data.no_profiles + "</h3>");
+                $("#floorplanInformationField").append("<h4>" + data.no_profiles + "</h4>");
             } else {
                 if (data[0].marker_miscinfo) {
                     $("#floorplanInformationField").append("<h4 id='profileRow' style='font-weight: bold;'>" + data[0].marker_name + "<h4><h5 id='profileRow' style='font-weight: bold;'>" + data[0].marker_location + "</h5> <button class='btn btn-info btn-xs' id='showFloorplanMarkerInfo'> Show Info </button> <button class='btn btn-info btn-xs' id='hideFloorplanMarkerInfo' style='display: none;'> Hide Info </button> <textarea style='width: 100%; display:none;' rows='4' id='floorplanMarkerInfo'> " + data[0].marker_miscinfo + " </textarea> <hr />");

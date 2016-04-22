@@ -15,6 +15,10 @@ communitApp.controller('communitysearchController', ['$scope', '$http', function
     $scope.show_side_version = false;
     $scope.row_clikced = 0;
 
+    $scope.max_shown = 10; // Used to hold the number of communities displayed
+
+    $scope.search_section = 0; // This is the section of the contents of the searched data (e.g. 1,2,3...)
+
     var encodedData = 'user=' +
         encodeURIComponent(localStorage.getItem("communit_user_id"));
 
@@ -34,7 +38,7 @@ communitApp.controller('communitysearchController', ['$scope', '$http', function
 
                     $scope.joined_communities_counter++;
 
-                    if ($scope.joined_communities_counter >= 5) {
+                    if ($scope.joined_communities_counter >= 10) {
                         $scope.can_join = false;
                         $("#maxJoinedAlertModal").modal("show");
                     }
@@ -77,10 +81,19 @@ communitApp.controller('communitysearchController', ['$scope', '$http', function
                     $scope.displayed_communities.length = 0;
                     $scope.has_results = true;
                     $scope.communities = data;
-                    for (i = $scope.range; i <= $scope.range && $scope.range < $scope.communities.length; i++) { 
-                        $scope.displayed_communities.push(data[i]);
+
+                    $scope.hide_next = false;
+                    $scope.hide_last = true;
+
+                    $scope.range = 0;
+                    counter = 0;
+                    while (counter < $scope.max_shown && $scope.range < $scope.communities.length) {
+                        $scope.displayed_communities.push($scope.communities[$scope.range]);
+                        $scope.range++;
+                        counter++;
                     }
-                    if ($scope.range >= $scope.communities.length - 1) {
+
+                    if ($scope.range >= $scope.communities.length) {
                         $scope.hide_next = true;
                     }
                 } else {
@@ -128,13 +141,20 @@ communitApp.controller('communitysearchController', ['$scope', '$http', function
     $scope.next = function() {
         $scope.displayed_communities.length = 0;
 
-        $scope.range = $scope.range + 1;
+        $scope.search_section = $scope.search_section + $scope.max_shown;
 
-        for (i = $scope.range; i <= $scope.range; i++) {
-            $scope.displayed_communities.push($scope.communities[i]);
+        counter = 0;
+        while (counter < $scope.max_shown && $scope.range < $scope.communities.length) {
+            index = counter + $scope.range;
+            if ($scope.communities[index]) {
+                $scope.displayed_communities.push($scope.communities[index]);
+            }
+            counter++;
         }
 
-        if ($scope.range >= $scope.communities.length - 1) {
+        $scope.range = $scope.range + $scope.max_shown;
+
+        if ($scope.range >= $scope.communities.length) {
             $scope.hide_next = true;
         }
 
@@ -146,14 +166,19 @@ communitApp.controller('communitysearchController', ['$scope', '$http', function
     $scope.last = function() {
         $scope.displayed_communities.length = 0;
 
-        $scope.range = $scope.range - 1;
+        $scope.search_section = $scope.search_section - $scope.max_shown;
 
-        for (i = $scope.range; i >= $scope.range; i--) {
-            $scope.displayed_communities.push($scope.communities[i]);
+        $scope.range = $scope.range - ($scope.max_shown * 2);
+
+        if ($scope.range <= 0) {
+            $scope.hide_last = true;
         }
 
-        if ($scope.range == 0) {
-            $scope.hide_last = true;
+        counter = 0;
+        while (counter < $scope.max_shown) {
+            $scope.displayed_communities.push($scope.communities[$scope.range]);
+            $scope.range++;
+            counter++;
         }
 
         if ($scope.range < $scope.communities.length) {
@@ -161,9 +186,10 @@ communitApp.controller('communitysearchController', ['$scope', '$http', function
         }
     }
 
-    $scope.showSideVersion = function() {
+    $scope.showSideVersion = function(index) {
         $scope.show_side_version = true;
-        $scope.row_clicked = $scope.range;
+        $scope.row_clicked = index + $scope.search_section;
+        
     }
 
     $scope.search = function() {

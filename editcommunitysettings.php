@@ -44,8 +44,8 @@
 
    <body>
       <div style="width:100%; height:91%; " id="pageDiv">
-        <div style="background-color: #19A3FF; ">
-          <div class="col-md-4"  style="background-color: #FFFFFF; min-height: 75%;">
+        <div style="height: 100%; ">
+          <div class="col-md-4"  style="background-color: #ffffff; max-height: 100%;">
              <div class="col-lg-6">
                 <button type="button" class="btn btn-success btn-sm" style="width:100%;" id="editCommunitySettingsButton">Edit Community Settings</button>
              </div>
@@ -59,12 +59,12 @@
                 <button type="button" class="btn btn-info btn-sm" style="width:100%;" id="residentRequestsInviteButton">Resident Requests / Invite</button>
              </div>
              &nbsp
-             <div id="informationField" style="height:87%  overflow:auto;">
+             <div id="informationField" style="height: 87%;  overflow:auto;">
              </div>
           </div>
-        </div>
-         <!--Google Map Div-->
+          <!--Google Map Div-->
          <div class="col-md-8" id="googleMap" style="height:100%;" ></div>
+        </div>
       </div>
    </body>
 

@@ -134,7 +134,7 @@ background-size: cover;
                                 </div>
                                 <div class="col-xs-7">
                                     <div class="form-group">
-                                        <input type="text" name="inputUsername" id="inputUsername" class="form-control input-sm floatlabel" placeholder="Username" required autofocus ng-model="inputData.username">
+                                        <input type="text" name="inputUsername" id="inputUsername" class="form-control input-sm floatlabel" placeholder="Username" required autofocus ng-model="inputData.username" maxlength="50" ng-change="checkUsername();">
                                         <span class="text-danger" ng-show="errorMsgUsername">{{errorMsgUsername}}</span>
                                     </div>
                                 </div>
@@ -148,7 +148,7 @@ background-size: cover;
                                 </div>
                                 <div class="col-xs-7">
                                     <div class="form-group">
-                                        <input type="email" name="inputEmail" id="inputEmail" class="form-control input-sm floatlabel" placeholder="E-mail Address" required ng-model="inputData.email">
+                                        <input type="email" name="inputEmail" id="inputEmail" class="form-control input-sm floatlabel" placeholder="E-mail Address" required ng-model="inputData.email" maxlength="50">
                                         <span class="text-danger" ng-show="errorMsgEmail">{{errorMsgEmail}}</span>
                                     </div>
                                 </div>
@@ -162,7 +162,7 @@ background-size: cover;
                                 </div>
                                 <div class="col-xs-7">
                                     <div class="form-group">
-                                        <input type="text" name="inputFirstName" id="inputFirstName" class="form-control input-sm floatlabel" placeholder="First Name" required ng-model="inputData.firstName">
+                                        <input type="text" name="inputFirstName" id="inputFirstName" class="form-control input-sm floatlabel" placeholder="First Name" required ng-model="inputData.firstName" maxlength="50">
                                     </div>
                                 </div>
                             </div>
@@ -175,7 +175,7 @@ background-size: cover;
                                 </div>
                                 <div class="col-xs-3 col-sm-3 col-md-3">
                                     <div class="form-group">
-                                        <input type="text" name="inputMiddleInitial" id="inputMiddleInitial" class="form-control input-sm floatlabel" placeholder="M" pattern="[A-Za-z]{1}" maxlength="1" style="text-transform:uppercase" ng-model="inputData.middleInitial">
+                                        <input type="text" name="inputMiddleInitial" id="inputMiddleInitial" class="form-control input-sm floatlabel" placeholder="MI" pattern="[A-Za-z]{1}" title="Enter the first letter of your middle-name." maxlength="1" style="text-transform:uppercase" ng-model="inputData.middleInitial">
                                     </div>
                                 </div>
                             </div>
@@ -202,10 +202,10 @@ background-size: cover;
                                 <div class="col-xs-7">
                                     <div class="form-group">
                                         <select class="form-control input-sm floatlabel" name="inputGender" id="inputGender" ng-model="inputData.gender">
-                                            <option selected value=""> No Answer</option>
-                                            <option value="male"> Male </option>
-                                            <option value="female"> Female </option>
-                                            <option value="other"> Other </option>
+                                            <option selected value="" >No Answer</option>
+                                            <option value="Male">Male </option>
+                                            <option value="Female">Female </option>
+                                            <option value="Other">Other </option>
                                         </select>
                                     </div>
                                 </div>
@@ -234,7 +234,7 @@ background-size: cover;
                                 </div>
                                 <div class="col-xs-7">
                                     <div class="form-group">
-                                        <input type="password" name="inputPassword" id="inputPassword" class="form-control input-sm floatlabel" required  ng-change="checkPassword()" ng-model="inputData.password" minlength="8">
+                                        <input type="password" name="inputPassword" id="inputPassword" class="form-control input-sm floatlabel" required  ng-change="checkPassword()" ng-model="inputData.password" minlength="8" maxlength="30">
                                     </div>
                                 </div>
                             </div>
@@ -247,7 +247,7 @@ background-size: cover;
                                 </div>
                                 <div class="col-xs-7">
                                     <div class="form-group">
-                                        <input type="password" name="inputPasswordConfirm" id="inputPasswordConfirm" class="form-control input-sm floatlabel" required ng-change="checkPassword()" ng-model="inputData.passwordConfirm" minlength="8">
+                                        <input type="password" name="inputPasswordConfirm" id="inputPasswordConfirm" class="form-control input-sm floatlabel" required ng-change="checkPassword()" ng-model="inputData.passwordConfirm" minlength="8" maxlength="30">
                                         <span class="text-danger" ng-show="errorMsgPassword">{{errorMsgPassword}}</span>
                                     </div>
                                 </div>

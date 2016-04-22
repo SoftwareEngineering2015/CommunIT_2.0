@@ -130,6 +130,17 @@ indexApp.controller('createaccountController', ['$scope', '$http', function($sco
 			}
 		}
 
+  $scope.checkUsername = function(){
+      if (!(/^[a-zA-Z0-9]*$/.test($scope.inputData.username))) {
+          //alert("Please use only Alphanumeric characters ")
+          $scope.errorMsgUsername = "Only Alphanumeric characters allowed.";
+          $scope.vaildUsername = false;
+      }else{
+        $scope.errorMsgUsername = '';
+        $scope.vaildUsername = true;
+      }
+  }
+
      $scope.clearForm = function() {
       $scope.inputData.username = '';
       $scope.inputData.email = '';
@@ -144,12 +155,15 @@ indexApp.controller('createaccountController', ['$scope', '$http', function($sco
     $scope.errorMsgBirthDate = "";
     $scope.errorMsgPassword = "";
     $scope.errorMsgEmail = "";
+    $scope.inputData.middleInitial = $scope.inputData.middleInitial.toUpperCase();
     if (/\s/.test($scope.inputData.username)){ //|| (!(/[a-zA-Z0-9]/.test($scope.inputData.username)))){
     $scope.errorMsgUsername = "There cannot be spaces in the username.";
     } else if ($("#inputBirthDate").val() === "") {
     $scope.errorMsgBirthDate = "Birth date is required.";
     } else if($scope.vaildPassword == false){
     $scope.errorMsgPassword = "Passwords do not match";
+    }else if($scope.vaildUsername == false){
+    $scope.errorMsgUsername = "Username not valid.";
     } else{
     var encodedData = 'inputUsername=' +
     encodeURIComponent($scope.inputData.username) +

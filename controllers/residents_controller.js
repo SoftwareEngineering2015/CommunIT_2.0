@@ -13,7 +13,9 @@ communitApp.controller('residentsController', function($scope, $http) {
   $scope.selectedResidentID;
   $scope.showDetailedResident = false;
   $scope.showEditResident = false;
-
+  $scope.showDetailedProfile = false
+  $scope.validPhone01 = true;
+  $scope.validPhone02 = true;
 
   $scope.residentFirstName = "";
   $scope.residentLastName = "";
@@ -30,6 +32,7 @@ communitApp.controller('residentsController', function($scope, $http) {
     $scope.showEditResident = false;
     $scope.showInsertResident = false;
     $scope.showDeleteResident = false;
+    $scope.showDetailedProfile = false;
     $scope.getResidents();
   };
 
@@ -37,6 +40,7 @@ communitApp.controller('residentsController', function($scope, $http) {
     $scope.showEditResident = false;
     $scope.showDetailedResident = false;
     $scope.showDeleteResident = false;
+    $scope.showDetailedProfile = false;
     $scope.showInsertResident = true;
   };
 
@@ -45,7 +49,16 @@ communitApp.controller('residentsController', function($scope, $http) {
     $scope.showEditResident = false;
     $scope.showInsertResident = false;
     $scope.showDeleteResident = false;
+    $scope.showDetailedProfile = false;
     $scope.showDetailedResident = true;
+  };
+
+    $scope.showProfile = function () {
+    $scope.showEditResident = false;
+    $scope.showInsertResident = false;
+    $scope.showDeleteResident = false;
+    $scope.showDetailedResident = false;
+    $scope.showDetailedProfile = true;
   };
 
   $scope.showDelete = function (selectedResID) {
@@ -53,6 +66,7 @@ communitApp.controller('residentsController', function($scope, $http) {
     $scope.showEditResident = false;
     $scope.showInsertResident = false;
     $scope.showDetailedResident = false;
+    $scope.showDetailedProfile = false;
     $scope.showDeleteResident = true;
   };
 
@@ -61,6 +75,7 @@ communitApp.controller('residentsController', function($scope, $http) {
     $scope.showDetailedResident = false;
     $scope.showInsertResident = false;
     $scope.showDeleteResident = false;
+    $scope.showDetailedProfile = false;
     $scope.showEditResident = true;
 
     $scope.residentFirstName = $scope.residents[$scope.selectedResidentID].firstname;
@@ -90,6 +105,39 @@ communitApp.controller('residentsController', function($scope, $http) {
     $scope.email_02 = '';
 
   };
+
+    $scope.checkPhoneNumber01 = function(){
+    if($scope.phone_01 != ''){ 
+      var phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+      if(phoneRegex.test($scope.phone_01)) {
+        $scope.errorPhone01Msg = "";
+        $scope.validPhone01 = true;
+      }else {  
+        $scope.errorPhone01Msg = "Invalid Phone Number";
+        $scope.validPhone01 = false;
+      }
+    }else{
+      $scope.validPhone01 = true;
+      $scope.errorPhone01Msg = "";
+    }
+  }
+
+    $scope.checkPhoneNumber02 = function(){
+      if($scope.phone_02 != ''){ 
+          var phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+          if(phoneRegex.test($scope.phone_02)) {
+            $scope.errorPhone02Msg = "";
+            $scope.validPhone02 = true;
+          }else {  
+            $scope.errorPhone02Msg = "Invalid Phone Number";
+            $scope.validPhone02 = false;
+          }
+      }else{
+        $scope.validPhone02 = true;
+        $scope.errorPhone02Msg = "";
+      }
+
+  }
 
 
   $scope.getInfo = function () {
@@ -142,72 +190,85 @@ communitApp.controller('residentsController', function($scope, $http) {
 
     $scope.updateRes = function (resID) {
 
-        var updateResident = $http({
-         method : 'POST',
-         url    : './models/residents_model.php',
-         data: {
-             user : $scope.user,
-             profile : $scope.selectProfile_id,
-             resident : resID,
-             firstname : $scope.residentFirstName,
-             lastname : $scope.residentLastName,
-             phone_01 : $scope.phone_01,
-             phone_02 : $scope.phone_02,
-             email_01 : $scope.email_01,
-             email_02 : $scope.email_02,
-             command  : "update"
-         },
-         headers: { 'Content-Type' : 'application/json'}
+      $scope.checkPhoneNumber01();
+      $scope.checkPhoneNumber02();
+      if($scope.validPhone01 == false || $scope.validPhone02 == false ){
+         //$scope.errorMsg = "Invalid Phone Number";
+      }else{
 
-      });
+          var updateResident = $http({
+           method : 'POST',
+           url    : './models/residents_model.php',
+           data: {
+               user : $scope.user,
+               profile : $scope.selectProfile_id,
+               resident : resID,
+               firstname : $scope.residentFirstName,
+               lastname : $scope.residentLastName,
+               phone_01 : $scope.phone_01,
+               phone_02 : $scope.phone_02,
+               email_01 : $scope.email_01,
+               email_02 : $scope.email_02,
+               command  : "update"
+           },
+           headers: { 'Content-Type' : 'application/json'}
 
-      updateResident.success(function (data, status, headers, config) {
+        });
 
-        $scope.updateObj = data;
-        if ($scope.updateObj.error) {
-          $scope.successMsg = '';
-          $scope.errorMsg = "Error: please refresh and try again.";
+        updateResident.success(function (data, status, headers, config) {
 
-        } else {
-          $scope.errorMsg = '';
-          $scope.successMsg = "Resident updated successfully.";
-          $scope.getResidents();
-        }
-      });
+          $scope.updateObj = data;
+          if ($scope.updateObj.error) {
+            $scope.successMsg = '';
+            $scope.errorMsg = "Error: please refresh and try again.";
+
+          } else {
+            $scope.errorMsg = '';
+            $scope.successMsg = "Resident updated successfully.";
+            $scope.getResidents();
+          }
+        });
+      }
     };
 
     $scope.insertRes = function () {
-
+      $scope.checkPhoneNumber01();
+      $scope.checkPhoneNumber02();
+      if($scope.validPhone01 == false || $scope.validPhone02 == false ){
+         //$scope.errorMsg = "Invalid Phone Number";
+      }else{
+        $scope.errorMsg = "";
         var insertResident = $http({
-         method : 'POST',
-         url    : './models/residents_model.php',
-         data: {
-             user : $scope.user,
-             profile : $scope.selectProfile_id,
-             firstname : $scope.residentFirstName,
-             lastname : $scope.residentLastName,
-             phone_01 : $scope.phone_01,
-             phone_02 : $scope.phone_02,
-             email_01 : $scope.email_01,
-             email_02 : $scope.email_02,
-             command  : "insert"
-         },
-         headers: { 'Content-Type' : 'application/json'}
-      });
+           method : 'POST',
+           url    : './models/residents_model.php',
+           data: {
+               user : $scope.user,
+               profile : $scope.selectProfile_id,
+               firstname : $scope.residentFirstName,
+               lastname : $scope.residentLastName,
+               phone_01 : $scope.phone_01,
+               phone_02 : $scope.phone_02,
+               email_01 : $scope.email_01,
+               email_02 : $scope.email_02,
+               command  : "insert"
+           },
+           headers: { 'Content-Type' : 'application/json'}
+        });
 
-      insertResident.then(function (data, status, headers, config) {
-        $scope.insertObj = data.data;
-        if ($scope.insertObj.error) {
-          $scope.successMsg = '';
-          //$scope.errorMsg = "Error: please refresh and try again.";
-          $scope.errorMsg = $scope.insertObj.error;
-        } else {
-          $scope.errorMsg = '';
-          $scope.successMsg = "Resident added successfully.";
-          $scope.clearInsert();
-          $scope.getResidents();
-        }
-      });
+        insertResident.then(function (data, status, headers, config) {
+          $scope.insertObj = data.data;
+          if ($scope.insertObj.error) {
+            $scope.successMsg = '';
+            //$scope.errorMsg = "Error: please refresh and try again.";
+            $scope.errorMsg = $scope.insertObj.error;
+          } else {
+            $scope.errorMsg = '';
+            $scope.successMsg = "Resident added successfully.";
+            $scope.clearInsert();
+            $scope.getResidents();
+          }
+        });
+      }
     };
 
     $scope.deleteRes = function (resID) {

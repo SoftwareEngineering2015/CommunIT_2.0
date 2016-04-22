@@ -123,7 +123,7 @@
         }
     }
 
-     .modal-dialog{
+     #floorplan-modal-dialog{
         position: relative;
         display: table;
         overflow-y: auto;
@@ -132,7 +132,7 @@
         height: 90%;
     }
 
-    .modal-content {
+    #floorplan-modal-content {
           height: 99%;
         }
 
@@ -233,15 +233,15 @@
 
     <!-- Modal -->
     <div id="viewFloorplanModal" class="modal fade" role="dialog"  style="overflow-y:auto; ">
-        <div class="modal-dialog"  style="overflow-y:auto; ">
+        <div class="modal-dialog" id="floorplan-modal-dialog" style="overflow-y:auto;">
             <!-- Modal content -->
-            <div class="modal-content"  style="overflow-y:auto; overflow-x: hidden;">
+            <div class="modal-content" id="floorplan-modal-content" style="overflow-y:auto; overflow-x: hidden; ">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h3 id="floorplanName"> </h3>
                 </div>
-                <div class="modal-body row" style="height: 85%; overflow-y:auto; overflow-x: hidden;">
-                    <div style="height: 100%; overflow-y:auto; overflow-x: auto; background-color: #19A3FF;" class="col-sm-4 col-lg-3 container-fluid">
+                <div class="modal-body" style="height: 85%; overflow-y:auto; overflow-x: hidden;">
+                    <div style="overflow-y:auto; overflow-x: auto; background-color: #19A3FF;" class="col-sm-4 col-lg-3 container-fluid">
                         <div id="floorplanInformationField" style="height: 90%; overflow-y:auto; overflow-x: auto; background-color: #FFFFFF; padding: 5px; margin-top: 10px; margin-bottom: 10px;">
                             <h3 align="center"> Select a residence </h3>
                         </div>
@@ -256,15 +256,15 @@
 
     <!-- Modal -->
     <div id="weatherModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog" style="min-width: 80%;">
             <!-- Modal content -->
-            <div class="modal-content">
+            <div class="modal-content" style="min-width: 80%;">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h3 id="markerNameWeather"></h3>
                 </div>
                 <div class="modal-body" id='weatherInformation'>
-                    <div id="forecastDiv">
+                    <div id="forecastDiv" style="overflow: auto;">
                         <h4> Current Weather <span id="currentWeatherPic"> </span> </h4>
                         <table class="table table-responsive" id="table-borderless">
                             <tr>

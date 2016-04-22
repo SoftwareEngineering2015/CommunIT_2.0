@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 15, 2016 at 04:37 PM
+-- Generation Time: Apr 22, 2016 at 08:49 AM
 -- Server version: 10.1.9-MariaDB
 -- PHP Version: 5.6.15
 
@@ -14,7 +14,6 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `communit2`
@@ -34,10 +33,6 @@ CREATE TABLE `communities` (
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `communities`
---
-
 -- --------------------------------------------------------
 
 --
@@ -54,12 +49,6 @@ CREATE TABLE `config` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `config`
---
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `floorplans_to_markers`
 --
 
@@ -68,11 +57,6 @@ CREATE TABLE `floorplans_to_markers` (
   `marker_id` char(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `floorplans_to_markers`
---
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `floor_plans`
@@ -84,11 +68,6 @@ CREATE TABLE `floor_plans` (
   `image_location` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `floor_plans`
---
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `markers`
@@ -97,6 +76,7 @@ CREATE TABLE `floor_plans` (
 CREATE TABLE `markers` (
   `marker_id` char(12) NOT NULL,
   `name` varchar(255) NOT NULL,
+  `miscinfo` text,
   `latitude` double NOT NULL,
   `longitude` double NOT NULL,
   `location` varchar(255) NOT NULL,
@@ -104,11 +84,6 @@ CREATE TABLE `markers` (
   `has_floorplan` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `markers`
---
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `markers_to_communities`
@@ -119,11 +94,6 @@ CREATE TABLE `markers_to_communities` (
   `marker_id` char(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `markers_to_communities`
---
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `markers_to_floorplans`
@@ -134,11 +104,6 @@ CREATE TABLE `markers_to_floorplans` (
   `floorplan_id` char(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `markers_to_floorplans`
---
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `privileges`
@@ -169,18 +134,14 @@ CREATE TABLE `profiles` (
   `profile_id` char(12) NOT NULL,
   `user_id` char(12) NOT NULL,
   `community_id` char(12) NOT NULL,
-  `phone_01` char(12) DEFAULT NULL,
-  `phone_02` char(12) DEFAULT NULL,
+  `phone_01` char(14) DEFAULT NULL,
+  `phone_02` char(14) DEFAULT NULL,
   `email_01` varchar(255) DEFAULT NULL,
   `email_02` varchar(255) DEFAULT NULL,
+  `miscinfo` text,
   `has_edited` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `profiles`
---
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `profiles_to_markers`
@@ -188,15 +149,8 @@ CREATE TABLE `profiles` (
 
 CREATE TABLE `profiles_to_markers` (
   `marker_id` char(12) NOT NULL,
-  `profile_id` char(12) NOT NULL,
-  `has_edited` int(1) NOT NULL DEFAULT '0'
+  `profile_id` char(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `profiles_to_markers`
---
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `requests_to_join_communities`
@@ -209,8 +163,6 @@ CREATE TABLE `requests_to_join_communities` (
   `date_created` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
 --
 -- Table structure for table `residents`
 --
@@ -220,18 +172,11 @@ CREATE TABLE `residents` (
   `profile_id` char(12) NOT NULL,
   `firstname` varchar(255) NOT NULL,
   `lastname` varchar(255) NOT NULL,
-  `phone_01` char(12) DEFAULT NULL,
-  `phone_02` char(12) DEFAULT NULL,
+  `phone_01` char(14) DEFAULT NULL,
+  `phone_02` char(14) DEFAULT NULL,
   `email_01` varchar(255) DEFAULT NULL,
   `email_02` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `residents`
---
-
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `users`
@@ -251,11 +196,6 @@ CREATE TABLE `users` (
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `users`
---
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `users_to_communities`
@@ -267,9 +207,6 @@ CREATE TABLE `users_to_communities` (
   `privilege_id` int(11) NOT NULL DEFAULT '3'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `users_to_communities`
---
 
 --
 -- Indexes for dumped tables
@@ -391,7 +328,7 @@ ALTER TABLE `privileges`
 -- AUTO_INCREMENT for table `residents`
 --
 ALTER TABLE `residents`
-  MODIFY `resident_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `resident_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 --
 -- Constraints for dumped tables
 --

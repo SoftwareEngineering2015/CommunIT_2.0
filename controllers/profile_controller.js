@@ -7,6 +7,9 @@ communitApp.controller('profileController', function($scope, $http) {
     $scope.showEditProfile = false;
     $scope.newProfile = false;
 
+    $scope.validPhone01 = true;
+    $scope.validPhone02 = true;
+
     //Form Values
     $scope.phone_01 = "";
     $scope.phone_02 = "";
@@ -40,6 +43,41 @@ communitApp.controller('profileController', function($scope, $http) {
     }
 
   });
+
+
+  $scope.checkPhoneNumber01 = function(){
+    if($scope.phone_01 != ''){ 
+      var phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+      if(phoneRegex.test($scope.phone_01)) {
+        $scope.errorPhone01Msg = "";
+        $scope.validPhone01 = true;
+      }else {  
+        $scope.errorPhone01Msg = "Invalid Phone Number";
+        $scope.validPhone01 = false;
+      }
+    }else{
+      $scope.validPhone01 = true;
+      $scope.errorPhone01Msg = "";
+    }
+  }
+
+    $scope.checkPhoneNumber02 = function(){
+      if($scope.phone_02 != ''){ 
+          var phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+          if(phoneRegex.test($scope.phone_02)) {
+            $scope.errorPhone02Msg = "";
+            $scope.validPhone02 = true;
+          }else {  
+            $scope.errorPhone02Msg = "Invalid Phone Number";
+            $scope.validPhone02 = false;
+          }
+      }else{
+        $scope.validPhone02 = true;
+        $scope.errorPhone02Msg = "";
+      }
+
+  }
+
 
     $scope.changePinColor = function() {
       if ($scope.contents[$scope.selectProfile].pin_color != "" && $scope.contents[$scope.selectProfile].pin_color != null) {
@@ -112,6 +150,11 @@ communitApp.controller('profileController', function($scope, $http) {
   };
 
     $scope.update = function () {
+      $scope.checkPhoneNumber01();
+      $scope.checkPhoneNumber02();
+      if($scope.validPhone01 == false || $scope.validPhone02 == false ){
+         //$scope.errorProfileMsg = "Invalid Phone Number";
+      }else{
         var index = $scope.selectProfile;
         var updateInfo = $http({
          method : 'POST',
@@ -137,6 +180,7 @@ communitApp.controller('profileController', function($scope, $http) {
           $scope.getInfo();
           $scope.showEditProfile = false;
 
-      });
+        });
+      }
     };
 });

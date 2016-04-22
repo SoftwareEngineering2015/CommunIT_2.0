@@ -36,6 +36,7 @@ if (mysqli_num_rows($sql_get_user_community_requests_result) == 0) {
         $requests_array[$counter]['community_description'] = $row['community_description'];
         $requests_array[$counter]['date_created'] = $row['date_created'];
         $requests_array[$counter]['requested_or_invited'] = $row['requested_or_invited'];
+        
 
         $counter = $counter + 1;
     }

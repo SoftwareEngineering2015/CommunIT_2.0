@@ -68,11 +68,13 @@ communitApp.controller('myhomeController', ['$scope', '$http', function($scope, 
                                     $scope.owned_communities_counter++;
                                     $scope.joined_communities_counter++;
 
-                                    if ($scope.owned_communities_counter >= 2) {
-                                        $scope.hide_owned_communities_button = true; // This will make the create a community button go away
+                                    if ($scope.owned_communities_counter >= 10) {
+                                        $scope.hide_owned_communities_button = true;
+                                        $scope.hide_join_communities_button = true; // This will make the create a community button go away
                                     }
 
-                                    if ($scope.joined_communities_counter >= 5) {
+                                    if ($scope.joined_communities_counter >= 10) {
+                                        $scope.hide_owned_communities_button = true;
                                         $scope.hide_join_communities_button = true; // This will make the create a community button go away
                                     }
 
@@ -86,7 +88,8 @@ communitApp.controller('myhomeController', ['$scope', '$http', function($scope, 
 
                                     $scope.joined_communities_counter++;
 
-                                    if ($scope.joined_communities_counter >= 5) {
+                                    if ($scope.joined_communities_counter >= 10) {
+                                        $scope.hide_owned_communities_button = true;
                                         $scope.hide_join_communities_button = true; // This will make the create a community button go away
                                     }
 

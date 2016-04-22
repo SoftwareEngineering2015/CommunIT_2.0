@@ -8,7 +8,6 @@ class template {
   function show_template( ) {
 
     print "<html>\n<head> <title> $this->TITLE </title>
-    <link rel='icon' type='image/icon' href='images/favicon.ico'>
     <meta name='google' value='notranslate'> </head>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
   	<link rel='stylesheet' type='text/css' href='css/bootstrap.css'>
@@ -22,6 +21,7 @@ class template {
     //Conatins the Site's Header Nav Bar
 ?>
 
+    <link rel='icon' type='image/icon' href='images/favicon.ico'>
       <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
         <div class="navbar-header">

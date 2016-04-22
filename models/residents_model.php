@@ -100,7 +100,7 @@ if (mysqli_fetch_row($resultCheck)) {
     }
   }else if($command == "profiles"){
 
-        $query = "SELECT markers.marker_id, profiles.profile_id, `communities`.`community_id`, `profiles`.`has_edited`, `markers`.`name` as 'marker_name', location, community_name
+        $query = "SELECT markers.marker_id, profiles.profile_id, `communities`.`community_id`, `profiles`.`has_edited`, `markers`.`name` as 'marker_name', location, community_name, `users`.`first_name`, `users`.`last_name`, `profiles`.`phone_01`, `profiles`.`email_01`, `profiles`.`phone_02`, `profiles`.`email_02`
               FROM profiles
               INNER JOIN users ON profiles.user_id = users.user_id
               INNER JOIN communities ON profiles.community_id = communities.community_id
@@ -122,6 +122,12 @@ if (mysqli_fetch_row($resultCheck)) {
                                "community_id" => $row['community_id'],
                                "marker_id" => $row['marker_id'],
                                "profile_id" => $row['profile_id'],
+                               "first_name" => $row['first_name'],
+                               "last_name" => $row['last_name'],
+                               "phone_01" => $row['phone_01'],
+                               "email_01" => $row['email_01'],
+                               "phone_02" => $row['phone_02'],
+                               "email_02" => $row['email_02'],
                                "marker_name" => $row['marker_name'],
                                "location" => $row['location'],
                                "community_name" => $row['community_name']);

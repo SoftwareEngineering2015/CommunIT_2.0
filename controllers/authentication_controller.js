@@ -7,9 +7,13 @@ communitApp.controller('authenticationController', ['$scope', '$http', function(
       $scope.userlastname = localStorage.getItem('communit_user_last'); 
   }
 */
-$scope.authenticater = function(){
+  $scope.newProfileCounter = 0;
+  $scope.invitedCounter = 0;
+
+  $scope.authenticater = function(){
   $scope.authenticated = false;
   $scope.authenticateCheck();
+  $scope.authenticated = true;
 //Uncomment to repeat the authentication every 5 seconds,
 //this will prevent users from continuing on the page after they've
 //somehow cleared their stored localStorage.
@@ -19,8 +23,43 @@ $scope.authenticater = function(){
   }, 5000);
 */
 
-  $scope.authenticated = true;
+  $http({
+    method : 'POST',
+    url    : './models/profile_model.php',
+    data   : {
+      user: localStorage.getItem("communit_user_id")
+    },
+    headers: { 'Content-Type': 'application/json' }
+  })
+  .success(function (data) {
+    $scope.newProfiles = data;
 
+    for(var i = 0; i < $scope.newProfiles.length; i++){
+      if($scope.newProfiles[i].has_edited == 0){
+        $scope.newProfileCounter++;
+      }
+    }
+
+  });
+
+var encodedData = 'user=' +
+  encodeURIComponent(localStorage.getItem("communit_user_id"));
+$http({
+      method: 'POST',
+      url: './models/show_community_requests_model.php',
+      data: encodedData,
+      headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+      }
+  })
+  .then(function(data, status, headers, config) {
+    $scope.invites = data.data;
+      for(var i = 0; i < $scope.invites.length; i++){
+        if($scope.invites[i].requested_or_invited == 1){
+          $scope.invitedCounter++;
+        }
+      }
+  });
 
 }
 

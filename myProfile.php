@@ -4,7 +4,7 @@
     <?php
 
     require_once( "template_class.php");       // css and headers
-    $H = new template( "CommunIT Profile" );
+    $H = new template( "CommunIT Profiles" );
     $H->show_template( );
 
     ?>
@@ -149,10 +149,10 @@
           </div>
 
           <div class="col-sm-12" class="container-fluid" ng-show="viewSwitch && showEditProfile">
-            <form class="form-vertical" ng-submit="update(); getInfo();">
-            <div class="alert alert-success" ng-show="successProfileMsg">{{successProfileMsg}}</div>
+            <form class="form-vertical" ng-submit="update();">
             <h2>Edit Profile: {{contents[selectProfile].first_name}} {{contents[selectProfile].last_name}}</h2>
-            <h3></h3 >
+            <div class="alert alert-success" ng-show="successProfileMsg">{{successProfileMsg}}</div>
+            <!--<div class="alert alert-danger" ng-show="errorProfileMsg">{{errorProfileMsg}}</div>-->
             <table class="table table-striped table-hover" ng-show="selectProfile" >
               <tr>
                 <td id="profileRow">Selected Community: </td>
@@ -165,11 +165,17 @@
               </tr>
               <tr>
                 <td id="profileRow">Primary Phone: </td>
-                <td colspan="2"><input type="tel" class="form-control" id="inputPhone01" placeholder="Primary Phone Number"  ng-model="phone_01" minlength="10" required></td>
+                <td colspan="2"><input type="tel" class="form-control" id="inputPhone01" placeholder="Primary Phone Number"  ng-model="phone_01" minlength="10" required ng-change="checkPhoneNumber01();"></td>
+              </tr>
+              <tr ng-show="errorPhone01Msg">
+                <td colspan="3"class="alert alert-danger">{{errorPhone01Msg}}</td>
               </tr>
               <tr>
                 <td id="profileRow">Secondary Phone: </td>
-                <td colspan="2"><input type="tel" class="form-control" id="inputPhone02" placeholder="Secondary Phone Number"  ng-model="phone_02" minlength="10"></td>
+                <td colspan="2"><input type="tel" class="form-control" id="inputPhone02" placeholder="Secondary Phone Number"  ng-model="phone_02" minlength="10" ng-change="checkPhoneNumber02();"></td>
+              </tr>
+              <tr ng-show="errorPhone02Msg">
+                <td colspan="3" class="alert alert-danger">{{errorPhone02Msg}}</td>
               </tr>
               <tr>
                 <td id="profileRow">Primary Email: </td>
