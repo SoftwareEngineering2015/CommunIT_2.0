@@ -232,7 +232,7 @@ if (mysqli_num_rows($sql_floorplans_in_marker_result) == 0 ) {
                 }
             );
             var img = $('<img id="floorplan_marker_being_added">');
-            img.attr('src', "images/house_pin02.png");
+            img.attr('src', "images/house_pin.png");
             img.css("display", "block");
             img.css("position", "absolute");
             img.css("top", "50%");
