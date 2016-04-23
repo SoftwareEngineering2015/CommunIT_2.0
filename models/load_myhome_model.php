@@ -13,7 +13,7 @@ include("db_class.php");
 // This multidimensional array holds the information of the communities the user is in
 $users_to_communities_array = array();
 
-$sql_get_user_communities = "SELECT * FROM communities INNER JOIN config ON communities.community_id = config.community_id INNER JOIN users_to_communities ON communities.community_id = users_to_communities.community_id INNER JOIN privileges ON users_to_communities.privilege_id = privileges.privilege_id WHERE users_to_communities.user_id = '$user_id' ORDER BY community_name";
+$sql_get_user_communities = "SELECT * FROM communities INNER JOIN config ON communities.community_id = config.community_id INNER JOIN users_to_communities ON communities.community_id = users_to_communities.community_id INNER JOIN privileges ON users_to_communities.privilege_id = privileges.privilege_id WHERE users_to_communities.user_id = '$user_id' ORDER BY privileges.privilege_id DESC, community_name";
 $sql_get_user_communities_result = mysqli_query($conn, $sql_get_user_communities);
 
 
@@ -28,6 +28,9 @@ if (mysqli_num_rows($sql_get_user_communities_result) == 0 ) {
     $users_to_communities_array[$counter]['community_id'] = $row['community_id'];
     $users_to_communities_array[$counter]['community_name'] = $row['community_name'];
     $users_to_communities_array[$counter]['community_description'] = $row['community_description'];
+    $users_to_communities_array[$counter]['city'] = $row['city'];
+    $users_to_communities_array[$counter]['state'] = $row['province'];
+    $users_to_communities_array[$counter]['country'] = $row['country'];
     $users_to_communities_array[$counter]['privilege'] = $row['privilege'];
 
     $counter = $counter + 1;

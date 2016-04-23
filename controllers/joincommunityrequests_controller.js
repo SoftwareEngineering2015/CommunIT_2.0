@@ -6,6 +6,12 @@ communitApp.controller('joincommunityrequestsController', ['$scope', '$http', fu
             $scope.requested_array = [];
             $scope.invited_array = [];
 
+            $scope.detailedRequest = false;
+            $scope.detailedInvite = false;
+
+            $scope.request_row_clicked = 0;
+            $scope.invite_row_clicked = 0;
+
             var temp_array = []; // Used in the foreach loop to create a multidimensional array
 
             var encodedData = 'user=' +
@@ -29,7 +35,10 @@ communitApp.controller('joincommunityrequestsController', ['$scope', '$http', fu
                                     temp_array['community_id'] = value.community_id;
                                     temp_array['community_name'] = value.community_name;
                                     temp_array['community_description'] = value.community_description;
-                                    temp_array['date_created'] = value.date_created;
+                                    temp_array['city'] = value.city;
+                                    temp_array['state'] = value.state;
+                                    temp_array['country'] = value.country;
+                                    temp_array['date_created'] = Date.parse(value.date_created).toString('M/d/yyyy h:m tt');
                                     $scope.requested_array.push(temp_array);
                                     temp_array = {};
 
@@ -37,7 +46,10 @@ communitApp.controller('joincommunityrequestsController', ['$scope', '$http', fu
                                     temp_array['community_id'] = value.community_id;
                                     temp_array['community_name'] = value.community_name;
                                     temp_array['community_description'] = value.community_description;
-                                    temp_array['date_created'] = value.date_created;
+                                    temp_array['city'] = value.city;
+                                    temp_array['state'] = value.state;
+                                    temp_array['country'] = value.country;
+                                    temp_array['date_created'] = Date.parse(value.date_created).toString('M/d/yyyy h:m tt');
                                     $scope.invited_array.push(temp_array);
                                     temp_array = {};
 
@@ -55,6 +67,51 @@ communitApp.controller('joincommunityrequestsController', ['$scope', '$http', fu
                     .error(function(data, status, headers, config) {
 
                     })
+
+                    $scope.showDetailedRequest = function(index) {
+                        $scope.request_row_clicked = index;
+                        $scope.detailedRequest = true;
+                    }
+
+                    $scope.showDetailedInvite = function(index) {
+                        $scope.invite_row_clicked = index;
+                        $scope.detailedInvite = true;
+                    }
+
+                    $scope.backToRequests = function(index) {
+                        $scope.detailedRequest = false;
+                    }
+
+                    $scope.backToInvites = function(index) {
+                        $scope.detailedInvite = false;
+                    }
+
+                    $scope.load_map_into_modal = function (community) {
+
+                        $("#community_map").empty(); // Clear the div when they change their selection for which community profile they would like to edit
+
+                        encodedData = 'community=' +
+                            encodeURIComponent(community);
+
+                        $http({
+                                method: 'POST',
+                                url: './models/jquery_community_map_load.php',
+                                data: encodedData,
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                }
+                            })
+                            .success(function(data, status, headers, config) {
+                                $("#community_map").html(data);
+                                $('#view_community_modal').on('shown.bs.modal', function() {
+                                    google.maps.event.trigger(map, 'resize');
+                                    map.fitBounds(bounds);
+                                });
+                            })
+                            .error(function(data, status, headers, config) {
+
+                            })
+                    }
 
                     $scope.show_delete_request_to_community_modal = function(community) {
 

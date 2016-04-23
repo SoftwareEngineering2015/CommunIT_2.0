@@ -16,7 +16,11 @@ if ($check !== false) {
     //echo "File is an image - " . $check["mime"] . ".";
     $uploadOk = 1;
 } else {
-    //echo "File is not an image.";
+        $json_return_array =  array(
+        "status" =>  "error",
+        "message" =>  "Cannot upload file."
+    );
+    echo json_encode($json_return_array); exit();
     $uploadOk = 0;
     return false;
     

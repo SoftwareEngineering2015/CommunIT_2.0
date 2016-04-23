@@ -155,7 +155,7 @@ indexApp.controller('createaccountController', ['$scope', '$http', function($sco
     $scope.errorMsgBirthDate = "";
     $scope.errorMsgPassword = "";
     $scope.errorMsgEmail = "";
-    $scope.inputData.middleInitial = $scope.inputData.middleInitial.toUpperCase();
+    //$scope.inputData.middleInitial = $scope.inputData.middleInitial.toUpperCase();
     if (/\s/.test($scope.inputData.username)){ //|| (!(/[a-zA-Z0-9]/.test($scope.inputData.username)))){
     $scope.errorMsgUsername = "There cannot be spaces in the username.";
     } else if ($("#inputBirthDate").val() === "") {
@@ -188,6 +188,7 @@ indexApp.controller('createaccountController', ['$scope', '$http', function($sco
     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     })
     .success(function(data, status, headers, config) {
+    console.log(data);
     $scope.errorMsgUsername = "";
     $scope.errorMsgEmail = "";
     if ( data.trim() === 'usernameExists') {

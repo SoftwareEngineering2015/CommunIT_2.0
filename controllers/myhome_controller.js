@@ -7,11 +7,20 @@ communitApp.controller('myhomeController', ['$scope', '$http', function($scope, 
             $scope.owned_communities_array = [];
             $scope.joined_communities_array = [];
 
+            $scope.hasCreatedCommunities = false;
+            $scope.hasJoinedCommunities = false;
+
             $scope.owned_communities_counter = 0; // Used to keep track of how many communities user owns
             $scope.joined_communities_counter = 0; // Used to keep track of how many communities user is in
 
             $scope.hide_owned_communities_button = false; // Used to keep track of how many communities user owns
             $scope.hide_join_communities_button = false; // Used to keep track of how many communities user is in
+
+            $scope.detailedCreated = false;
+            $scope.detailedJoined = false;
+
+            $scope.owned_row_clicked = 0;
+            $scope.joined_row_clicked = 0;
 
             $scope.user = localStorage.getItem('communit_user_id');
 /*
@@ -58,9 +67,14 @@ communitApp.controller('myhomeController', ['$scope', '$http', function($scope, 
                         } else {
                             angular.forEach(data, function(value, key) {
                                 if (value.privilege.trim() == "creator") {
+                                    $scope.hasCreatedCommunities = true;
+
                                     temp_array['community_id'] = value.community_id;
                                     temp_array['community_name'] = value.community_name;
                                     temp_array['community_description'] = value.community_description;
+                                    temp_array['city'] = value.city;
+                                    temp_array['state'] = value.state;
+                                    temp_array['country'] = value.country;
                                     temp_array['privilege'] = value.privilege;
                                     $scope.owned_communities_array.push(temp_array);
                                     temp_array = {};
@@ -79,9 +93,13 @@ communitApp.controller('myhomeController', ['$scope', '$http', function($scope, 
                                     }
 
                                 } else {
+                                    $scope.hasJoinedCommunities = true;
                                     temp_array['community_id'] = value.community_id;
                                     temp_array['community_name'] = value.community_name;
                                     temp_array['community_description'] = value.community_description;
+                                    temp_array['city'] = value.city;
+                                    temp_array['state'] = value.state;
+                                    temp_array['country'] = value.country;
                                     temp_array['privilege'] = value.privilege;
                                     $scope.joined_communities_array.push(temp_array);
                                     temp_array = {};
@@ -100,6 +118,24 @@ communitApp.controller('myhomeController', ['$scope', '$http', function($scope, 
                     .error(function(data, status, headers, config) {
 
                     })
+
+                    $scope.showDetailedCreated = function(index) {
+                        $scope.owned_row_clicked = index;
+                        $scope.detailedCreated = true;
+                    }
+
+                    $scope.backToCreated = function() {
+                        $scope.detailedCreated = false;
+                    }
+
+                    $scope.showDetailedJoined = function(index) {
+                        $scope.joined_row_clicked = index;
+                        $scope.detailedJoined = true;
+                    }
+
+                    $scope.backToJoined = function() {
+                        $scope.detailedJoined = false;
+                    }
 
                     $scope.show_delete_community_modal = function(community) {
 

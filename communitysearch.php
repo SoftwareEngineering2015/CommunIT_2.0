@@ -31,7 +31,7 @@
                <div ng-show="show_side_version">
                   <div align="center">
                   <br />
-                     <button class='btn btn-primary btn-md' style='width:auto' ng-click="search()"><span class="glyphicon glyphicon-arrow-left"/> Back To Search </button>
+                     <button class='btn btn-primary btn-md' style='width:auto' ng-click="search()"><span class="glyphicon glyphicon-arrow-left"></span> Back To Search </button>
                   </div>
                   <h3> {{ communities[row_clicked].community_name }} </h3>
                   <table class="table  table-borderless table-responsive table-striped">
@@ -361,10 +361,10 @@
                            <th> </th>
                         </tr>
                         <tr ng-repeat="x in displayed_communities track by $index"> 
-                           <td style='color: #317eac' ng-click="showSideVersion($index);"> {{ x.community_name }} </td> 
-                           <td ng-click="showSideVersion($index);"> {{ x.city }} </td> 
+                           <td style='color: #317eac; cursor: pointer;' ng-click="showSideVersion($index);"> {{ x.community_name }} </td> 
+                           <td ng-click="showSideVersion($index);" style='cursor: pointer;'> {{ x.city }} </td> 
                            <!--<td> {{ x.state }} </td> --> 
-                           <td ng-click="showSideVersion($index);"> {{ x.country }} </td> 
+                           <td ng-click="showSideVersion($index);" style='cursor: pointer;'> {{ x.country }} </td> 
                            <td> <button type='button' class='btn btn-success btn-sm' style='width:auto' ng-click='load_map_into_modal(x.community_id)' data-toggle='modal' data-target='#view_community_modal'>View Community</button> </td>
                            <td ng-if="can_join"> <button type='button' class='btn btn-primary btn-sm' style='width:auto' ng-click='show_join_community_modal(x.community_id)' data-toggle='modal'>Join Community</button> </td>
                         </tr>

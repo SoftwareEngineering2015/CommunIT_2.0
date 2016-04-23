@@ -87,7 +87,7 @@ background-size: cover;
 				<div   class="form-group">
 					<b for="loginID" class="col-sm-3 control-label" style="color: #000000">Username</b>
 					<div class="col-sm-9">
-						<input id="loginID" name="username" type="text" class="form-control" placeholder="Username" required="" style="" required autofocus ng-model="inputDataLogin.username"> <br/>
+						<input id="loginID" name="username" type="text" class="form-control" placeholder="Username"required autofocus ng-model="inputDataLogin.username"> <br/>
 					</div>
 				</div>
 

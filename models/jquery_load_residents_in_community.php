@@ -41,18 +41,18 @@ var buttonClicked; // This will hold the row of in the table of the resident tha
 $.each(names, function( index, value ) {
   if (residents[index] == localStorage.getItem("communit_user_id")) {
     if (privileges[index] == "moderator") {
-      $('#residentsTable').append("<tr> <td>" + value.first_name + " </td> <td>" + value.last_name + " </td> <td class='privilegesTableCells hasSelectBox'> <select class='form-control residentPrivilegesSelectBox'><option value='resident'>Resident</option><option value='moderator' selected>Moderator</option></select> </td> <td> <button type='button' class='btn btn-danger btn-sm show_remove_residents_modal' style='width: 100%;' value='" + residents[index] + "'>Remove Resident</button></td></tr>");
+      $('#residentsTable').append("<tr> <td>" + value.first_name + " </td> <td>" + value.last_name + " </td> <td class='privilegesTableCells hasSelectBox'> <select class='form-control residentPrivilegesSelectBox'><option value='resident'>Resident</option><option value='moderator' selected>Moderator</option></select> </td> <td> <button type='button' class='btn btn-danger btn-sm show_remove_residents_modal removeResidentsColumn' style='width: 100%;' value='" + residents[index] + "'>Remove Resident</button></td></tr>");
     } else if (privileges[index] == "owner") {
-      $('#residentsTable').append("<tr> <td>" + value.first_name + " </td> <td>" + value.last_name + " </td> <td class='privilegesTableCells hasSelectBox'> <select class='form-control residentPrivilegesSelectBox'><option value='resident'>Resident</option><option value='moderator'>Moderator</option><option value='owner' selected>Owner</option></select> </td> <td> <button type='button' class='btn btn-danger btn-sm show_remove_residents_modal' style='width: 100%;' value='" + residents[index] + "'>Remove Resident</button></td></tr>");
+      $('#residentsTable').append("<tr> <td>" + value.first_name + " </td> <td>" + value.last_name + " </td> <td class='privilegesTableCells hasSelectBox'> <select class='form-control residentPrivilegesSelectBox'><option value='resident'>Resident</option><option value='moderator'>Moderator</option><option value='owner' selected>Owner</option></select> </td> <td> <button type='button' class='btn btn-danger btn-sm show_remove_residents_modal removeResidentsColumn' style='width: 100%;' value='" + residents[index] + "'>Remove Resident</button></td></tr>");
     } else if (privileges[index] == "creator") {
       $('#residentsTable').append("<tr> <td>" + value.first_name + " </td> <td>" + value.last_name + " </td> <td class='privilegesTableCells' value='creator'> Creator </td> <td> </td></tr>");
     } 
   } else if (privileges[index] == "resident") {
-    $('#residentsTable').append("<tr> <td>" + value.first_name + " </td> <td>" + value.last_name + " </td> <td class='privilegesTableCells hasSelectBox'> <select class='form-control residentPrivilegesSelectBox'><option value='resident' selected>Resident</option><option value='moderator'>Moderator</option><option value='owner'>Owner</option></select> </td> <td> <button type='button' class='btn btn-danger btn-sm show_remove_residents_modal' style='width: 100%;' value='" + residents[index] + "'>Remove Resident</button></td></tr>");
+    $('#residentsTable').append("<tr> <td>" + value.first_name + " </td> <td>" + value.last_name + " </td> <td class='privilegesTableCells hasSelectBox'> <select class='form-control residentPrivilegesSelectBox'><option value='resident' selected>Resident</option><option value='moderator'>Moderator</option><option value='owner'>Owner</option></select> </td> <td> <button type='button' class='btn btn-danger btn-sm show_remove_residents_modal removeResidentsColumn' style='width: 100%;' value='" + residents[index] + "'>Remove Resident</button></td></tr>");
   } else if (privileges[index] == "moderator") {
-    $('#residentsTable').append("<tr> <td>" + value.first_name + " </td> <td>" + value.last_name + " </td> <td class='privilegesTableCells hasSelectBox'> <select class='form-control residentPrivilegesSelectBox'><option value='resident'>Resident</option><option value='moderator' selected>Moderator</option><option value='owner'>Owner</option></select> </td> <td> <button type='button' class='btn btn-danger btn-sm show_remove_residents_modal' style='width: 100%;' value='" + residents[index] + "'>Remove Resident</button></td></tr>");
+    $('#residentsTable').append("<tr> <td>" + value.first_name + " </td> <td>" + value.last_name + " </td> <td class='privilegesTableCells hasSelectBox'> <select class='form-control residentPrivilegesSelectBox'><option value='resident'>Resident</option><option value='moderator' selected>Moderator</option><option value='owner'>Owner</option></select> </td> <td> <button type='button' class='btn btn-danger btn-sm show_remove_residents_modal removeResidentsColumn' style='width: 100%;' value='" + residents[index] + "'>Remove Resident</button></td></tr>");
   } else if (privileges[index] == "owner") {
-    $('#residentsTable').append("<tr> <td>" + value.first_name + " </td> <td>" + value.last_name + " </td> <td class='privilegesTableCells hasSelectBox'> <select class='form-control residentPrivilegesSelectBox'><option value='resident'>Resident</option><option value='moderator'>Moderator</option><option value='owner' selected>Owner</option></select> </td> <td> <button type='button' class='btn btn-danger btn-sm show_remove_residents_modal' style='width: 100%;' value='" + residents[index] + "'>Remove Resident</button></td></tr>");
+    $('#residentsTable').append("<tr> <td>" + value.first_name + " </td> <td>" + value.last_name + " </td> <td class='privilegesTableCells hasSelectBox'> <select class='form-control residentPrivilegesSelectBox'><option value='resident'>Resident</option><option value='moderator'>Moderator</option><option value='owner' selected>Owner</option></select> </td> <td> <button type='button' class='btn btn-danger btn-sm show_remove_residents_modal removeResidentsColumn' style='width: 100%;' value='" + residents[index] + "'>Remove Resident</button></td></tr>");
   } else if (privileges[index] == "creator") {
     $('#residentsTable').append("<tr> <td>" + value.first_name + " </td> <td>" + value.last_name + " </td> <td class='privilegesTableCells' value='creator'> Creator </td> <td> </td></tr>");
   }
@@ -60,6 +60,10 @@ $.each(names, function( index, value ) {
 
 // Jquery Actions
 $(document).ready(function() {
+
+    if (currentUsersPrivilege == 3) {
+      $(".removeResidentsColumn").hide();
+    }
 
     $('#updateResidentsPrivilegesModal').on('show.bs.modal', function() {
         $(this).find('.modal-body').css({
@@ -138,7 +142,7 @@ $(document).ready(function() {
       <th> First Name </th>
       <th> Last Name </th>
       <th> Privilege <a class="glyphicon glyphicon-question-sign" style="text-decoration: none" title="Resident - Can only view information in the community &#xAModerator - Can edit the community &#xAOwner - Can edit / delete the community"> </a> </th>
-      <th> Remove Resident </th>
+      <th class="removeResidentsColumn"> Remove Resident </th>
    </tr>
 </table>
 

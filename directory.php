@@ -1,272 +1,169 @@
-<!DOCTYPE html>
 <html>
-<head>
-	<?php
-require_once( "template_class.php");       // css and headers
-$H = new template( "Directory" );
-$H->show_template( );
-?>
+    <head>
+        <?php 
+            require_once("template_class.php");
+            $H = new template("Directory");
+            $H->show_template();
+        ?>
+    </head>
+    <script src='controllers/directory_controller.js'></script>
+    <body ng-controller='directoryController' ng-init='getCommunities();'>
+	<div>Not Finished.</div>
+    <div class="container-fluid" ng-show="cows">
+        <div class="row">
+            <div class="col-md-12" class="container-fluid" align="center">
+                <div class="form-inline">
+                    <select ng-show="showCommunitySelect" id="selectCommunity" ng-model="selectCommunity" class="form-control" ng-change="changeCommunity(selectCommunity);">
+                        <option ng-repeat="community in communities track by community.community_id" value={{community.community_id}}>{{community.community_name}}
+                        </option>
+                    </select>
+                    <select ng-show="showMarkerSelect" id="selectMarker" ng-model="selectMarker" class="form-control" ng-change="changeMarker(); getFloorplan(communities[selectCommunity][selectMarker].has_floorplan)">
+                        <option ng-show="markers.marker_id" ng-repeat="markers in communities[selectCommunity]" value='{{markers.marker_id}}'> {{markers.name}} </option>
+                    </select>
+                    <select ng-show="showSelectFloor" id="selectFloot" ng-model="selectFloor" class="form-control" ng-change="changeFloor()">
+                        <option ng-show="floor.floorplan_id" ng-repeat="floor in floorplans" value='{{floor.floorplan_id}}'> {{floor.floor}} </option>
+                    </select>
+                    <select ng-show="showSelectRoom" id="selectRoom" ng-model="selectRoom" class="form-control" ng-change="changeRoom()">
+                        <option ng-show="markers.marker_id" ng-repeat="markers in floorplans[selectFloor]" value='{{markers.marker_id}}'> {{markers.marker_name}} </option>
+                    </select>
+                </div>
+                <button class="btn btn-info btn-sm" ng-show="showEmailButton" ng-click="openEmailModal()"> Show All Emails </button>
+           </div>
+        </div>
+     </div>
+        <div id="simpleView" ng-show="showCommunity">
+            <div class="row">
+            <h2> {{communities[selectCommunity].community_name}} </h2>
+            </div>
+            <table class="col-xs-12 table table-hover">
+                <tr>
+                    <td> Name </td>
+                    <td> Primary Phone </td>
+                    <td> Secondary Phone </td>
+                    <td> Primary Email </td>
+                    <td> Secondary Email </td>
+                </tr>
+                <tbody  ng-repeat="markers in communities[selectCommunity] ">
+                    <tr ng-show="users.user_id" ng-repeat="users in communities[selectCommunity][markers.marker_id]"> 
+                        <td > {{users.firstname}} {{users.lastname}}</td>
+                        <td ng-show="users.phone_01"> {{users.phone_01}} </td>
+                        <td ng-show="!users.phone_01"> N/A </td>
+                        <td ng-show="users.phone_02"> {{users.phone_02}} </td>
+                        <td ng-show="!users.phone_02"> N/A </td>
+                        <td ng-show="users.email_01"> {{users.email_01}} </td>
+                        <td ng-show="!users.email_01"> N/A </td>
+                        <td ng-show="users.email_02"> {{users.email_02}} </td>
+                        <td ng-show="!users.email_02"> N/A </td>
+                    </tr>
+                </tbody>         
+            </table>
+            </div>
+            
+            <div id="simpleMarker" ng-show="showMarker">
+                <div class="row">
+                <h2> {{communities[selectCommunity].community_name}} - {{communities[selectCommunity][selectMarker].name}}</h2>
+                </div>
+                <table class="col-xs-12 table table-hover">
+                    <tr>
+                        <td> Name </td>
+                        <td> Primary Phone </td>
+                        <td> Secondary Phone </td>
+                        <td> Primary Email </td>
+                        <td> Secondary Email </td>
+                    </tr>
+                    <tr ng-show="users.user_id" ng-repeat="users in communities[selectCommunity][selectMarker]">
+                        <td > {{users.firstname}} {{users.lastname}}</td>
+                        <td ng-show="users.phone_01"> {{users.phone_01}} </td>
+                        <td ng-show="!users.phone_01"> N/A </td>
+                        <td ng-show="users.phone_02"> {{users.phone_02}} </td>
+                        <td ng-show="!users.phone_02"> N/A </td>
+                        <td ng-show="users.email_01"> {{users.email_01}} </td>
+                        <td ng-show="!users.email_01"> N/A </td>
+                        <td ng-show="users.email_02"> {{users.email_02}} </td>
+                        <td ng-show="!users.email_02"> N/A </td>
+                    </tr>
+                </table>
+            </div>
 
-<?php
-// Create connection
-$P = new manage_db;
-$P->connect_db();
-//Gets the information of a residence and it's head resident 
-$sqlResidences = "SELECT CONCAT(first_name, ' ', last_name) as 'head_full_name', head_resident_id, address, latitude, longitude, emergency_contact, phone_one, email_address FROM residences INNER JOIN head_residents ON head_residents.fk_residence_id = residences.residence_id WHERE address IS NOT NULL ORDER BY last_name ";
-$P->do_query($sqlResidences);
-$resultResidences = mysql_query($sqlResidences);    
- // $row = mysql_fetch_assoc($resultResidences)
-
-
-?>
-
-</head>
-<style>
-@media print
-{    
-.no-print, .no-print *
-{
-    display: none !important;
-}
-}
-
-</style>
-
-<body>
-
-<?php
-if(($_SESSION['login_user']) != "guest"){
-	print('
-<div class="container-fluid-right no-print " style="width:100%; height:95%; ">
-	<form class="form-horizontal col-xs-6 col-xs-offset-3">
-		<fieldset>
-			<div class="radio">
-				<table class="table">
-						<tr>
-							<th><b>Choose Directory Type:</b></th>
-							<td>
-								<button type="submit" class="btn btn-primary btn-xs" name="directoryType" id="directoryTypeSimple" value="simple"><b> Simple </b></button>
-							</td>
-							<td>
-							
-							
-							 <button type="submit" class="btn btn-primary btn-xs" name="directoryType" id="directoryTypeDetailed" value="detailed"><b> Detailed </b></button>
-								
-
-							</td>
-					</table>
-					<hr>
-
-
-');
-}
-
-							?>
-
-				</div>
-			</div>
-		</div>
-	</fieldset>
-</form>
-
-
-<div class="col-xs-10 col-xs-offset-1" style=" height:100%;">
-	<?php
-
-	if(!isset($_REQUEST['directoryType'])) {
-		$_REQUEST['directoryType'] = 'simple';
-	}
-
-	if(isset($_REQUEST['directoryType'])) {
-		$directoryType=$_REQUEST['directoryType'];
-
-		if($directoryType == 'detailed' &&  ($_SESSION['login_user']) != "guest") {
-			while ($row = mysql_fetch_assoc($resultResidences)) { 
-				if($row['phone_one'] == ''){
-					$row['phone_one'] = 'unavailable';
-				}
-				if($row['email_address'] == ''){
-					$row['email_address'] = 'unavailable';
-				}
-
-				print("
-					<div class='col-xs-8'>
-						<table class='table table-hover'>
-							<tbody>
-								<tr>
-									<th>Address</th>
-									<td>".$row['address']."</td>
-								</tr>
-								<tr>
-									<th>Phone Number One</th>
-									<td>".$row['emergency_contact']."</td>
-								</tr>
-								<tr>
-									<th>Phone Number Two</th>
-									<td>".$row['phone_one']."</td>
-								</tr>
-								<tr>
-									<th>E-Mail Address</th>
-									<td>".$row['email_address']."</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-
-					<div class='col-xs-4'>
-						<table class='table table-hover'>
-							<tbody>
-								<tr>
-									<th>Resident</th>
-									<th>Phone</th>
-									<th>E-Mail</th>
-								</tr>
-								<tr>
-									<td>".$row['head_full_name']."</td>
-									<td>".$row['phone_one']."</td>
-									<td>".$row['email_address']."</td>
-								</tr>
-								");
-
-				$sqlResidents = "SELECT CONCAT(first_name, ' ', last_name) as 'sub_full_name', phone_number, email_address FROM sub_residents WHERE fk_head_id = ".$row['head_resident_id']." ORDER BY last_name";
-				$P->do_query($sqlResidents);
-				$resultResidents = mysql_query($sqlResidents);  
-// $row2 = mysql_fetch_assoc($resultResidents);
-				while ($row2 = mysql_fetch_assoc($resultResidents)) {
-					if($row2['phone_number'] == ''){
-						$row2['phone_number'] = 'unavailable';
-					}
-					if($row2['email_address'] == ''){
-						$row2['email_address'] = 'unavailable';
-					}
-					print("
-						<tr>
-							<td>".$row2['sub_full_name']."</td>
-							<td>".$row2['phone_number']."</td>
-							<td>".$row2['email_address']."</td>
-						</tr>
-						");
-
-				}
-
-				print("
-			</tbody>
-		</table>
-	</div>
-	");
-
-			}
-		}elseif($directoryType == 'simple'){
-
-
-			print("
-				<div class='col-xs-12'>
-					<table class='table table-hover'>
-						<thead>
-							<tr>
-								<th>Head Resident</th>
-								<th>Phone Number One</th>
-								<th>Phone Number Two</th>
-								<th>E-Mail Address</th>
-								<th>Address</th>
-							</tr>
-							<tbody>
-								");
-
-			while ($row = mysql_fetch_assoc($resultResidences)) { 
-				
-			if($row['phone_one'] == ''){
-					$row['phone_one'] = 'unavailable';
-				}
-				if($row['email_address'] == ''){
-					$row['email_address'] = 'unavailable';
-				}
-
-				print("
-
-					<tr>
-						<td>".$row['head_full_name']."</td>
-
-						<td>".$row['emergency_contact']."</td>
-
-						<td>".$row['phone_one']."</td>
-
-						<td>".$row['email_address']."</td>
-
-						<td>".$row['address']."</td>
-					</tr>
-					");
-
-
-
-
-			}
-
-			print("
-		</tbody>
-	</table>
-</div>
-");
-
-
-
-		}else{
-			$directoryType = 'simple';
-			print("
-				<div class='col-xs-12'>
-					<table class='table table-hover'>
-						<thead>
-							<tr>
-								<th>Head Resident</th>
-								<th>Phone Number One</th>
-								<th>Phone Number Two</th>
-								<th>E-Mail Address</th>
-								<th>Address</th>
-							</tr>
-							<tbody>
-								");
-
-			while ($row = mysql_fetch_assoc($resultResidences)) { 
-				
-			if($row['phone_one'] == ''){
-					$row['phone_one'] = 'unavailable';
-				}
-				if($row['email_address'] == ''){
-					$row['email_address'] = 'unavailable';
-				}
-
-				print("
-
-					<tr>
-						<td>".$row['head_full_name']."</td>
-
-						<td>".$row['emergency_contact']."</td>
-
-						<td>".$row['phone_one']."</td>
-
-						<td>".$row['email_address']."</td>
-
-						<td>".$row['address']."</td>
-					</tr>
-					");
-			}
-
-			print("
-		</tbody>
-	</table>
-</div>
-");
-			
-		}
-
-	}
-
-
-
-
-	?>
-</div>
-</div>
-
-</body>
+            <div id="simpleFloor" ng-show="showFloor">
+                <div class="row">
+                <h2> {{communities[selectCommunity].community_name}} - {{communities[selectCommunity][selectMarker].name}} - {{floorplans[selectFloor].floor}}</h2>
+                </div>
+                <table class="col-xs-12 table table-hover">
+                <tr>
+                    <td> Name </td>
+                    <td> Primary Phone </td>
+                    <td> Secondary Phone </td>
+                    <td> Primary Email </td>
+                    <td> Secondary Email </td>
+                </tr>
+                <tbody  ng-repeat="markers in floorplans[selectFloor] ">
+                    <tr ng-show="users.user_id" ng-repeat="users in floorplans[selectFloor][markers.marker_id]"> 
+                        <td > {{users.firstname}} {{users.lastname}}</td>
+                        <td ng-show="users.phone_01"> {{users.phone_01}} </td>
+                        <td ng-show="!users.phone_01"> N/A </td>
+                        <td ng-show="users.phone_02"> {{users.phone_02}} </td>
+                        <td ng-show="!users.phone_02"> N/A </td>
+                        <td ng-show="users.email_01"> {{users.email_01}} </td>
+                        <td ng-show="!users.email_01"> N/A </td>
+                        <td ng-show="users.email_02"> {{users.email_02}} </td>
+                        <td ng-show="!users.email_02"> N/A </td>
+                    </tr>
+                </tbody>         
+            </table>
+            </div>
+    
+            <div id="simpleRoom" ng-show="showRoom">
+                <div class="row">
+                <h2> {{communities[selectCommunity].community_name}} - {{communities[selectCommunity][selectMarker].name}} - {{floorplans[selectFloor].floor}} - {{floorplans[selectFloor][selectRoom].marker_name}}</h2>
+                </div>
+                <table class="col-xs-12 table table-hover">
+                    <tr>
+                        <td> Name </td>
+                        <td> Primary Phone </td>
+                        <td> Secondary Phone </td>
+                        <td> Primary Email </td>
+                        <td> Secondary Email </td>
+                    </tr>
+                    <tr ng-show="users.user_id" ng-repeat="users in floorplans[selectFloor][selectRoom]">
+                        <td > {{users.firstname}} {{users.lastname}}</td>
+                        <td ng-show="users.phone_01"> {{users.phone_01}} </td>
+                        <td ng-show="!users.phone_01"> N/A </td>
+                        <td ng-show="users.phone_02"> {{users.phone_02}} </td>
+                        <td ng-show="!users.phone_02"> N/A </td>
+                        <td ng-show="users.email_01"> {{users.email_01}} </td>
+                        <td ng-show="!users.email_01"> N/A </td>
+                        <td ng-show="users.email_02"> {{users.email_02}} </td>
+                        <td ng-show="!users.email_02"> N/A </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="emailListModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content --> 
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h3 class="modal-title">Email Lsit</h3>
+                        </div>
+                        <div class="modal-body">
+                            <span ng-repeat="markers in communities[selectCommunity]">
+                                
+                                    <span ng-show="users.email_01 && primaryEmail" ng-repeat="users in communities[selectCommunity][markers.marker_id]"
+                                     ng-show="primaryEmail">{{users.email_01}}, </span>
+                                    <spam ng-show="users.email_02 && secondaryEmail" ng-repeat="users in communities[selectCommunity][markers.marker_id]">
+                                    {{users.email_02}}, </spam>
+                                    
+                                
+                        </span>
+                        <div class="modal-footer">
+                            <button type="button" ng-click="showSecondaryEmail()" ng-show="primaryEmail" class="btn btn-info" style="width: auto"> Secondary Emails </button>
+                            <button type="button" ng-click="showPrimaryEmail()" ng-show="secondaryEmail" class="btn btn-info" style="width: auto"> Primary Emails </button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal" style="width: auto">Close</button>
+                        </div>
+                </div>
+            </form>
+         </div>
+      </div> 
+    </body>
 </html>

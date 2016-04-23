@@ -274,7 +274,7 @@
                 <td id="notAvailable" ng-show="!resident.email_01" ng-click="showDetailed(resident.resident_id);"> N/A </td>
                 <td><a class="col-xs-12 btn btn-primary" ng-click="showEdit(resident.resident_id);"> Edit </a></td>
                 <td><a class="col-xs-12 btn btn-danger" ng-click="showDelete(resident.resident_id);"> Remove </a></td>
-                <!--<td class="text-primary"> <b><span style="cursor:pointer; hover{ color:green;}" ng-click="showEdit(resident.resident_id);"> Edit </span></b></td>
+                <!--<td class="text-primary"> <b><span style="cursor:pointer;" ng-click="showEdit(resident.resident_id);"> Edit </span></b></td>
                 <td class="text-danger"> <b><span style="cursor:pointer" ng-click="showDelete(resident.resident_id);"> Remove </span></b></td>-->
             </tr>
             <tr>

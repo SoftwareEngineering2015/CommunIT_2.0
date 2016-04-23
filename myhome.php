@@ -34,65 +34,123 @@
       <div class="container-fluid">
          <div class="row">
             <div class="col-md-6" class="container-fluid">
-               <h1> Created Communities </h1>
-               <hr>
-               <div ng-repeat="x in owned_communities_array" class="owned_communities">
-                  <table class="table table-borderless">
-                     <tr>
-                        <td colspan = "4">
-                           <h4> {{ x.community_name }} </h4>
-                        </td>
+               <div ng-show="!detailedCreated">
+                  <div ng-show="hasCreatedCommunities">
+                     <h1> Created Communities </h1>
+                     <hr>
+                     <table class="table table-borderless table-responsive">
+                        <tr> 
+                           <th> Community Name </th>
+                           <th> </th>
+                           <th> </th>
+                           <th> </th>
+                        </tr>
+                        <tr ng-repeat="x in owned_communities_array track by $index">
+                           <td style="color: #006699; font-weight: bold;  cursor: pointer;" ng-click="showDetailedCreated($index)"> {{ x.community_name}} </td>
+                           <td align="center"><a type="button" class="btn btn-primary btn-sm" href="communitymap.php?community={{ x.community_id }}">Visit</a></td>
+                           <td align="center"><a type="button" class="btn btn-primary btn-sm" href="editcommunitysettings.php?community={{ x.community_id }}">Edit</a></td>
+                           <td align="center"><button type="button" class="btn btn-danger btn-sm" ng-click="show_delete_community_modal(x.community_id);">Delete</button></td>
+                        </tr>
+                     </table>
+                  </div>
+                  <div ng-show="!hasCreatedCommunities">
+                     <h3> You have not created any communities. </h3>
+                  </div>
+                  <br />
+                  <a type="button" class="btn btn-primary btn-md" href="createcommunity.php" ng-show="!hide_owned_communities_button">Create A Community</a>
+               </div>
+               <div ng-show="detailedCreated">
+                  <div align="center">
+                  <br />
+                     <button class='btn btn-primary btn-md' style='width:auto' ng-click="backToCreated()">
+                     <span class="glyphicon glyphicon-arrow-left"></span> Back To Created Communities </button>
+                  </div>
+                  <h3> {{ owned_communities_array[owned_row_clicked].community_name }} </h3>
+                  <table class="table  table-borderless table-responsive table-striped">
+                     <tr> 
+                        <th style="color: #006699"> City: </th> 
+                        <td> {{ owned_communities_array[owned_row_clicked].city }} </td> 
                      </tr>
-                     <tr>
-                        <td colspan = "4"> <b style="color: black;"> Description: </b> <br /> {{ x.community_description }} </td>
+                     <tr> 
+                        <th style="color: #006699"> State / Province: </th> 
+                        <td> {{ owned_communities_array[owned_row_clicked].state }} </td> 
                      </tr>
-                     <tr>
-                        <td align="center"><a type="button" class="btn btn-primary btn-md" href="communitymap.php?community={{ x.community_id }}">Visit Community</a></td>
-                        <td align="center"><a type="button" class="btn btn-primary btn-md" href="editcommunitysettings.php?community={{ x.community_id }}">Edit Community Settings</a></td>
-                        <td align="center"><button type="button" class="btn btn-danger btn-md" ng-click="show_delete_community_modal(x.community_id);">Delete Community</button></td>
+                     <tr> 
+                        <th style="color: #006699"> Country: </th> 
+                        <td> {{ owned_communities_array[owned_row_clicked].country }} </td> 
+                     </tr>
+                     <tr> 
+                        <th style="color: #006699"> Description: </th> 
+                        <td> {{ owned_communities_array[owned_row_clicked].community_description }} </td> 
                      </tr>
                   </table>
-                  <br />
                </div>
-               <a type="button" class="btn btn-primary btn-lg" href="createcommunity.php" ng-show="!hide_owned_communities_button">Create A Community</a>
             </div>
             <div class="col-md-6" class="container-fluid">
-               <h1> Joined Communities </h1>
-               <hr>
-               <div ng-repeat="x in joined_communities_array ">
-                  <table class="table table-borderless">
-                     <tr>
-                        <td colspan = "4">
-                           <h4> {{ x.community_name }} - <span style="color:red; text-transform: capitalize;"> {{ x.privilege }} </span> </h4>
-                        </td>
+               <div ng-show="!detailedJoined">
+                  <div ng-show="hasJoinedCommunities">
+                     <h1> Joined Communities </h1>
+                     <hr>
+                     <table class="table table-borderless table-responsive">
+                        <tr> 
+                           <th> Community Name </th>
+                           <th> </th>
+                           <th> </th>
+                           <th> </th>
+                           <th> </th>
+                        </tr>
+                        <tr ng-repeat="x in joined_communities_array track by $index">
+                           <td style="color: #006699; font-weight: bold; cursor: pointer;" ng-click="showDetailedJoined($index)"> <span style="text-transform: capitalize;"> {{ x.privilege }} </span> Of {{ x.community_name}} </td>
+                           
+                           <td align="center" ng-if="x.privilege == 'owner'"><a type="button" class="btn btn-primary btn-sm" href="communitymap.php?community={{ x.community_id }}">Visit</a></td>
+                           <td align="center" ng-if="x.privilege == 'owner'"><a type="button" class="btn btn-primary btn-sm" href="editcommunitysettings.php?community={{ x.community_id }}">Edit</a></td>
+                           <td align="center" ng-if="x.privilege == 'owner'"><button type="button" class="btn btn-danger btn-sm" ng-click="show_leave_community_modal(x.community_id);">Leave</button></td>
+                           <td align="center" ng-if="x.privilege == 'owner'"><button type="button" class="btn btn-danger btn-sm" ng-click="show_delete_community_modal(x.community_id);">Delete</button></td>
+                        
+                           <td align="center" ng-if="x.privilege == 'moderator'"><a type="button" class="btn btn-primary btn-sm" href="communitymap.php?community={{ x.community_id }}">Visit</a></td>
+                           <td align="center" ng-if="x.privilege == 'moderator'"><a type="button" class="btn btn-primary btn-sm" href="editcommunitysettings.php?community={{ x.community_id }}">Edit</a></td>
+                           <td align="center" ng-if="x.privilege == 'moderator'"><button type="button" class="btn btn-danger btn-sm" ng-click="show_leave_community_modal(x.community_id);">Leave</button></td>
+                           <td align="center" ng-if="x.privilege == 'moderator'"></td>
+
+                           <td align="center" ng-if="x.privilege == 'resident'"><a type="button" class="btn btn-primary btn-sm" href="communitymap.php?community={{ x.community_id }}">Visit</a></td>
+                           <td align="center" ng-if="x.privilege == 'resident'"><button type="button" class="btn btn-danger btn-sm" ng-click="show_leave_community_modal(x.community_id);">Leave</button></td>
+                           <td align="center" ng-if="x.privilege == 'resident'"></td>
+                           <td align="center" ng-if="x.privilege == 'resident'"></td>
+
+                        </tr>
+                     </table>
+                  </div>
+                  <div ng-show="!hasJoinedCommunities">
+                     <h3> You have not joined a community. </h3>
+                  </div>
+                  <br />
+                  <a type="button" class="btn btn-primary btn-md" href="communitysearch.php" ng-show="!hide_join_communities_button">Search For A Community To Join</a>
+               </div>
+               <div ng-show="detailedJoined">
+                  <div align="center">
+                  <br />
+                     <button class='btn btn-primary btn-md' style='width:auto' ng-click="backToJoined()"><span class="glyphicon glyphicon-arrow-left"></span> Back To Joined Communities </button>
+                  </div>
+                  <h3> {{ joined_communities_array[joined_row_clicked].community_name }} </h3>
+                  <table class="table  table-borderless table-responsive table-striped">
+                     <tr> 
+                        <th style="color: #006699"> City: </th> 
+                        <td> {{ joined_communities_array[joined_row_clicked].city }} </td> 
                      </tr>
-                     <tr>
-                        <td colspan = "4">
-                           <b style="color: black;"> Description: </b> <br /> {{ x.community_description }}
-                        </td>
+                     <tr> 
+                        <th style="color: #006699"> State / Province: </th> 
+                        <td> {{ joined_communities_array[joined_row_clicked].state }} </td> 
                      </tr>
-                     <tr ng-if="x.privilege == 'owner'">
-                        <td align="center"><a type="button" class="btn btn-primary btn-md" href="communitymap.php?community={{ x.community_id }}">Visit Community</a></td>
-                        <td align="center"><button type="button" class="btn btn-danger btn-md" ng-click="show_leave_community_modal(x.community_id);">Leave Community</button></td>
-                        <td align="center"><a type="button" class="btn btn-primary btn-md" href="editcommunitysettings.php?community={{ x.community_id }}">Edit Community Settings</a></td>
-                        <td align="center"><button type="button" class="btn btn-danger btn-md" ng-click="show_delete_community_modal(x.community_id);">Delete Community</button></td>
+                     <tr> 
+                        <th style="color: #006699"> Country: </th> 
+                        <td> {{ joined_communities_array[joined_row_clicked].country }} </td> 
                      </tr>
-                     <tr ng-if="x.privilege == 'moderator'">
-                        <td align="center"><a type="button" class="btn btn-primary btn-md" href="communitymap.php?community={{ x.community_id }}">Visit Community</a></td>
-                        <td align="center"><a type="button" class="btn btn-primary btn-md" href="editcommunitysettings.php?community={{ x.community_id }}">Edit Community Settings</a></td>
-                        <td align="center"><button type="button" class="btn btn-danger btn-md" ng-click="show_leave_community_modal(x.community_id);">Leave Community</button></td>
-                        <td align="center">&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp</td>
-                     </tr>
-                     <tr ng-if="x.privilege == 'resident'">
-                        <td align="center" colspan='1'><a type="button" class="btn btn-primary btn-md" href="communitymap.php?community={{ x.community_id }}">Visit Community</a></td>
-                        <td align="center"><button type="button" class="btn btn-danger btn-md" ng-click="show_leave_community_modal(x.community_id);">Leave Community</button></td>
-                        <td align="center">&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp</td>
-                        <td align="center">&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp</td>
+                     <tr> 
+                        <th style="color: #006699"> Description: </th> 
+                        <td> {{ joined_communities_array[joined_row_clicked].community_description }} </td> 
                      </tr>
                   </table>
-                  <br />
                </div>
-               <a type="button" class="btn btn-primary btn-lg" href="communitysearch.php" ng-show="!hide_join_communities_button">Search For A Community To Join</a>
             </div>
          </div>
       </div>

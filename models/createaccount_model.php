@@ -39,6 +39,7 @@ $username = mysql_real_escape_string($username);
 $email = mysql_real_escape_string($email);
 $firstName = mysql_real_escape_string($firstName);
 $middleInitial = mysql_real_escape_string($middleInitial);
+$middleInitial = strtoupper($middleInitial);
 $lastName = mysql_real_escape_string($lastName);
 $gender = mysql_real_escape_string($gender);
 $birthDate = mysql_real_escape_string($birthDate);
@@ -46,48 +47,57 @@ $password = mysql_real_escape_string($password);
 
 $password = (password_hash($password, PASSWORD_DEFAULT));
 
-// Check to see if the username already exists
-$sql_username_check = "SELECT username FROM users WHERE username= '$username' LIMIT 1";
+$sql_username_check = "SELECT m_initial FROM users LIMIT 1";
 $result_username_check = mysqli_query($conn, $sql_username_check);
 
-if(mysqli_fetch_row($result_username_check)) {
-	echo "usernameExists"; exit;
-}
+if(mysqli_num_rows($result_username_check) > 0) {
 
-// Check to see if the email already exists
-$sql_email_check = "SELECT email FROM users WHERE email= '$email' LIMIT 1";
-$result_email_check = mysqli_query($conn, $sql_email_check);
+    // Check to see if the username already exists
+    $sql_username_check = "SELECT username FROM users WHERE username= '$username' LIMIT 1";
+    $result_username_check = mysqli_query($conn, $sql_username_check);
 
-if(mysqli_fetch_row($result_email_check)) {
-	echo "emailExists"; exit;
-}
-
-// If the username and email are free begin to create the user
-// Loop that interacts with the database to insert the user
-$error_counter = 0;
-do {
-    $available = true;
-    $user_id = generate_HexCode();
-
-    $sql_user_id_check = "SELECT user_id FROM users WHERE user_id= '$user_id' LIMIT 1";
-    $result_user_id_check = mysqli_query($conn, $sql_user_id_check);
-
-    //Check to see if the User ID Already Exists
-    if(mysqli_fetch_row($result_user_id_check)){
-            $available = false;
-            $error_counter++;
-        }else{
-            $available = true;
-            $sql_create_user = "INSERT INTO users (user_id, username, password, email, first_name, last_name, m_initial, gender, birth_date, date_created) VALUES ('$user_id', '$username', '$password', '$email', '$firstName', '$lastName', '$middleInitial', '$gender', '$birthDate',  NOW())";
-            if(mysqli_query($conn, $sql_create_user)) {
-                echo "success"; exit();
-            }
-            // Close the connection down here somewhere
-        }
-    if($error_counter == 100){
-        echo "Problem with connection, please try again.";
+    if(mysqli_fetch_row($result_username_check)) {
+    	echo "usernameExists"; exit;
     }
-}while($available == false && $error_counter < 100);
+
+    // Check to see if the email already exists
+    $sql_email_check = "SELECT email FROM users WHERE email= '$email' LIMIT 1";
+    $result_email_check = mysqli_query($conn, $sql_email_check);
+
+    if(mysqli_fetch_row($result_email_check)) {
+    	echo "emailExists"; exit;
+    }
+
+    // If the username and email are free begin to create the user
+    // Loop that interacts with the database to insert the user
+    $error_counter = 0;
+    do {
+        $available = true;
+        $user_id = generate_HexCode();
+
+        $sql_user_id_check = "SELECT user_id FROM users WHERE user_id= '$user_id' LIMIT 1";
+        $result_user_id_check = mysqli_query($conn, $sql_user_id_check);
+
+        //Check to see if the User ID Already Exists
+        if(mysqli_fetch_row($result_user_id_check)){
+                $available = false;
+                $error_counter++;
+            }else{
+                $available = true;
+                $sql_create_user = "INSERT INTO users (user_id, username, password, email, first_name, last_name, m_initial, gender, birth_date, date_created) VALUES ('$user_id', '$username', '$password', '$email', '$firstName', '$lastName', '$middleInitial', '$gender', '$birthDate',  NOW())";
+                if(mysqli_query($conn, $sql_create_user)) {
+                    echo "success"; exit();
+                }
+                // Close the connection down here somewhere
+            }
+        if($error_counter == 100){
+            echo "Problem with connection, please try again.";
+        }
+    }while($available == false && $error_counter < 100);
+
+}else{
+    echo "Problem with connection, please try again.";
+}
 
 //Function to generate Hex Code
 function generate_HexCode() {

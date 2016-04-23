@@ -18,7 +18,7 @@ $user_id = mysql_real_escape_string($user_id);
 
 $requests_array = array();
 
-$sql_get_user_community_requests = "SELECT * FROM requests_to_join_communities INNER JOIN config ON requests_to_join_communities.community_id = config.community_id WHERE requests_to_join_communities.user_id = '$user_id'";
+$sql_get_user_community_requests = "SELECT * FROM requests_to_join_communities INNER JOIN communities ON requests_to_join_communities.community_id = communities.community_id INNER JOIN config ON requests_to_join_communities.community_id = config.community_id WHERE requests_to_join_communities.user_id = '$user_id' ORDER BY requests_to_join_communities.date_created";
 
 $sql_get_user_community_requests_result = mysqli_query($conn, $sql_get_user_community_requests);
 
@@ -34,9 +34,11 @@ if (mysqli_num_rows($sql_get_user_community_requests_result) == 0) {
         $requests_array[$counter]['community_id'] = $row['community_id'];
         $requests_array[$counter]['community_name'] = $row['community_name'];
         $requests_array[$counter]['community_description'] = $row['community_description'];
+        $requests_array[$counter]['city'] = $row['city'];
+        $requests_array[$counter]['state'] = $row['province'];
+        $requests_array[$counter]['country'] = $row['country'];
         $requests_array[$counter]['date_created'] = $row['date_created'];
         $requests_array[$counter]['requested_or_invited'] = $row['requested_or_invited'];
-        
 
         $counter = $counter + 1;
     }

@@ -4,6 +4,11 @@
    $H->show_template( );
        
 ?>
+   <!-- Google API KEY for accessing a broader spectrum of Google APIs-->
+   <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCTUwndh9ZED3trNlGZqcCEjkAb5-bpoUw"></script>
+   <script type="text/javascript" src="js/colorpins.js"></script>
+
+   <script src="js/date.js"> </script> <!-- For the date stuff -->
 
    <style>
       hr {
@@ -30,58 +35,120 @@
       <div class="container-fluid">
          <div class="row">
             <div class="col-md-6" class="container-fluid">
-               <h1> Requests To Join Communities </h1>
-               <hr>
-               <div id="requests">
-                  <div ng-repeat="x in requested_array">
-                  <table class="table table-borderless">
-                     <tr>
-                        <td colspan = "3">
-                           <h4> <span style="color: black;"> Community Name - </span> {{ x.community_name }} </h4>
-                        </td>
+               <div ng-show="!detailedRequest">
+                  <h1> Requests To Join Communities </h1>
+                  <hr>
+                  <div id="requests">
+                     <table class="table table-borderless table-responsive">
+                        <tr>
+                           <th> Community Name </th>
+                           <th> Date Sent </th>
+                           <th> </th>
+                        <tr ng-repeat="x in requested_array track by $index">
+                           <td style="color: #006699; font-weight: bold; cursor: pointer;" ng-click="showDetailedRequest($index)"> {{ x.community_name}} </td>
+                           <td ng-click="showDetailedRequest($index)" style="cursor: pointer;"> {{ x.date_created }} </td>
+                           <td> <button type="button" class="btn btn-danger btn-sm" ng-click="show_delete_request_to_community_modal(x.community_id);">Delete Request</button></td>
+                        </tr>
+                     </table>
+                  </div>
+               </div>
+               <div ng-show="detailedRequest">
+                  <div align="center">
+                  <br />
+                     <button class='btn btn-primary btn-md' style='width:auto' ng-click="backToRequests()"><span class="glyphicon glyphicon-arrow-left"/> Back To Requests </button>
+                  </div>
+                  <h3> {{ requested_array[request_row_clicked].community_name }} </h3>
+                  <table class="table  table-borderless table-responsive table-striped">
+                     <tr> 
+                        <th style="color: #006699"> City: </th> 
+                        <td> {{ requested_array[request_row_clicked].city }} </td> 
                      </tr>
-                     <tr>
-                        <td colspan = "3"> <b style="color: black;"> Description: </b> <br /> {{ x.community_description }} </td>
+                     <tr> 
+                        <th style="color: #006699"> State / Province: </th> 
+                        <td> {{ requested_array[request_row_clicked].state }} </td> 
                      </tr>
-                     <tr>
-                        <td> <button type="button" class="btn btn-danger btn-md" ng-click="show_delete_request_to_community_modal(x.community_id);">Delete Request</button></td>
-                        <td> </td>
-                        <td> </td>
+                     <tr> 
+                        <th style="color: #006699"> Country: </th> 
+                        <td> {{ requested_array[request_row_clicked].country }} </td> 
+                     </tr>
+                     <tr> 
+                        <th style="color: #006699"> Description: </th> 
+                        <td> {{ requested_array[request_row_clicked].community_description }} </td> 
                      </tr>
                   </table>
-                  <br />
-                  </div>
+                  <div align="center">
+                     <button type='button' class='btn btn-success btn-sm' style='width:auto' ng-click='load_map_into_modal(requested_array[request_row_clicked].community_id)' data-toggle='modal' data-target='#view_community_modal'>View Community</button> </td>
+                  </div> 
                </div>
             </div>
             <div class="col-md-6" class="container-fluid">
-               <h1> Invites To Join Communities </h1>
-               <hr>
-               <div id="invites">
-                  <div ng-repeat="x in invited_array" >
-                  <table class="table table-borderless">
-                     <tr>
-                        <td colspan = "3">
-                           <h4> {{ x.community_name }} </h4>
-                        </td>
+               <div ng-show="!detailedInvite">
+                  <h1> Invites To Join Communities </h1>
+                  <hr>
+                  <div id="invites">
+                     <table class="table table-borderless table-responsive">
+                        <tr>
+                           <th> Community Name </th>
+                           <th> Date Sent </th>
+                           <th> </th>
+                           <th> </th>
+                        <tr ng-repeat="x in invited_array track by $index">
+                           <td style="color: #006699; font-weight: bold;  cursor: pointer;" ng-click="showDetailedInvite($index)"> {{ x.community_name}} </td>
+                           <td ng-click="showDetailedInvite($index)" style="cursor: pointer;"> {{ x.date_created }} </td>
+                           <td> <button type="button" class="btn btn-primary btn-sm" ng-click="show_accept_invite_to_community_modal(x.community_id);" style="width: 100%;">Accept Invite</button> </td>
+                           <td> <button type="button" class="btn btn-danger btn-sm" ng-click="show_delete_invite_to_community_modal(x.community_id);" style="width: 100%;">Delete Invite</button> </td>
+                        </tr>
+                     </table>
+                  </div>
+               </div>
+               <div ng-show="detailedInvite">
+                  <div align="center">
+                  <br />
+                     <button class='btn btn-primary btn-md' style='width:auto' ng-click="backToInvites()"><span class="glyphicon glyphicon-arrow-left"/> Back To Invites </button>
+                  </div>
+                  <h3> {{ invited_array[invite_row_clicked].community_name }} </h3>
+                  <table class="table  table-borderless table-responsive table-striped">
+                     <tr> 
+                        <th style="color: #006699"> City: </th> 
+                        <td> {{ invited_array[invite_row_clicked].city }} </td> 
                      </tr>
-                     <tr>
-                        <td colspan = "3"> 
-                           <b> Description: </b> <br /> {{ x.community_description }} 
-                        </td>
+                     <tr> 
+                        <th style="color: #006699"> State / Province: </th> 
+                        <td> {{ invited_array[invite_row_clicked].state }} </td> 
                      </tr>
-                     <tr>
-                        <td> <button type="button" class="btn btn-primary btn-md" ng-click="show_accept_invite_to_community_modal(x.community_id);" style="width: 100%;">Accept Invite</button> </td>
-                        <td> <button type="button" class="btn btn-danger btn-md" ng-click="show_delete_invite_to_community_modal(x.community_id);" style="width: 100%;">Delete Invite</button> </td>
-                        <td> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp </td>
+                     <tr> 
+                        <th style="color: #006699"> Country: </th> 
+                        <td> {{ invited_array[invite_row_clicked].country }} </td> 
+                     </tr>
+                     <tr> 
+                        <th style="color: #006699"> Description: </th> 
+                        <td> {{ invited_array[invite_row_clicked].community_description }} </td> 
                      </tr>
                   </table>
-                  <br />
-                  </div>
+                  <div align="center">
+                     <button type='button' class='btn btn-success btn-sm' style='width:auto' ng-click='load_map_into_modal(invited_array[invite_row_clicked].community_id)' data-toggle='modal' data-target='#view_community_modal'>View Community</button> </td>
+                     <button type="button" class="btn btn-primary btn-sm" ng-click="show_accept_invite_to_community_modal(invited_array[invite_row_clicked].community_id);" style="width: auto;">Accept Invite</button>
+                  </div> 
                </div>
             </div>
          </div>
       </div>
-      <div>
+      <!-- Modal -->
+      <div id="view_community_modal" class="modal fade" role="dialog">
+         <div class="modal-dialog">
+            <!-- Modal content -->
+            <div class="modal-content">
+               <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title" id="community_name"></h4>
+               </div>
+               <div class="modal-body" id="community_map" style="height: 450px"></div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+               </div>
+            </div>
+         </div>
+      </div>
         <!-- Modal -->
       <div id="delete_request_to_community_modal" class="modal fade" role="dialog">
          <div class="modal-dialog">

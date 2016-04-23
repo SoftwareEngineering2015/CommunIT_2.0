@@ -9,8 +9,11 @@ $.post(
             user: localStorage.getItem("communit_user_id") // User ID
         },
         function(data) {
-            if (data.trim() === "noMatch") {
+            data = jQuery.parseJSON(data);
+            if (data.status.trim() === "noMatch") {
                 window.location.href = "myhome.php";
+            } else {
+                currentUsersPrivilege = data.privilege;
             }
         }
     );

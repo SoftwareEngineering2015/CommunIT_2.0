@@ -1,12 +1,7 @@
 //var authenticationApp = angular.module('authenticationApp', []);
 
 communitApp.controller('authenticationController', ['$scope', '$http', function($scope, $http) {
-/*
-  if(localStorage.getItem('communit_user_first') && localStorage.getItem('communit_user_last')){
-      $scope.userfirstname = localStorage.getItem('communit_user_first');
-      $scope.userlastname = localStorage.getItem('communit_user_last'); 
-  }
-*/
+
   $scope.newProfileCounter = 0;
   $scope.invitedCounter = 0;
 
@@ -14,6 +9,10 @@ communitApp.controller('authenticationController', ['$scope', '$http', function(
   $scope.authenticated = false;
   $scope.authenticateCheck();
   $scope.authenticated = true;
+
+  $scope.newProfileIndicator();
+  $scope.newInviteIndicator();
+
 //Uncomment to repeat the authentication every 5 seconds,
 //this will prevent users from continuing on the page after they've
 //somehow cleared their stored localStorage.
@@ -22,6 +21,10 @@ communitApp.controller('authenticationController', ['$scope', '$http', function(
     $scope.authenticateCheck();
   }, 5000);
 */
+
+}
+
+$scope.newProfileIndicator = function(){
 
   $http({
     method : 'POST',
@@ -42,8 +45,12 @@ communitApp.controller('authenticationController', ['$scope', '$http', function(
 
   });
 
+}
+
+$scope.newInviteIndicator = function(){
+
 var encodedData = 'user=' +
-  encodeURIComponent(localStorage.getItem("communit_user_id"));
+encodeURIComponent(localStorage.getItem("communit_user_id"));
 $http({
       method: 'POST',
       url: './models/show_community_requests_model.php',
