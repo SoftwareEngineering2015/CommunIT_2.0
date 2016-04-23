@@ -21,7 +21,7 @@
   		<p>
   			By using our website, you hereby consent to our disclaimer and agree to its terms.
   		</p>
-  		<h3>Update</h3>This site disclaimer was last updated on: Thursday, December 17th, 2015.<br /><br /><br /><hr />
+  		<h3>Update</h3>This site disclaimer was last updated on: Wednesday, April 27th, 2016.<br /><br /><br /><hr />
 			<div style="text-align: center;">
 			<a href="index.php" class="btn btn-primary btn-lg"> Return </a>
 			<p></p>

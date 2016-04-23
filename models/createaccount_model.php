@@ -2,6 +2,7 @@
 
 // Make sure all the required variables are set, if not then exit
 if (!isset($_REQUEST['inputUsername']) && !isset($_REQUEST['inputEmail']) && !isset($_REQUEST['inputFirstName']) && !isset($_REQUEST['inputLastName']) && !isset($_REQUEST['inputBirthDate']) && !isset($_REQUEST['inputPassword'])) {
+    echo("Missing information: Bad Request");
 	exit;
 }
 
@@ -47,10 +48,10 @@ $password = mysql_real_escape_string($password);
 
 $password = (password_hash($password, PASSWORD_DEFAULT));
 
-$sql_username_check = "SELECT m_initial FROM users LIMIT 1";
-$result_username_check = mysqli_query($conn, $sql_username_check);
+$sql_database_check = "SELECT `privilege_id` FROM `privileges` where `privilege_id` = 1 LIMIT 1";
+$result_database_check = mysqli_query($conn, $sql_database_check);
 
-if(mysqli_num_rows($result_username_check) > 0) {
+if(mysqli_num_rows($result_database_check) > 0) {
 
     // Check to see if the username already exists
     $sql_username_check = "SELECT username FROM users WHERE username= '$username' LIMIT 1";
@@ -97,6 +98,7 @@ if(mysqli_num_rows($result_username_check) > 0) {
 
 }else{
     echo "Problem with connection, please try again.";
+    exit;
 }
 
 //Function to generate Hex Code

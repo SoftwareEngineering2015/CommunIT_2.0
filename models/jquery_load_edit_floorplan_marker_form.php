@@ -106,20 +106,20 @@
             <td> <input type="text" class="form-control input-md" id="floorplanMarkerName" placeholder="Marker Name" value="<?php echo $name; ?>"> <span class="text-danger" id="errorMsgFloorplanMarkerName"></span> </td>
         </tr>
         <tr>
-            <th> Marker Information </th>
-            <td> 
-                <a class="glyphicon glyphicon-question-sign" style="text-decoration: none" title="Information about this marker."> </a>
-            </td>
-            <td> </td>
-            <td> <textarea class="form-control" id="floorplanMarkerInformation" placeholder="Marker Information" wrap="soft" rows="5"><?php echo $miscinfo; ?></textarea></td>
-        </tr>
-        <tr>
             <th> Marker Location </th>
             <td>
                 <a class="glyphicon glyphicon-question-sign" style="text-decoration: none" title="Specify the location of the marker."> </a>
             </td>
             <td> </td>
             <td> <input type="text" class="form-control input-md" id="floorplanMarkerLocation" placeholder="Marker Location" value="<?php echo $location; ?>"> <span class="text-danger" id="errorMsgFloorplanMarkerLocation"></span> </td>
+        </tr>
+        <tr>
+            <th> Marker Information </th>
+            <td> 
+                <a class="glyphicon glyphicon-question-sign" style="text-decoration: none" title="Information about this marker."> </a>
+            </td>
+            <td> </td>
+            <td> <textarea class="form-control" id="floorplanMarkerInformation" placeholder="Marker Information" wrap="soft" rows="5"><?php echo $miscinfo; ?></textarea></td>
         </tr>
         <tr>
             <th> Marker Pin Color </th>

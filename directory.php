@@ -8,8 +8,7 @@
     </head>
     <script src='controllers/directory_controller.js'></script>
     <body ng-controller='directoryController' ng-init='getCommunities();'>
-	<div>Not Finished.</div>
-    <div class="container-fluid" ng-show="cows">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-md-12" class="container-fluid" align="center">
                 <div class="form-inline">

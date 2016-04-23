@@ -40,7 +40,7 @@
             </div>-->
             <table class="col-xs-12 table table-hover">
               <tr>
-                <td id="profileRow">Selected Community: &nbsp</td>
+                <td id="profileRow" colspan="2">Selected Community: &nbsp</td>
                 <td style="float: left;">
                   <select id="selectMarker" ng-model="selectProfile" class="form-control" ng-change="changeInfo(profiles[selectProfile].profile_id);">
                       <option ng-repeat="markers in profiles track by $index" value="{{$index}}">{{markers.community_name}}</option>
@@ -264,7 +264,7 @@
                 <td id="notAvailable" ng-show="!profiles[selectProfile].phone_01" ng-click="showProfile();"> N/A </td>
                 <td ng-show="profiles[selectProfile].email_01" ng-click="showProfile();"> {{profiles[selectProfile].email_01}} </td>
                 <td id="notAvailable" ng-show="!profiles[selectProfile].email_01" ng-click="showProfile();"> N/A </td>
-                <td colspan="2"> <a class="col-xs-12 btn btn-primary" href="myProfile.php">My Profile</a> </td>
+                <td colspan="2"> <a class="col-xs-12 btn btn-primary" href="myprofile.php">My Profile</a> </td>
             </tr>
             <tr ng-repeat="resident in residents track by $index" ng-show="!residents.error">
                 <td class="col-xs-3" ng-click="showDetailed(resident.resident_id);"> {{resident.firstname}} {{resident.lastname}} </td>

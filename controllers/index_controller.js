@@ -201,6 +201,7 @@ indexApp.controller('createaccountController', ['$scope', '$http', function($sco
     //window.location.href = 'index.php';
     $scope.clearForm();
     $scope.formSwitch = false;
+    $scope.errorMsgForm = '';
     $scope.successMsg = 'Account Created Successfully, Please Log In.';
     }
     })

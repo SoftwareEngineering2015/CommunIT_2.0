@@ -89,7 +89,7 @@ $error = '';
                 </div>
                 <!-- /.navbar-collapse -->
         </nav>
-        <div id="nav-bar-spacing" style="height: 55px">&nbsp</div>
+        <div id="nav-bar-spacing" style="height: 60px">&nbsp</div>
 
 
         <!--

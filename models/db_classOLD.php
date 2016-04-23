@@ -1,24 +1,25 @@
 <?php
+
+
  //The Application's Database Credentials.
-
-		 $server = "127.0.0.1";
-     $user = "root";
-     $pass = "";
-     $mydb = "communit2";
-     $conn = mysqli_connect($server, $user, $pass, $mydb)
+	 $serverdb = "127.0.0.1";
+     $userdb = "root";
+     $passdb = "";
+     $mydbdb = "communit2";
+     $conn = mysqli_connect($serverdb, $userdb, $passdb, $mydbdb )
 		or die ("Cannot connect to $server using $user." .  mysql_error());
-
+    
 class manage_db {
   function __construct( $DBG = false ) {
     $this->DBG = $DBG;
   }
   function connect_db(){
         //include("db_config.php");
-   $server = '127.0.0.1';
-     $user = 'root';
-     $pass = '';
-     $mydb = 'communit2';
-     $this->DBH = mysqli_connect($server, $user, $pass, $mydb )
+   $server = $serverdb;
+     $user = $userdb;
+     $pass = $passdb;
+     $mydb = $mydbdb;
+     $this->DBH = mysqli_connect($server, $user, $pass, $mydb ) 
          or die ("Cannot connect to $server using $user" .  mysql_error());
 
   }
@@ -29,7 +30,7 @@ class manage_db {
          $this->results = mysqli_query( $this->DBH, $query )
           //or die ("Database query failed SQLcmd=$query Error_str=" .  mysqli_error() );
          or ($this->results = 'false');
-  }
+  } 
 
   function do_residence_query( $input, $redirect ) {
       $error = ' ';
@@ -37,21 +38,21 @@ class manage_db {
          $this->results = mysqli_query( $this->DBH, $query )
           //or die ("Database query failed SQLcmd=$query Error_str=" .  mysqli_error() );
         or die ("<META HTTP-EQUIV='Refresh' CONTENT='0;URL=$redirect'>");
-  }
+  } 
 
   function check_rows( $input ) {
        $query = $input;
-       $rows = mysqli_query( $this->DBH, $query )
+       $rows = mysqli_query( $this->DBH, $query ) 
           or die ("Database query failed SQLcmd=$query Error_str=" .  mysqli_error());
         $this->results = mysql_num_rows($rows)
         or die ("Database query failed SQLcmd=$query Error_str=" .  mysqli_error());
-  }
+  } 
 
   function affected_rows() {
       // $query = $input;
         $this->results = mysqli_affected_rows($this->DBH)
         or die ("Database query failed SQLcmd= Error_str=" .  mysqli_error());
-  }
+  } 
 
   function doesUserExist($username, $password) {
     $query = "SELECT * FROM residences WHERE password = '".$password."' AND username = '".$username."'";
