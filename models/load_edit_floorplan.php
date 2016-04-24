@@ -1,9 +1,13 @@
 <?php
 
 // Get the community id from the post for which community map to display
-if (isset($_REQUEST["floorplan"]) && isset($_REQUEST["default_pin_color"])) {
+if (isset($_REQUEST["floorplan"])) {
     $floorplan_id = $_REQUEST["floorplan"];
-    $default_pin_color = $_REQUEST["default_pin_color"];
+    if (isset($_REQUEST["default_pin_color"])) {
+        $default_pin_color = $_REQUEST["default_pin_color"];
+    } else {
+        $default_pin_color = "";
+    }
 } else {
     echo "noFloorplan";
     exit;

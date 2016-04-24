@@ -107,7 +107,7 @@ communitApp.controller('residentsController', function($scope, $http) {
   };
 
     $scope.checkPhoneNumber01 = function(){
-    if($scope.phone_01 != ''){ 
+    if($scope.phone_01 != '' && $scope.phone_01 != null){ 
       var phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
       if(phoneRegex.test($scope.phone_01)) {
         $scope.errorPhone01Msg = "";
@@ -123,7 +123,7 @@ communitApp.controller('residentsController', function($scope, $http) {
   }
 
     $scope.checkPhoneNumber02 = function(){
-      if($scope.phone_02 != ''){ 
+      if($scope.phone_02 != '' && $scope.phone_02 != null){ 
           var phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
           if(phoneRegex.test($scope.phone_02)) {
             $scope.errorPhone02Msg = "";
