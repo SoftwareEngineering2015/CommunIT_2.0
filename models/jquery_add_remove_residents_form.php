@@ -187,6 +187,9 @@ $(document).ready(function() {
 
   </tr>
 </table>
+<br />
+<br />
+<br />
 
 <!-- Modal -->
 <div id="confirmUnlinkResidentModal" class="modal fade" role="dialog">

@@ -33,6 +33,7 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
     $scope.marker_name; // This show the name of the clicked marker when there is a profile
     $scope.marker_location; // This show the location of the clicked marker when there is a profile
     $scope.marker_misc; // This show the location of the clicked marker when there is a profile
+    $scope.hasMarkerMisc = false;
 
     $scope.misc_panel = false;
     $scope.showMarkerInfoButton = false;
@@ -229,6 +230,8 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
     function addFloorplanListener(i) {
         markers[i].addListener('click', function() {
 
+            $scope.misc_panel = false;
+
             $scope.showMarkerInfoButton = true;
 
             $scope.marker_clicked_for_weather_information = i;
@@ -247,7 +250,14 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
             }
 
             $scope.marker_name = marker_names[i];
-            $scope.marker_misc = marker_miscinfos[i];
+            
+            if (marker_miscinfos[i] != "" && marker_miscinfos[i] != null) {
+                $scope.hasMarkerMisc = true;
+                $scope.marker_misc = marker_miscinfos[i];
+            } else {
+                $scope.hasMarkerMisc = false; 
+            }
+
             $scope.marker_location = marker_locations[i];
 
             encodedData = 'marker_id=' +
@@ -329,6 +339,8 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
     function addProfileListener(i) {
         markers[i].addListener('click', function() {
 
+            $scope.misc_panel = false;
+
             $scope.showMarkerInfoButton = true;
 
             $scope.marker_clicked_for_weather_information = i;
@@ -347,7 +359,14 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
             }
 
             $scope.marker_name = marker_names[i];
-            $scope.marker_misc = marker_miscinfos[i];
+
+            if (marker_miscinfos[i] != "" && marker_miscinfos[i] != null) {
+                $scope.hasMarkerMisc = true;
+                $scope.marker_misc = marker_miscinfos[i];
+            } else {
+                $scope.hasMarkerMisc = false; 
+            }
+
             $scope.marker_location = marker_locations[i];
 
             encodedData = 'marker_id=' +
@@ -705,12 +724,12 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
                         .success(function(data, status, headers, config) {
                             angular.forEach(data.list, function(value, key) {
                                 var dayOfWeek = Date.parse(value.dt_txt);
-                                if (value.dt_txt.indexOf("12:00:00") > 0) {
+                                if (value.dt_txt.indexOf("6:00:00") > 0) {
                                     $("#dayOfWeekForWeather").append("<td> " + dayOfWeek.toString('M/d<br />ddd<br />12:00 tt') + " </td>");
                                     $("#weatherForForecast").append("<td><img src='images/weather/" + value.weather['0']['icon'] + ".png' /></td>");
                                     $("#tempForForecast").append("<td> " + value.main['temp'] + "&degF</td>");
                                     $("#descriptionForForecast").append("<td> " + value.weather['0']['description'] + "</td>");
-                                } else if (value.dt_txt.indexOf("00:00:00") > 0) {
+                                } else if (value.dt_txt.indexOf("18:00:00") > 0) {
                                     $("#dayOfWeekForWeather").append("<td> " + dayOfWeek.toString('M/d<br />ddd<br />12:00 tt') + " </td>");
                                     $("#weatherForForecast").append("<td><img src='images/weather/" + value.weather['0']['icon'] + ".png' /></td>");
                                     $("#tempForForecast").append("<td> " + value.main['temp'] + "&degF</td>");

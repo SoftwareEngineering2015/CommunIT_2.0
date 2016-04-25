@@ -70,7 +70,7 @@ if (mysqli_num_rows($sql_community_requests_result) == 0 ) {
     }
   }
 
-  echo "</table>";
+  echo "</table><br /><br /><br />";
 }
 
 ?>

@@ -64,6 +64,9 @@
 
                                 $("#floorplanModalDiv").append('<img src=' + fullimg + ' class="markers_on_floorplan" id="marker_' + data.marker_id + '" style="display: block; position: absolute; left:' + data.latitude + '%; top:' + data.longitude + '%;" title="' + data.marker_name + '\n' + data.marker_location + '" onclick="marker_actions(`' + data.marker_id + '`)"/>');
                                 
+                                $("#floorplan_marker_being_added").css("top", "50%");
+                                $("#floorplan_marker_being_added").css("left", "50%");
+
                                 $("#floorplanMarkerName").val('');
                                 $("#floorplanMarkerLocation").val('');
                                 $("#floorplanMarkerInformation").val('');

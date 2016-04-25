@@ -196,6 +196,9 @@ $(document).ready(function() {
       <td> <button type="button" class="btn btn-primary btn-md" id="showUpdateMarkerModal" style="width:100%"> Update Marker </button> </td>
    </tr>
 </table>
+<br />
+<br />
+<br />
 
 <!-- Modal -->
 <div id="updateMarkerModal" class="modal fade" role="dialog">

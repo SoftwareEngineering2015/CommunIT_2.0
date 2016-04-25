@@ -182,6 +182,8 @@ function initializeFilledCommunity() {
 // Add a listener to the marker for a floorplan
 function addFloorplanListener(i) {
     markers[i].addListener('click', function() {
+
+        edit_marker(marker_ids[i], i);
         clicked_marker = markers[i];
 
         if (typeof placedMarker[0] !== 'undefined') {
@@ -201,12 +203,19 @@ function addFloorplanListener(i) {
 
         map.panTo(marker_latlngs[i]);
     });
+    google.maps.event.addListener(map, 'click', function() {
+        if (prev_infowindow) {
+            prev_infowindow.close();
+        }
+    });
 }
 
 
 // Add a click event listener to the marker for the profile
 function addProfileListener(i) {
     markers[i].addListener('click', function() {
+
+        edit_marker(marker_ids[i], i);
         clicked_marker = markers[i];
 
         if (typeof placedMarker[0] !== 'undefined') {
@@ -389,6 +398,10 @@ $(document).ready(function() {
             }
         );
 
+
+    $("#goToCommunity").click(function(event) {
+        window.location.href = "communitymap.php?community=" + $.urlParam('community') + "";
+    });
 
     $("#editCommunitySettingsButton").click(function(event) {
         $("#informationField").empty();

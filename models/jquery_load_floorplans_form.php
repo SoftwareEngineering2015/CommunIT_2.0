@@ -81,7 +81,7 @@ if (mysqli_num_rows($sql_floorplans_in_marker_result) == 0 ) {
 
   }
 
-  echo "</table>";
+  echo "</table><br /><br /><br />";
 }
 
 ?>
@@ -231,8 +231,11 @@ if (mysqli_num_rows($sql_floorplans_in_marker_result) == 0 ) {
                     $("#floorplanFormsField").html(data);
                 }
             );
+
+            overalayColor(community_marker_color);
+
             var img = $('<img id="floorplan_marker_being_added">');
-            img.attr('src', "images/house_pin.png");
+            img.attr('src', fullimg);
             img.css("display", "block");
             img.css("position", "absolute");
             img.css("top", "50%");

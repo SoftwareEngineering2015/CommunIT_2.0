@@ -145,6 +145,9 @@ $(document).ready(function() {
       <th class="removeResidentsColumn"> Remove Resident </th>
    </tr>
 </table>
+<br />
+<br />
+<br />
 
 <!-- Modal -->
 <div id="updateResidentsPrivilegesModal" class="modal fade" role="dialog">

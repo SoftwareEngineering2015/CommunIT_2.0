@@ -159,7 +159,7 @@
                 <b><div class="col-sm-12" Style="text-align: center; font-size: 125%;" id="head_resident_panel"> {{ marker_name }} </div></b>
                 <div class="col-sm-12" Style="text-align: center; font-size: 100%; font-weight: bold;" id="address_panel"> {{ marker_location }} </div>
                 <div class="col-sm-12" Style="text-align: center; font-size: 100%; font-weight: bold;" id="address_panel"> </div>
-                <div class="col-sm-12" Style="text-align: center; font-size: 100%;" id="address_panel" ng-show="marker_misc">
+                <div class="col-sm-12" Style="text-align: center; font-size: 100%;" id="address_panel" ng-show="hasMarkerMisc">
                     <br />
                     <button class="btn btn-info btn-xs" ng-click="showMiscInfo();" ng-show="showMarkerInfoButton"> Show Info </button>
                     <button class="btn btn-info btn-xs" ng-click="hideMiscInfo();" ng-show="misc_panel"> Hide Info </button>
@@ -213,7 +213,7 @@
                 <b><div class="col-sm-12" Style="text-align: center; font-size: 125%;" id="head_resident_panel"> {{ marker_name }} </div></b>
                 <div class="col-sm-12" Style="text-align: center; font-size: 100%; font-weight: bold;" id="address_panel"> {{ marker_location }} </div>
                 <div class="col-sm-12" Style="text-align: center; font-size: 100%; font-weight: bold;" id="address_panel"> </div>
-                <div class="col-sm-12" Style="text-align: center; font-size: 100%;" ng-show"marker_misc">
+                <div class="col-sm-12" Style="text-align: center; font-size: 100%;" ng-show="hasMarkerMisc">
                     <br />
                     <button class="btn btn-info btn-xs" ng-click="showMiscInfo();" ng-show="showMarkerInfoButton"> Show Info </button>
                     <button class="btn btn-info btn-xs" ng-click="hideMiscInfo();" ng-show="misc_panel"> Hide Info </button>

@@ -474,6 +474,9 @@
       <td> <button type="button" class="btn btn-primary btn-md" id="show_modal_button" style="width:100%"> Update </button> </td>
    </tr>
 </table>
+<br />
+<br />
+<br />
 <!-- Modal -->
 <div id="review_information_modal" class="modal fade" role="dialog">
 <div class="modal-dialog">

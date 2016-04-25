@@ -37,11 +37,14 @@ function geocodeAddress(geocoder, resultsMap) {
         if (status === google.maps.GeocoderStatus.OK) {
             resultsMap.panTo(results[0].geometry.location);
             resultsMap.setZoom(18);
+
+            overalayColor(community_marker_color);
+
             //Sets a Marker at the locations in the Geocoder search
             var marker = new google.maps.Marker({
                 map: resultsMap,
                 draggable: true,
-                icon: "images/house_pin.png",
+                icon: fullimg,
                 position: results[0].geometry.location
             });
             placedMarker.push(marker);
