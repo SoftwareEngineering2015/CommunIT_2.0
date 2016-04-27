@@ -261,7 +261,7 @@
             <div class="modal-content" style="min-width: 80%;">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 id="markerNameWeather"></h3>
+                    <h3 id="markerNameWeather">Weather Forecast</h3>
                 </div>
                 <div class="modal-body" id='weatherInformation'>
                     <div id="forecastDiv" style="overflow: auto;">

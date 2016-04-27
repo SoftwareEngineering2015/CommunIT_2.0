@@ -21,15 +21,15 @@
       <body ng-controller="residentsController" ng-init="checkHasEdited(); getInfo();" ng-click="successMsg = null; errorMsg = null; deleteMsg = false; ">
           <div id="welcomejumbotron" class="jumbotron" ng-show="viewSwitch ">
           <div ng-show="!selectProfile" style="padding-left: 5%;">
-            <h2 id="welcomejumbotrontext">Welcome {{userfirstname}} {{userlastname}}!</h2>
+            <h2 id="welcomejumbotrontext">Welcome <span ng-bind="userfirstname"></span> <span ng-bind="userlastname"></span>!</h2>
             <h5 id="welcomejumbotrontext">Here you can specify anyone else at your location.</h5>
             <h4 id="welcomejumbotrontext">Please select a community</h4>
           </div>
           <div id="welcomejumbotron" ng-show="selectProfile" style="padding-left: 5%;">
-            <h2 id="welcomejumbotrontext">Welcome {{userfirstname}} {{userlastname}}!</h2>
+            <h2 id="welcomejumbotrontext">Welcome <span ng-bind="userfirstname"></span> <span ng-bind="userlastname"></span>!</h2>
             <h5 id="welcomejumbotrontext">Here you can specify anyone else at your location.</h5>
-            <h4 id="welcomejumbotrontext" ng-show="profiles[selectProfile].marker_name">Here are your residents for <b>{{profiles[selectProfile].marker_name}}</b>, at <b>{{profiles[selectProfile].community_name}}</b>.</h4>
-            <h4 id="welcomejumbotrontext" ng-show="!profiles[selectProfile].marker_name">No place of residence set at <b>{{profiles[selectProfile].community_name}}</b>.</h4>
+            <h4 id="welcomejumbotrontext" ng-show="profiles[selectProfile].marker_name">Here are your residents for <b><span ng-bind="profiles[selectProfile].marker_name"></span></b>, at <b><span ng-bind="profiles[selectProfile].community_name"></span></b>.</h4>
+            <h4 id="welcomejumbotrontext" ng-show="!profiles[selectProfile].marker_name">No place of residence set at <b><span ng-bind="profiles[selectProfile].community_name"></span></b>.</h4>
           </div>
         </div>
           <div id="communitySelecter" class="col-xs-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2" ng-show="!selectProfile && viewSwitch">

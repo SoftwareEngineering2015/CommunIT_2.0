@@ -16,7 +16,7 @@ if ($check !== false) {
     //echo "File is an image - " . $check["mime"] . ".";
     $uploadOk = 1;
 } else {
-        $json_return_array =  array(
+    $json_return_array =  array(
         "status" =>  "error",
         "message" =>  "Cannot upload file."
     );
@@ -27,11 +27,9 @@ if ($check !== false) {
 }
 
 if ($_FILES["fileToUpload"]["size"] > 1024000) {
-    //echo "Sorry, your file is too large.";
-    //echo $_FILES["fileToUpload"]["size"];
     $json_return_array =  array(
         "status" =>  "error",
-        "message" =>  "Sorry, file to large (Max Size: 1024KB)."
+        "message" =>  "Image cannot be over 1 MB."
     );
     echo json_encode($json_return_array); exit();
     $uploadOk = 0;

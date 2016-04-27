@@ -132,12 +132,12 @@
                 // If the marker has a floorplan add the listener for the floorplan, otherwise add a listener to get the profile of the marker
                 if (marker_has_floorplans[i] == 1) {
                     infowindows[i] = new google.maps.InfoWindow({
-                        content: "<b> Name: " + marker_names[i] + " <br /> Location: " + marker_locations[i]
+                        content: "<b>Location:<br />" + marker_locations[i] + "</b>"
                     });
                     addFloorplanListener(i);
                 } else {
                     infowindows[i] = new google.maps.InfoWindow({
-                        content: "<b> Name: " + marker_names[i] + " <br /> Location: " + marker_locations[i]
+                        content: "<b>Location:<br />" + marker_locations[i] + "</b>"
                     });
                     addProfileListener(i);
                 }

@@ -7,47 +7,77 @@
         ?>
     </head>
     <style>
-    @media print
-    {    
-    .no-print, .no-print *
-    {
-    display: none !important;
-    }
-    }
 
-</style>
+        @media print {       
+            .no-print, .no-print *{
+                display: none !important;
+            }
+        }
+        #profileRow{
+          color: #006699;
+          font-weight: bold;
+        }
+        #notAvailable{
+          color: #bebebe;
+        }
+
+    </style>
 
     <script src='controllers/directory_controller.js'></script>
     <body ng-controller='directory_controller' ng-init='getCommunities();'>
-    <div class="container-fluid">
+    <div class="container-fluid no-print">
         <div class="row">
             <div class="col-md-12" class="container-fluid" align="center">
-                <div class="form-inline">
-                    <select ng-show="showCommunitySelect" id="selectCommunity" ng-model="selectCommunity" class="form-control" ng-change="changeCommunity(selectCommunity);">
-                        <option ng-repeat="community in communities track by community.community_id" value={{community.community_id}}>{{community.community_name}}
-                        </option>
-                    </select>
-                    <select ng-show="showMarkerSelect" id="selectMarker" ng-model="selectMarker" class="form-control" ng-change="changeMarker(selectMarker, selectCommunity); getFloorplan(communities[selectCommunity][selectMarker].has_floorplan)">
-                        <option ng-show="markers.marker_id" ng-repeat="markers in communities[selectCommunity]" value='{{markers.marker_id}}'> {{markers.name}} </option>
-                    </select>
-                    <select ng-show="showSelectFloor" id="selectFloor" ng-model="selectFloor" class="form-control" ng-change="changeFloor(selectFloor)">
-                        <option ng-show="floor.floorplan_id" ng-repeat="floor in floorplans" value='{{floor.floorplan_id}}'> {{floor.floor}} </option>
-                    </select>
-                    <select ng-show="showSelectRoom" id="selectRoom" ng-model="selectRoom" class="form-control" ng-change="changeRoom()">
-                        <option ng-show="markers.marker_id" ng-repeat="markers in floorplans[selectFloor]" value='{{markers.marker_id}}'> {{markers.marker_name}} </option>
-                    </select>
+                <div>
+                    <h3 id="profileRow" ng-show="!selectCommunity"> Please Select a Community <br /></h3>
+                    <table>
+                    <tr id="profileRow">
+                    <td ng-show="showCommunitySelect && selectCommunity">Communities</td><td>&nbsp</td><td ng-show="showMarkerSelect">Building</td><td>&nbsp</td><td ng-show="showSelectFloor && !floorplans.error">Floor</td><td>&nbsp</td><td ng-show="showSelectRoom">Room</td>
+                    </tr>
+                    <tr>
+                    <td ng-show="showCommunitySelect">
+                        <select id="selectCommunity" ng-model="selectCommunity" class="form-control" ng-change="changeCommunity(selectCommunity);">
+                            <option ng-repeat="community in communities track by community.community_id" value={{community.community_id}}>{{community.community_name}}
+                            </option>
+                        </select>
+                    </td>
+                    <td>&nbsp</td>
+                    <td ng-show="showMarkerSelect">
+                        <select id="selectMarker" ng-model="selectMarker" class="form-control" ng-change="changeMarker(selectMarker, selectCommunity); getFloorplan(communities[selectCommunity][selectMarker].has_floorplan)">
+                            <option ng-show="markers.marker_id" ng-repeat="markers in communities[selectCommunity]" value='{{markers.marker_id}}'> {{markers.name}} </option>
+                        </select>
+                    </td>
+                    <td>&nbsp</td>
+                    <td ng-show="showSelectFloor && !floorplans.error">
+                        <select id="selectFloor" ng-model="selectFloor" class="form-control" ng-change="changeFloor(selectFloor)">
+                            <option ng-show="floor.floorplan_id" ng-repeat="floor in floorplans track by $index" value='{{floor.floorplan_id}}'> {{floor.floor}} </option>
+                        </select>
+                    </td>
+                    <td>&nbsp</td>
+                    <td ng-show="showSelectRoom">
+                    <select id="selectRoom" ng-model="selectRoom" class="form-control" ng-change="changeRoom()">
+                            <option ng-show="markers.marker_id" ng-repeat="markers in floorplans[selectFloor]" value='{{markers.marker_id}}'> {{markers.marker_name}} </option>
+                        </select>
+                    </td>
+
+                    </tr>
+          </table>
                 </div>
-                <button class="btn btn-info btn-sm" ng-show="showEmailButton" ng-click="openEmailModal()"> Show All Emails </button>
+                <div ng-show="showEmailButton && !noMarkers && !noRooms && !noUsers">
+                <br />
+                <button class="btn btn-info btn-sm" ng-click="openEmailModal()"> Show All Emails </button>
+                </div>
            </div>
         </div>
      </div>
-        <!---------------------------- Here is the simple community view------------------------------>
+     
+        <!--  Here is the simple community view -->
         <div id="simpleView" ng-show="showCommunity" class="col-xs-10 col-xs-offset-1" style=" height:100%;">
             <div>
             <h2> {{communities[selectCommunity].community_name}} </h2>
             </div>
             <table class="col-xs-12 table table-hover">
-                <tr>
+                <tr id="profileRow">
                     <td> Name </td>
                     <td> Primary Phone </td>
                     <td> Secondary Phone </td>
@@ -70,13 +100,13 @@
             </table>
             </div>
             
-            <!-----------------------------------Marker Simple View---------------------------------------------->
+            <!-- Marker Simple View -->
             <div id="simpleMarker" ng-show="showMarker" class="col-xs-10 col-xs-offset-1" style=" height:100%;">
                 <div>
                 <h2> {{communities[selectCommunity].community_name}} - {{communities[selectCommunity][selectMarker].name}}</h2>
                 </div>
                 <table class="col-xs-12 table table-hover">
-                    <tr>
+                    <tr id="profileRow">
                         <td> Name </td>
                         <td> Primary Phone </td>
                         <td> Secondary Phone </td>
@@ -96,13 +126,13 @@
                     </tr>
                 </table>
             </div>
-            <!--------------------------------------Floor Table------------------------------------------------------------->  
+            <!-- Floor Table -->  
             <div id="simpleFloor" ng-show="showFloor" class="col-xs-10 col-xs-offset-1" style=" height:100%;">
                 <div>
                 <h2> {{communities[selectCommunity].community_name}} - {{communities[selectCommunity][selectMarker].name}} - {{floorplans[selectFloor].floor}}</h2>
                 </div>
                 <table class="col-xs-12 table table-hover">
-                <tr>
+                <tr id="profileRow">
                     <td> Name </td>
                     <td> Primary Phone </td>
                     <td> Secondary Phone </td>
@@ -124,13 +154,13 @@
                 </tbody>         
             </table>
             </div>
-            <!--------------------------------------Room Table------------------------------------------------------------->  
+            <!-- Room Table -->  
             <div id="simpleRoom" ng-show="showRoom" class="col-xs-10 col-xs-offset-1" style=" height:100%;">
                 <div>
                 <h2> {{communities[selectCommunity].community_name}} - {{communities[selectCommunity][selectMarker].name}} - {{floorplans[selectFloor].floor}} - {{floorplans[selectFloor][selectRoom].marker_name}}</h2>
                 </div>
                 <table class="col-xs-12 table table-hover">
-                    <tr>
+                    <tr id="profileRow">
                         <td> Name </td>
                         <td> Primary Phone </td>
                         <td> Secondary Phone </td>
@@ -138,7 +168,7 @@
                         <td> Secondary Email </td>
                     </tr>
                     <tr ng-show="users.user_id" ng-repeat="users in floorplans[selectFloor][selectRoom]">
-                        <td > {{users.firstname}} {{users.lastname}}</td>
+                        <td> {{users.firstname}} {{users.lastname}}</td>
                         <td ng-show="users.phone_01"> {{users.phone_01}} </td>
                         <td ng-show="!users.phone_01"> N/A </td>
                         <td ng-show="users.phone_02"> {{users.phone_02}} </td>
@@ -150,7 +180,7 @@
                     </tr>
                 </table>
             </div>
-            <!------------------------------------------Modal--------------------------------------------------->
+            <!-- Modal -->
             <div id="emailListModal" class="modal fade" role="dialog">
                 <div class="modal-dialog">
                     <!-- Modal content --> 
@@ -176,7 +206,7 @@
             </form>
          </div>
       </div>
-      <!----------------------------------------------------------------------------------------------------------------------------->
+      <!-- -->
       <div id="emailMarkerList" class="modal fade" role="dialog">
                 <div class="modal-dialog">
                     <!-- Modal content --> 
@@ -201,7 +231,7 @@
             </form>
          </div>
       </div>
-      <!---------------------------------------------------------------------------------------------------------------------------------------------------->
+      <!-- -->
       <div id="emailFloorList" class="modal fade" role="dialog">
                 <div class="modal-dialog">
                     <!-- Modal content --> 
@@ -227,7 +257,7 @@
             </form>
          </div>
       </div>
-      <!-------------------------------------------------------------------------------------------------------------------------->
+      <!-- -->
       <div id="emailRoomList" class="modal fade" role="dialog">
                 <div class="modal-dialog">
                     <!-- Modal content --> 
@@ -252,20 +282,27 @@
             </form>
          </div>
       </div>
-      <!---------------------------------------------------------------------------------------------------------------------->
-      <div ng-show="noMarkers" class="jumbotron">
-          <h1>{{communities[selectCommunity].community_name}}</h1>
-          There are no markers for this community.
-      </div>
-      <!---------------------------------------------------------------------------------------------------------------------->
-      <div ng-show="noRooms" class="jumbotron">
-          <h1>{{floorplans[selectFloor].floor}} - {{communities[selectCommunity][selectMarker].name}} - {{communities[selectCommunity].community_name}} </h1>
-          There are no rooms in this floor. 
-      </div>
-      <!---------------------------------------------------------------------------------------------------------------------->
-      <div ng-show="noUsers" class="jumbotron">
-          <h1> {{communities[selectCommunity].community_name}} - {{communities[selectCommunity][selectMarker].name}} </h1>
-          Has no users.
+      <!-- -->
+      <br />
+      <div id="welcomejumbotron" class="jumbotron" ng-show="noMarkers || noRooms || noUsers">
+          <div ng-show="noMarkers" style="padding-left: 5%;">
+              <h2 id="welcomejumbotrontext" ng-bind="communities[selectCommunity].community_name"></h2>
+              <h4 id="welcomejumbotrontext">There are no markers for this community.</h4>
+          </div>
+          <!-- -->
+          <div ng-show="noRooms" style="padding-left: 5%;">
+              <h2 id="welcomejumbotrontext">{{floorplans[selectFloor].floor}} - {{communities[selectCommunity][selectMarker].name}} - {{communities[selectCommunity].community_name}} </h2>
+              <h4 id="welcomejumbotrontext">There are no rooms on this floor.</h4>
+          </div>
+          <!-- -->
+          <div ng-show="noUsers" style="padding-left: 5%;">
+              <h2 id="welcomejumbotrontext">{{communities[selectCommunity].community_name}} - {{communities[selectCommunity][selectMarker].name}} </h2>
+              <h4 id="welcomejumbotrontext">No residents found.</h4>
+          </div>
+          <div ng-show="selectRoom" style="padding-left: 5%;">
+              <h2 id="welcomejumbotrontext">{{communities[selectCommunity].community_name}} - {{communities[selectCommunity][selectMarker].name}} </h2>
+              <h4 id="welcomejumbotrontext">No residents found.</h4>
+          </div>
       </div>
     </body>
 </html>

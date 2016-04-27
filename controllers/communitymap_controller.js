@@ -205,7 +205,7 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
         var weather = new weatherDiv(createWeatherDiv, map);
         createWeatherDiv.index = 1;
         //puts the div on the map
-        map.controls[google.maps.ControlPosition.TOP_CENTER].push(createWeatherDiv);
+        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(createWeatherDiv);
 
         //these next four lines are for the centering button
         var centerControlDiv = document.createElement('div');
@@ -713,8 +713,6 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
                     $("#currentWeatherHumidity").html(data.main['humidity']+"%");
                     $("#currentWeatherWind").html(data.wind['speed']+" mph");
 
-                    city_id = data.sys.id;
-
                     var forecastURL = "http://api.openweathermap.org/data/2.5/forecast?lat=" + marker_latitudes[$scope.marker_clicked_for_weather_information] + "&" + "lon=" + marker_longitudes[$scope.marker_clicked_for_weather_information] + "&APPID=cd4eda95a76d3de65a551a892bf8ce41&units=imperial";
 
                     $http({
@@ -723,14 +721,15 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
                         })
                         .success(function(data, status, headers, config) {
                             angular.forEach(data.list, function(value, key) {
-                                var dayOfWeek = Date.parse(value.dt_txt);
                                 if (value.dt_txt.indexOf("6:00:00") > 0) {
-                                    $("#dayOfWeekForWeather").append("<td> " + dayOfWeek.toString('M/d<br />ddd<br />12:00 tt') + " </td>");
+                                    var dayOfWeek = Date.parse(value.dt_txt).addDays(-1);
+                                    $("#dayOfWeekForWeather").append("<td> " + dayOfWeek.toString('M/d<br />ddd<br />') + " Night</td>");
                                     $("#weatherForForecast").append("<td><img src='images/weather/" + value.weather['0']['icon'] + ".png' /></td>");
                                     $("#tempForForecast").append("<td> " + value.main['temp'] + "&degF</td>");
                                     $("#descriptionForForecast").append("<td> " + value.weather['0']['description'] + "</td>");
                                 } else if (value.dt_txt.indexOf("18:00:00") > 0) {
-                                    $("#dayOfWeekForWeather").append("<td> " + dayOfWeek.toString('M/d<br />ddd<br />12:00 tt') + " </td>");
+                                    var dayOfWeek = Date.parse(value.dt_txt);
+                                    $("#dayOfWeekForWeather").append("<td> " + dayOfWeek.toString('M/d<br />ddd<br />') + " </td>");
                                     $("#weatherForForecast").append("<td><img src='images/weather/" + value.weather['0']['icon'] + ".png' /></td>");
                                     $("#tempForForecast").append("<td> " + value.main['temp'] + "&degF</td>");
                                     $("#descriptionForForecast").append("<td> " + value.weather['0']['description'] + "</td>");
@@ -746,7 +745,6 @@ communitApp.controller('communitymapController', ['$scope', '$http', function($s
                             }
                         })
 
-                    $("#markerNameWeather").html("Weather For " + data.name);
                 })
                 .error(function(data, status, headers, config) {
                     if (status == 429) {

@@ -300,6 +300,7 @@ if (mysqli_num_rows($sql_floorplans_in_marker_result) == 0 ) {
             if (floorplanMarkerBeingEdited) {
                 addMarkerOnClickEvent(floorplanMarkerBeingEdited);
             }
+            edit_floorplan_marker(marker);
         }
 
         function addMarkerOnClickEvent(marker) {
@@ -447,9 +448,10 @@ if (mysqli_num_rows($sql_floorplans_in_marker_result) == 0 ) {
                         {
                             data = jQuery.parseJSON(json);
                             if (data.status.trim() == "success") {
+                                document.getElementById("floorplanImage").src = "";
                                 $("#floorplanChangeMessage").html("<span style='color: green;'> Floor plan updated successfully. </span>");
                                 $("#newFile").val("");
-                                document.getElementById("floorplanImage").src = data.message;
+                                $("#floorplanImage").attr("src", data.message);
                             } else {
                                 $("#floorplanChangeMessage").html("<span style='color: red;'> " + data.message + "</span>");
                             }

@@ -186,7 +186,7 @@ if ($command == "markers") {
                              
                              $floorplanUserCheck = $conn->query($floorplanUserQuery) or exit("Error code ({$conn->errno}): {$conn->error}");
                              
-                             if ($floorplanUserCheck) {
+                             if (mysqli_num_rows($floorplanUserCheck) > 0) {
                                  while($row6 = mysqli_fetch_assoc($floorplanUserCheck)) {
                                  
                                  $profile_id = $row6['profile_id'];
@@ -256,7 +256,7 @@ if ($command == "markers") {
                                 
         $floorplanCheck = $conn->query($floorplanQuery) or exit("Error code ({conn->errno}): {$conn->error}");
         
-        if ($floorplanCheck) {
+        if (mysqli_num_rows($floorplanCheck) > 0) {
             while($row = mysqli_fetch_assoc($floorplanCheck)) {
                 
                 $floorplan_id = $row['floorplan_id'];
@@ -355,6 +355,11 @@ if ($command == "markers") {
                     }
                 }
             }
+        }else{
+          $directory_array = array (
+          "error" => "Error: Please try again."
+      );
+
         }
     
 } else {

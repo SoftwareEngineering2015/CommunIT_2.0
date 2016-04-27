@@ -36,15 +36,24 @@ if (isset($_REQUEST['floor'])) {
         //echo "File is an image - " . $check["mime"] . ".";
         $uploadOk = 1;
     } else {
-        //echo "File is not an image.";
+        $jsonArr_floorplans = array(
+            "status" => "Error",
+            "message" => "Cannot update the floorplan image."
+        );
+        echo json_encode($jsonArr_floorplans);
+        exit();
         $uploadOk = 0;
         return false;
         
     }
     
     if ($_FILES["fileToUpload"]["size"] > 1024000) {
-        //echo "Sorry, your file is too large.";
-        //echo $_FILES["fileToUpload"]["size"];
+        $jsonArr_floorplans = array(
+            "status" => "Error",
+            "message" => "Cannot update the floorplan image."
+        );
+        echo json_encode($jsonArr_floorplans);
+        exit();
         $uploadOk = 0;
         return false;
     }
@@ -108,7 +117,7 @@ function uploadFloorPlan($floorplan_id)
             		"status" => "Error",
             		"message" => "File is not an image."
         		);
-        		echo json_encode($jsonArr_floorplans);
+        		echo json_encode($jsonArr_floorplans); exit();
                 $uploadOk = 0;
                 return false;
                 
@@ -153,7 +162,7 @@ function uploadFloorPlan($floorplan_id)
             		"status" => "Error",
             		"message" => "Sorry, your file was not uploaded."
         		);
-        	echo json_encode($jsonArr_floorplans);
+        	echo json_encode($jsonArr_floorplans); exit();
             return false;
             //echo "Sorry, your file was not uploaded.";
             // if everything is ok, try to upload file
@@ -167,7 +176,7 @@ function uploadFloorPlan($floorplan_id)
             		"status" => "Error",
             		"message" => "Sorry, your file was not uploaded."
         		);
-        		echo json_encode($jsonArr_floorplans);
+        		echo json_encode($jsonArr_floorplans); exit();
                 return false;
                 //echo "Sorry, there was an error uploading your file.";
             }

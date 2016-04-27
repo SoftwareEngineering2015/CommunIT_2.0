@@ -91,6 +91,11 @@ communitApp.controller('directory_controller', function($scope, $http) {
             $scope.noMarkers = false;
             $scope.noRooms = false;
             $scope.noUsers = false;
+            $scope.selectMarker = "";
+            $scope.selectFloor = "";
+            $scope.selectRoom = "";
+            $scope.floorplans = null;
+            
         } else {
             $scope.showEmailButton = false;
             $scope.showMarkerSelect = false;
@@ -103,6 +108,10 @@ communitApp.controller('directory_controller', function($scope, $http) {
             $scope.noMarkers = true;
             $scope.noRooms = false;
             $scope.noUsers = false;
+            $scope.selectMarker = "";
+            $scope.selectFloor = "";
+            $scope.selectRoom = "";
+            $scope.floorplans = null;
         }
         
         count = 0; 
@@ -110,8 +119,8 @@ communitApp.controller('directory_controller', function($scope, $http) {
     };
     
     $scope.changeMarker = function(selectMarker, selectCommunity) {
-        //alert(selectMarker);
-        //alert(selectCommunity);
+        ////alert(selectMarker);
+        ////alert(selectCommunity);
         count = 0;
           
         
@@ -121,9 +130,11 @@ communitApp.controller('directory_controller', function($scope, $http) {
             }
         }
         ////alert(count);
-        count = 0;
+        
         
         if (count > 4) {
+        
+        $scope.floorplans = null;   
         $scope.showSelectRoom = false;
         $scope.showSelectFloor = false;
         $scope.showCommunity = false;
@@ -133,8 +144,14 @@ communitApp.controller('directory_controller', function($scope, $http) {
         $scope.noRooms = false;
         $scope.noMarkers = false;
         $scope.noUsers = false;
+        $scope.selectFloor = "";
+        $scope.selectRoom = "";
+        $scope.floorplans = null;
         $scope.getFloorplan();
+        
         } else if (count <= 4) {
+        
+        $scope.floorplans = null;  
         $scope.showSelectRoom = false;
         $scope.showSelectFloor = false;
         $scope.showCommunity = false;
@@ -144,8 +161,14 @@ communitApp.controller('directory_controller', function($scope, $http) {
         $scope.noMarkers = false;
         $scope.noRooms = false;
         $scope.noUsers = true;
-        $scope.getFloorplan();  
+        $scope.selectFloor = "";
+        $scope.selectRoom = "";
+        $scope.floorplans = null;
+        $scope.getFloorplan();
+          
         }
+        
+        count = 0;
     };
     
     $scope.changeFloor = function(selectFloor) {
@@ -171,6 +194,7 @@ communitApp.controller('directory_controller', function($scope, $http) {
            $scope.showRoom = false;
            $scope.noRooms = false;
            $scope.noUsers = false;
+           $scope.selectRoom = "";
             
         } else if (count <= 2) {
            $scope.showSelectRoom = false;
@@ -181,6 +205,7 @@ communitApp.controller('directory_controller', function($scope, $http) {
            $scope.showMarker = false;
            $scope.noRooms = true;
            $scope.noUsers = false;
+           $scope.selectRoom = "";
         }
            
     };
